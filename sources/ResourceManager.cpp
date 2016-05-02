@@ -27,12 +27,12 @@ ResourceManager & ResourceManager::getInstance(void)
 	return *m_instance;
 }
 
-std::shared_ptr<Mesh> ResourceManager::getMesh(std::string const & name)
+std::shared_ptr<MeshData> ResourceManager::getMeshData(std::string const & name)
 {
 	auto it = m_meshes.find(name);
 	if (it != m_meshes.end())
 		return it->second;
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
+	std::shared_ptr<MeshData> mesh = std::make_shared<MeshData>(name);
 	m_meshes[name] = mesh;
 	std::cout << "Add new mesh : " << name << std::endl;
 	return (mesh);

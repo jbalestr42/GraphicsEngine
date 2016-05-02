@@ -1,7 +1,6 @@
 #ifndef TRANSFORMABLE_HPP
 # define TRANSFORMABLE_HPP
 
-# include <list>
 # include "Matrix.hpp"
 
 class Transformable
@@ -19,13 +18,11 @@ public:
 	void setPosition(Vector3 const & position);
 	void setRotation(Vector3 const & rotation);
 	void setScale(Vector3 const & scale);
-	void setParentScale(Vector3 const & parentScale);
 
 	Vector3 const & getOrigin(void) const;
 	Vector3 const & getPosition(void) const;
 	Vector3 const & getRotation(void) const;
 	Vector3 const & getScale(void) const;
-	Vector3 const & getParentScale(void) const;
 
 	void translate(Vector3 const & translation);
 	void rotate(Vector3 const & rotation);
@@ -42,7 +39,6 @@ private:
 	Vector3				m_position;
 	Vector3				m_rotation;
 	Vector3				m_scale;
-	Vector3				m_parentScale;
 	Matrix				m_model;
 	Matrix::EulerOrder	m_eulerOrder;
 	bool				m_needRecompute;

@@ -3,7 +3,6 @@
 
 Transformable::Transformable(void) :
 	m_scale(1.f, 1.f, 1.f),
-	m_parentScale(1.f, 1.f, 1.f),
 	m_eulerOrder(Matrix::EulerOrder::ZYX),
 	m_needRecompute(false)
 {}
@@ -24,7 +23,6 @@ Transformable & Transformable::operator=(Transformable const & transformable)
 	m_position = transformable.m_position;
 	m_rotation = transformable.m_rotation;
 	m_scale = transformable.m_scale;
-	m_parentScale = transformable.m_parentScale;
 	m_model = transformable.m_model;
 	m_eulerOrder = transformable.m_eulerOrder;
 	m_needRecompute = transformable.m_needRecompute;
@@ -37,7 +35,6 @@ Transformable & Transformable::operator=(Transformable && transformable)
 	m_position = std::move(transformable.m_position);
 	m_rotation = std::move(transformable.m_rotation);
 	m_scale = std::move(transformable.m_scale);
-	m_parentScale = std::move(transformable.m_parentScale);
 	m_model = std::move(transformable.m_model);
 	m_eulerOrder = transformable.m_eulerOrder;
 	m_needRecompute = transformable.m_needRecompute;
@@ -68,35 +65,24 @@ void Transformable::setScale(Vector3 const & scale)
 	m_needRecompute = true;
 }
 
-void Transformable::setParentScale(Vector3 const & parentScale)
-{
-	m_parentScale = parentScale;
-	m_needRecompute = true;
-}
-
 Vector3 const & Transformable::getOrigin(void) const
 {
-	return m_origin;
+	return (m_origin);
 }
 
 Vector3 const & Transformable::getPosition(void) const
 {
-	return m_position;
+	return (m_position);
 }
 
 Vector3 const & Transformable::getRotation(void) const
 {
-	return m_rotation;
+	return (m_rotation);
 }
 
 Vector3 const & Transformable::getScale(void) const
 {
-	return m_scale;
-}
-
-Vector3 const & Transformable::getParentScale(void) const
-{
-	return m_parentScale;
+	return (m_scale);
 }
 
 void Transformable::translate(Vector3 const & translation)
@@ -147,14 +133,13 @@ Matrix const & Transformable::getMatrix(void)
 	{
 		m_model.identity();
 		m_model.translate(m_origin);
-		m_model.scale(m_scale * m_parentScale);
+		m_model.scale(m_scale);
 		m_model.rotate(m_rotation, m_eulerOrder);
-		//Quaternion modelRot;
+		//TODO Quaternion modelRot;
 		//modelRot.fromEuler(m_rotation);
 		//m_model.multiply(modelRot.toMatrix());
-		m_model.scale(1.f / m_parentScale);
 		m_model.translate(m_position);
 		m_needRecompute = false;
 	}
-	return m_model;
+	return (m_model);
 }
