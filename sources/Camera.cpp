@@ -26,6 +26,51 @@ Camera & Camera::operator=(Camera const & camera)
 	return (*this);
 }
 
+Vector3 const & Camera::getPosition(void) const
+{
+	return (m_position);
+}
+
+Vector3 const & Camera::getRotation(void) const
+{
+	return (m_rotation);
+}
+
+Vector3 const & Camera::getOriginUp(void) const
+{
+	return (m_originUp);
+}
+
+Vector3 const & Camera::getOriginDirection(void) const
+{
+	return (m_originDirection);
+}
+
+void Camera::setPosition(Vector3 const & position)
+{
+	m_position = position;
+}
+
+void Camera::setRotation(Vector3 const & rotation)
+{
+	m_rotation = rotation;
+}
+
+void Camera::setOriginUp(Vector3 const & originUp)
+{
+	m_originUp = originUp;
+}
+
+void Camera::setOriginDirection(Vector3 const & originDirection)
+{
+	m_originDirection = originDirection;
+}
+
+Matrix const & Camera::getView(void) const
+{
+	return (m_view);
+}
+
 void Camera::lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up)
 {
 	Vector3 f = (center - position).normalize();
@@ -51,11 +96,6 @@ void Camera::lookAt(Vector3 const & position, Vector3 const & center, Vector3 co
 	m_view[13] = u.dotProduct(center);
 	m_view[14] = f.dotProduct(center);
 	m_view[15] = 1.f;
-}
-
-Matrix const & Camera::getView(void) const
-{
-	return (m_view);
 }
 
 void Camera::update(float frametime)

@@ -13,6 +13,16 @@ public:
 
 	Camera & operator=(Camera const & camera);
 
+	Vector3 const & getPosition(void) const;
+	Vector3 const & getRotation(void) const;
+	Vector3 const & getOriginUp(void) const;
+	Vector3 const & getOriginDirection(void) const;
+
+	void setPosition(Vector3 const & position);
+	void setRotation(Vector3 const & rotation);
+	void setOriginUp(Vector3 const & originUp);
+	void setOriginDirection(Vector3 const & originDirection);
+
 	Matrix const & getView(void) const;
 	void update(float frametime);
 
