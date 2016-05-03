@@ -9,7 +9,12 @@ MeshData::MeshData(std::string const & filename) :
 	m_filename(filename)
 {
 	Assimp::Importer Importer;
-	const aiScene * pScene = Importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+	const aiScene * pScene = Importer.ReadFile(filename.c_str(),
+			aiProcess_Triangulate |
+			aiProcess_GenSmoothNormals |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_GenUVCoords |
+			aiProcess_OptimizeMeshes);
 	if (!pScene)
 		std::cout << "error pscene" << std::endl;
 	else
@@ -59,7 +64,7 @@ void MeshData::initMaterials(aiScene const * scene, std::string const & filename
 				std::cout << "Error while loading texture : " << fullPath << std::endl;
 		}
 		else
-			m_textures.push_back(ResourceManager::getInstance().getTexture("resources/nyan.bmp"));
+			m_textures.push_back(ResourceManager::getInstance().getTexture("resources/nyan.bmp")); // TODO load white texture instead
 	}
 }
 

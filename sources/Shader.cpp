@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 Shader::Shader(std::string const & fragShader, std::string const & vertShader)
 {
@@ -142,6 +143,7 @@ void Shader::setParameter(std::string const & name, std::vector<DirectionalLight
 	if (m_program)
 	{
 		glUseProgram(m_program);
+		assert(lights.size() <= DirectionalLight::MaxLight);
 		for (std::size_t i = 0u; i < lights.size(); i++)
 			setParameter(name, i, lights[i]);
 	}

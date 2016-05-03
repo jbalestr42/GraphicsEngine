@@ -6,6 +6,8 @@
 class DirectionalLight : public Light
 {
 public:
+	static const std::size_t	MaxLight = 10u;
+
 	DirectionalLight(void);
 	DirectionalLight(Color const & color, float ambientIntensity);
 	DirectionalLight(DirectionalLight const & directionnalLight);

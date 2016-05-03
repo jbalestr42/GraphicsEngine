@@ -14,14 +14,15 @@ int main(void)
 	Shader shader("resources/ambientlight.frag" ,"resources/ambientlight.vert");
 	Matrix m_view;
 	Matrix m_projection;
-	m_view.translate(Vector3(0.f, 0.f, -4.f));
+	m_view.translate(Vector3(0.f, -10.f, -20.f));
 	shader.setParameter("ViewMatrix", m_view);
 	m_projection.perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
 	shader.setParameter("ProjectionMatrix", m_projection);
 
-	Mesh mesh("resources/corridor.obj");
+	Mesh mesh("resources/bear-obj.obj");
 	std::vector<DirectionalLight> dirLights;
-	dirLights.emplace_back(DirectionalLight(Color(0.5f, 0.2f, 0.5f, 1.f), 1.f));
+	dirLights.emplace_back(DirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f), 1.f));
+	//dirLights.emplace_back(DirectionalLight(Color(0.9f, 0.0f, 0.8f, 1.f), 1.f));
 	shader.setParameter("directional_light_count", dirLights.size());
 	shader.setParameter("directional_lights", dirLights);
 
