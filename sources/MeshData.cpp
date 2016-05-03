@@ -9,7 +9,12 @@ MeshData::MeshData(std::string const & filename) :
 	m_filename(filename)
 {
 	Assimp::Importer Importer;
-	const aiScene * pScene = Importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+	const aiScene * pScene = Importer.ReadFile(filename.c_str(),
+			aiProcess_Triangulate |
+			aiProcess_GenSmoothNormals |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_GenUVCoords |
+			aiProcess_OptimizeMeshes);
 	if (!pScene)
 		std::cout << "error pscene" << std::endl;
 	else
@@ -59,7 +64,7 @@ void MeshData::initMaterials(aiScene const * scene, std::string const & filename
 				std::cout << "Error while loading texture : " << fullPath << std::endl;
 		}
 		else
-			m_textures.push_back(ResourceManager::getInstance().getTexture("resources/nyan.bmp"));
+			m_textures.push_back(ResourceManager::getInstance().getTexture("resources/nyan.bmp")); // TODO load white texture instead
 	}
 }
 
@@ -93,15 +98,16 @@ MeshData::MeshEntry::MeshEntry(aiMesh * mesh) :
 		const aiVector3D * pPos = &(mesh->mVertices[i]);
 		const aiVector3D * pNormal = &(mesh->mNormals[i]);
 		const aiVector3D * pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
+		Vector3 normal(pNormal->x, pNormal->y, pNormal->z);
 		vertices.emplace_back(Vector3(pPos->x, pPos->y, pPos->z),
 				Vector2(pTexCoord->x, pTexCoord->y),
-				Vector3(pNormal->x, pNormal->y, pNormal->z),
+				normal.normalize(),
 				Color());
 	}
 
 	for (std::size_t i = 0; i < mesh->mNumFaces; i++)
 	{
-		const aiFace& Face = mesh->mFaces[i];
+		aiFace const & Face = mesh->mFaces[i];
 		assert(Face.mNumIndices == 3);
 		indices.push_back(Face.mIndices[0]);
 		indices.push_back(Face.mIndices[1]);

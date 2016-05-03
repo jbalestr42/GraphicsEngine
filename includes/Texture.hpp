@@ -1,7 +1,7 @@
 #ifndef TEXTURE_HPP
 # define TEXTURE_HPP
 
-#define ILUT_USE_OPENGL
+# define ILUT_USE_OPENGL
 
 # include <GL/glew.h>
 # include <cstddef>

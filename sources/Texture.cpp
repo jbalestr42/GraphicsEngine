@@ -1,5 +1,6 @@
 #include "Texture.hpp"
 #include "Shader.hpp"
+#include <iostream>
 
 Texture::Texture(std::string const & filename) :
 	m_textureID(0),
@@ -55,7 +56,8 @@ void Texture::bind(Shader & shader)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
-	shader.setParameter("tex", 0);
+	//TODO find a way to get the right parameter
+	shader.setParameter("sampler", 0);
 }
 
 void Texture::bind(GLenum textureUnit, GLenum textureTarget)

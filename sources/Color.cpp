@@ -36,3 +36,9 @@ Color & Color::operator=(Color const & color)
 	a = color.a;
 	return (*this);
 }
+
+std::ostream & operator<<(std::ostream & out, Color const & color)
+{
+	out << "Color(" << color.r << ", " << color.g << ", " << color.b << ", " << color.a << ")";
+	return out;
+}
