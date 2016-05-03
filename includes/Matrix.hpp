@@ -2,6 +2,7 @@
 # define MATRIX_HPP
 
 # include "Vector3.hpp"
+# include <iostream>
 
 class Matrix
 {
@@ -57,5 +58,7 @@ private:
 	int getMinor(Matrix const & src, Matrix & dest, int row, int col) const;
 	float determinant3(Matrix const & matrix) const;
 };
+
+std::ostream & operator<<(std::ostream & out, Matrix const & matrix);
 
 #endif

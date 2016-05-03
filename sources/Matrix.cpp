@@ -346,3 +346,13 @@ float Matrix::determinant3(Matrix const & matrix) const
 		+ m[2] * (m[3] * m[7] - m[4] * m[6]);
 	return (det);
 }
+
+std::ostream & operator<<(std::ostream & out, Matrix const & matrix)
+{
+	out << "Matrix(";
+	out << matrix.getMatrix()[0 * 4 + 0] << ", " << matrix.getMatrix()[0 * 4 + 1] << ", " << matrix.getMatrix()[0 * 4 + 2] << ", " << matrix.getMatrix()[0 * 4 + 4] << ", " << std::endl;
+	out << matrix.getMatrix()[1 * 4 + 0] << ", " << matrix.getMatrix()[1 * 4 + 1] << ", " << matrix.getMatrix()[1 * 4 + 2] << ", " << matrix.getMatrix()[1 * 4 + 4] << ", " << std::endl;
+	out << matrix.getMatrix()[2 * 4 + 0] << ", " << matrix.getMatrix()[2 * 4 + 1] << ", " << matrix.getMatrix()[2 * 4 + 2] << ", " << matrix.getMatrix()[2 * 4 + 4] << ", " << std::endl;
+	out << matrix.getMatrix()[3 * 4 + 0] << ", " << matrix.getMatrix()[3 * 4 + 1] << ", " << matrix.getMatrix()[3 * 4 + 2] << ", " << matrix.getMatrix()[3 * 4 + 4] << ")" << std::endl;
+	return (out);
+}

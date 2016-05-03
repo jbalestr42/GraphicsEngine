@@ -1,6 +1,8 @@
 #ifndef VECTOR2_HPP
 # define VECTOR2_HPP
 
+# include <iostream>
+
 class Vector2
 {
 public:
@@ -11,6 +13,9 @@ public:
 
 	Vector2 & operator=(Vector2 const & vector2);
 	Vector2 operator*(float factor) const;
+	Vector2 operator+(Vector2 const & vector2) const;
+	Vector2 operator-(Vector2 const & vector2) const;
+	Vector2 operator*(Vector2 const & vector2) const;
 	Vector2 operator/(Vector2 const & vector2) const;
 
 	float	x;
@@ -19,5 +24,6 @@ public:
 };
 
 Vector2 operator/(float value, Vector2 const & vector2);
+std::ostream & operator<<(std::ostream & out, Vector2 const & vector);
 
 #endif

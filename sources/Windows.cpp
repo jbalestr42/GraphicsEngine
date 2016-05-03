@@ -75,9 +75,11 @@ void Windows::init(void)
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	glGetError(); // Avoid first error
 	glfwSwapInterval(1); // vsync
 	glfwGetFramebufferSize(m_window, &m_width, &m_height);
 	resizeCallback(m_window, m_width, m_height);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
