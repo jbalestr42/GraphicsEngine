@@ -1,6 +1,8 @@
 #ifndef COLOR_HPP
 # define COLOR_HPP
 
+# include <iostream>
+
 class Color
 {
 public:
@@ -27,5 +29,7 @@ public:
 	float	a;
 
 };
+
+std::ostream & operator<<(std::ostream & out, Color const & color);
 
 #endif

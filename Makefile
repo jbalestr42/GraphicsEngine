@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jbalestr <jbalestr@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2015/01/11 12:08:17 by jbalestr          #+#    #+#              #
-#    Updated: 2016/05/02 19:06:26 by jbalestr         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 .PHONY: all clean fclean re
 
 NAME =	graphics.app
@@ -47,7 +35,8 @@ SRC =	main.cpp \
 		Keyboard.cpp \
 		Mouse.cpp \
 		Texture.cpp \
-		AnimatedTexture.cpp \
+		Light.cpp \
+		DirectionalLight.cpp \
 		Color.cpp
 
 INC =	Matrix.hpp \
@@ -66,7 +55,8 @@ INC =	Matrix.hpp \
 		Keyboard.hpp \
 		Mouse.hpp \
 		Texture.hpp \
-		AnimatedTexture.hpp \
+		Light.hpp \
+		DirectionalLight.hpp \
 		Color.hpp
 
 OBJ =	$(SRC:.cpp=.o)

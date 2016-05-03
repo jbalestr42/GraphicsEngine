@@ -3,6 +3,7 @@
 #include "Shader.hpp"
 #include "Keyboard.hpp"
 #include "Mesh.hpp"
+#include "DirectionalLight.hpp"
 #include <iostream>
 
 int main(void)
@@ -10,7 +11,7 @@ int main(void)
 	Windows win(800, 600, "test graphics");
 	win.setClearColor(Color::White);
 
-	Shader shader("resources/default.frag" ,"resources/default.vert");
+	Shader shader("resources/ambientlight.frag" ,"resources/ambientlight.vert");
 	Matrix m_view;
 	Matrix m_projection;
 	m_view.translate(Vector3(0.f, 0.f, -4.f));
@@ -19,6 +20,10 @@ int main(void)
 	shader.setParameter("ProjectionMatrix", m_projection);
 
 	Mesh mesh("resources/corridor.obj");
+	std::vector<DirectionalLight> dirLights;
+	dirLights.emplace_back(DirectionalLight(Color(0.5f, 0.2f, 0.5f, 1.f), 1.f));
+	shader.setParameter("directional_light_count", dirLights.size());
+	shader.setParameter("directional_lights", dirLights);
 
 	glfwSetTime(0.f);
 	float lastTime = 0.f;
@@ -40,8 +45,6 @@ int main(void)
 		// Draw
 		win.clear();
 		mesh.draw(shader);
-		if (glGetError()) // TODO remove
-			std::cout << "error" << std::endl;
 
 		win.display();
 		win.pollEvents();
