@@ -4,6 +4,7 @@
 # include <iostream>
 
 class Matrix;
+class Quaternion;
 
 class Vector3
 {
@@ -14,9 +15,12 @@ public:
 	Vector3(Vector3 && vector3);
 	~Vector3(void) = default;
 
-	float length(void);
+	float length(void) const;
+	float dotProduct(Vector3 const & vector) const;
 	Vector3 & normalize(void);
-	Vector3 inverse(void);
+	Vector3 cross(Vector3 const & vector) const;
+
+	Vector3 rotate(Quaternion const & quaternion) const;
 
 	Vector3 & operator=(Vector3 const & vector3);
 	Vector3 & operator=(Vector3 && vector3);

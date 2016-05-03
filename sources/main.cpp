@@ -4,12 +4,15 @@
 #include "Keyboard.hpp"
 #include "Mesh.hpp"
 #include "DirectionalLight.hpp"
+#include "Camera.hpp"
 #include <iostream>
 
 int main(void)
 {
 	Windows win(800, 600, "test graphics");
 	win.setClearColor(Color::White);
+
+	Camera camera;
 
 	Shader shader("resources/ambientlight.frag" ,"resources/ambientlight.vert");
 	Matrix m_view;
@@ -27,6 +30,8 @@ int main(void)
 
 	glfwSetTime(0.f);
 	float lastTime = 0.f;
+	float dt = 0.f;
+	float frameLimit = 1.f / 300.f;
 	while (win.isOpen())
 	{
 		// Compute frametime
@@ -35,16 +40,26 @@ int main(void)
 		(void)frametime;
 		lastTime = currentTime;
 
+		dt += frametime;
+		if (dt < frameLimit)
+			continue ;
+
 		// Inputs
 		if (Keyboard::isKeyPressed(GLFW_KEY_ESCAPE))
 			win.close();
 
 		// Update
-		mesh.rotateY(frametime * 40.f);
-		dirLights[0].rotateX(100.f * frametime);
-		dirLights[0].rotateY(-5.f * frametime);
-		dirLights[0].rotateZ(15.f * frametime);
+		camera.update(dt);
+		shader.setParameter("ViewMatrix", camera.getView());
+
+		mesh.rotateY(dt * 40.f);
+		dirLights[0].rotateX(10.f * dt);
+		dirLights[0].rotateY(-5.f * dt);
+		dirLights[0].rotateZ(15.f * dt);
 		shader.setParameter("directional_lights", dirLights);
+
+		while (dt > frameLimit)
+			dt -= frameLimit;
 
 		// Draw
 		win.clear();

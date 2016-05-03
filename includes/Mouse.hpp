@@ -14,16 +14,18 @@ public:
 	static bool isButtonPress(int button);
 	static bool isButtonReleased(int button);
 	static Vector2 const & getPosition(void);
+	static Vector2 const & getNormalizedPosition(void);
 
 private:
-	Mouse(void);
-	virtual ~Mouse(void);
+	Mouse(void) = default;
+	virtual ~Mouse(void) = default;
 
 	Mouse(Mouse const & mouse);
 	Mouse & operator=(Mouse const & mouse);
 
 	static std::map<int, int>	m_buttons;
 	static Vector2				m_position;
+	static Vector2				m_normalizedPosition;
 };
 
 #endif

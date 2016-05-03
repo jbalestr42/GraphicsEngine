@@ -37,6 +37,7 @@ SRC =	main.cpp \
 		Texture.cpp \
 		Light.cpp \
 		DirectionalLight.cpp \
+		Camera.cpp \
 		Color.cpp
 
 INC =	Matrix.hpp \
@@ -57,6 +58,7 @@ INC =	Matrix.hpp \
 		Texture.hpp \
 		Light.hpp \
 		DirectionalLight.hpp \
+		Camera.hpp \
 		Color.hpp
 
 OBJ =	$(SRC:.cpp=.o)

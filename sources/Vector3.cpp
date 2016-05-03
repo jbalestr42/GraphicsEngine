@@ -1,5 +1,6 @@
 #include "Vector3.hpp"
 #include "Matrix.hpp"
+#include "Quaternion.hpp"
 #include <cmath>
 
 Vector3::Vector3(void) :
@@ -22,9 +23,14 @@ Vector3::Vector3(Vector3 && vector)
 	*this = std::move(vector);
 }
 
-float Vector3::length(void)
+float Vector3::length(void) const
 {
 	return (std::sqrt(x * x + y * y + z * z));
+}
+
+float Vector3::dotProduct(Vector3 const & vector) const
+{
+	return (x * vector.x + y * vector.y + z * vector.z);
 }
 
 Vector3 & Vector3::normalize(void)
@@ -36,7 +42,20 @@ Vector3 & Vector3::normalize(void)
 	return (*this);
 }
 
-	Vector3 inverse(void);
+Vector3 Vector3::cross(Vector3 const & vector) const
+{
+	return (Vector3(y * vector.z - z * vector.y,
+					z * vector.x - x * vector.z,
+					x * vector.y - y * vector.x));
+}
+
+Vector3 Vector3::rotate(Quaternion const & quaternion) const
+{
+	Vector3 u(quaternion.x, quaternion.y, quaternion.z);
+	return (u * 2.0f * u.dotProduct(*this) +
+			*this * ((quaternion.w * quaternion.w) - u.dotProduct(u)) +
+			u.cross(*this) * 2.0f * quaternion.w);
+}
 
 Vector3 & Vector3::operator=(Vector3 const & vector)
 {
