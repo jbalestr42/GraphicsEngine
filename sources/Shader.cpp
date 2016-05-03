@@ -126,7 +126,7 @@ void Shader::setParameter(std::string const & name, Matrix const & matrix)
 	}
 }
 
-void Shader::setParameter(std::string const & name, std::size_t index, DirectionalLight const & light)
+void Shader::setParameter(std::string const & name, std::size_t index, DirectionalLight & light)
 {
 	if (m_program)
 	{
@@ -134,11 +134,13 @@ void Shader::setParameter(std::string const & name, std::size_t index, Direction
 		std::ostringstream s;
 		s << name << "[" << index << "].";
 		setParameter(s.str() + "color", light.getColor());
+		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
+		setParameter(s.str() + "diffuse_intensity", light.getDiffuseIntensity());
 	}
 }
 
-void Shader::setParameter(std::string const & name, std::vector<DirectionalLight> const & lights)
+void Shader::setParameter(std::string const & name, std::vector<DirectionalLight> & lights)
 {
 	if (m_program)
 	{

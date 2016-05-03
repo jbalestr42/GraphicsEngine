@@ -39,8 +39,8 @@ public:
 	void setParameter(std::string const & name, Vector3 const & vector);
 	void setParameter(std::string const & name, Color const & color);
 	void setParameter(std::string const & name, Matrix const & matrix);
-	void setParameter(std::string const & name, std::size_t index, DirectionalLight const & light);
-	void setParameter(std::string const & name, std::vector<DirectionalLight> const & lights);
+	void setParameter(std::string const & name, std::size_t index, DirectionalLight & light);
+	void setParameter(std::string const & name, std::vector<DirectionalLight> & lights);
 	int getAttribute(Attribute attribute) const;
 
 private:
