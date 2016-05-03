@@ -1,6 +1,5 @@
 #include "MeshData.hpp"
 #include "ResourceManager.hpp"
-#include "Texture.hpp"
 #include <iostream>
 #include <cassert>
 #include <postprocess.h>
@@ -9,15 +8,17 @@
 MeshData::MeshData(std::string const & filename) :
 	m_filename(filename)
 {
-	//TODO check if file exist
 	Assimp::Importer Importer;
 	const aiScene * pScene = Importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
 	if (!pScene)
 		std::cout << "error pscene" << std::endl;
-	for (std::size_t i = 0; i < pScene->mNumMeshes; i++)
-		m_meshEntries.emplace_back(new MeshEntry(pScene->mMeshes[i]));
-
-	initMaterials(pScene, filename);
+	else
+	{
+		for (std::size_t i = 0; i < pScene->mNumMeshes; i++)
+			m_meshEntries.emplace_back(new MeshEntry(pScene->mMeshes[i]));
+		//TODO init all materials
+		initMaterials(pScene, filename);
+	}
 	Importer.FreeScene();
 }
 
@@ -131,6 +132,7 @@ void MeshData::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject[VBOIndex::VertexBuffer]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
+	//TODO found a way to use attriblocation from shader, maybe each frame ?
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 	glEnableVertexAttribArray(1);

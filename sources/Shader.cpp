@@ -110,15 +110,11 @@ void Shader::init(std::string const & fragShader, std::string const & vertShader
 	glAttachShader(m_program, m_shaders[1]);
 	glLinkProgram(m_program);
 
-	m_uniforms[0] = glGetUniformLocation(m_program, "ModelMatrix");
-	m_uniforms[1] = glGetUniformLocation(m_program, "ViewMatrix");
-	m_uniforms[2] = glGetUniformLocation(m_program, "ProjectionMatrix");
-	m_uniforms[3] = glGetUniformLocation(m_program, "tex");
 	m_attributes[Attribute::Position] = glGetAttribLocation(m_program, "in_Position");
 	m_attributes[Attribute::TexCoord] = glGetAttribLocation(m_program, "in_TexCoord");
 	m_attributes[Attribute::Normal] = glGetAttribLocation(m_program, "in_Normal");
 	m_attributes[Attribute::Color] = glGetAttribLocation(m_program, "in_Color");
-	// use these params in the mesh.init
+	// TODO add accessor to get good uniform location
 }
 
 std::string Shader::readShader(std::string const & fileName)

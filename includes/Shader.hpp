@@ -38,7 +38,6 @@ private:
 
 	GLint		m_program;
 	GLint		m_shaders[2];
-	GLint		m_uniforms[5];
 	GLint		m_attributes[AttributeCount];
 	Matrix		m_model;
 	Matrix		m_view;
