@@ -6,7 +6,7 @@
 #    By: jbalestr <jbalestr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/11 12:08:17 by jbalestr          #+#    #+#              #
-#    Updated: 2016/05/02 18:57:39 by jbalestr         ###   ########.fr        #
+#    Updated: 2016/05/02 19:06:26 by jbalestr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRC =	main.cpp \
 		Quaternion.cpp \
 		Windows.cpp \
 		Mesh.cpp \
+		MeshData.cpp \
 		ResourceManager.cpp \
 		Vertex.cpp \
 		Shader.cpp \
@@ -54,6 +55,7 @@ INC =	Matrix.hpp \
 		Quaternion.hpp \
 		Windows.hpp \
 		Mesh.hpp \
+		MeshData.hpp \
 		ResourceManager.hpp \
 		Vertex.hpp \
 		Shader.hpp \
