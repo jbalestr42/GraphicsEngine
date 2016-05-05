@@ -1,22 +1,24 @@
 #version 410
 
-layout(location=0) in vec3 in_Position;
-layout(location=1) in vec2 in_TexCoord;
-layout(location=2) in vec3 in_Normal;
-layout(location=3) in vec4 in_Color;
-
-out vec4 ex_Color;
-out vec2 ex_TexCoord;
-out vec3 ex_Normal;
+layout(location=0) in vec3 Position;
+layout(location=1) in vec2 TexCoord;
+layout(location=2) in vec3 Normal;
+layout(location=3) in vec4 Color;
 
 uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 
+out vec4 Color0;
+out vec2 TexCoord0;
+out vec3 Normal0;
+out vec3 WorldPos0;
+
 void main(void)
 {
-	gl_Position = (ProjectionMatrix * ViewMatrix * ModelMatrix) * vec4(in_Position, 1.0);
-	ex_Color = in_Color;
-	ex_TexCoord = in_TexCoord;
-	ex_Normal = (ModelMatrix * vec4(in_Normal, 0.0)).xyz;
+	gl_Position = (ProjectionMatrix * ViewMatrix * ModelMatrix) * vec4(Position, 1.0);
+	Color0 = Color;
+	TexCoord0 = TexCoord;
+	Normal0 = (ModelMatrix * vec4(Normal, 0.0)).xyz;		// Normal in world position
+	WorldPos0 = (ModelMatrix * vec4(Position, 1.0)).xyz;	// Vertex in world position
 }
