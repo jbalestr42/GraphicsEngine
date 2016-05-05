@@ -8,15 +8,26 @@
 MeshData::MeshData(std::string const & filename) :
 	m_filename(filename)
 {
-	Assimp::Importer Importer;
-	const aiScene * pScene = Importer.ReadFile(filename.c_str(),
+	Assimp::Importer importer;
+	const aiScene * pScene = importer.ReadFile(filename.c_str(),
 			aiProcess_Triangulate |
 			aiProcess_GenSmoothNormals |
-			aiProcess_JoinIdenticalVertices |
 			aiProcess_GenUVCoords |
-			aiProcess_OptimizeMeshes);
+			aiProcess_OptimizeMeshes |
+			aiProcess_FlipUVs |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_CalcTangentSpace |
+			aiProcess_SortByPType |
+			aiProcess_ImproveCacheLocality |
+			aiProcess_RemoveRedundantMaterials |
+			aiProcess_FindInvalidData |
+			aiProcess_TransformUVCoords |
+			aiProcess_FindInstances |
+			aiProcess_LimitBoneWeights |
+			aiProcess_SplitByBoneCount |
+			aiProcess_FixInfacingNormals);
 	if (!pScene)
-		std::cout << "error pscene" << std::endl;
+		std::cout << "Importer error : " << importer.GetErrorString() << std::endl;
 	else
 	{
 		for (std::size_t i = 0; i < pScene->mNumMeshes; i++)
@@ -24,7 +35,7 @@ MeshData::MeshData(std::string const & filename) :
 		//TODO init all materials
 		initMaterials(pScene, filename);
 	}
-	Importer.FreeScene();
+	importer.FreeScene();
 }
 
 //void MeshData::loadMaterialTextures(aiMaterial * material, aiTextureType type)
@@ -95,23 +106,22 @@ MeshData::MeshEntry::MeshEntry(aiMesh * mesh) :
 
 	for (std::size_t i = 0; i < mesh->mNumVertices; i++)
 	{
-		const aiVector3D * pPos = &(mesh->mVertices[i]);
-		const aiVector3D * pNormal = &(mesh->mNormals[i]);
-		const aiVector3D * pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
-		Vector3 normal(pNormal->x, pNormal->y, pNormal->z);
-		vertices.emplace_back(Vector3(pPos->x, pPos->y, pPos->z),
-				Vector2(pTexCoord->x, pTexCoord->y),
-				normal.normalize(),
+		const aiVector3D * pos = &(mesh->mVertices[i]);
+		const aiVector3D * normal = &(mesh->mNormals[i]);
+		const aiVector3D * texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
+		vertices.emplace_back(Vector3(pos->x, pos->y, pos->z),
+				Vector2(texCoord->x, texCoord->y),
+				Vector3(normal->x, normal->y, normal->z).normalize(),
 				Color());
 	}
 
 	for (std::size_t i = 0; i < mesh->mNumFaces; i++)
 	{
-		aiFace const & Face = mesh->mFaces[i];
-		assert(Face.mNumIndices == 3);
-		indices.push_back(Face.mIndices[0]);
-		indices.push_back(Face.mIndices[1]);
-		indices.push_back(Face.mIndices[2]);
+		aiFace const & face = mesh->mFaces[i];
+		assert(face.mNumIndices == 3);
+		indices.push_back(face.mIndices[0]);
+		indices.push_back(face.mIndices[1]);
+		indices.push_back(face.mIndices[2]);
 	}
 
 	m_indiceCount = mesh->mNumFaces * 3;
