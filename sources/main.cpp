@@ -2,7 +2,7 @@
 #include "ResourceManager.hpp"
 #include "Shader.hpp"
 #include "Keyboard.hpp"
-#include "Mesh.hpp"
+#include "Model.hpp"
 #include "DirectionalLight.hpp"
 #include "Camera.hpp"
 #include <iostream>
@@ -22,7 +22,7 @@ int main(void)
 	m_projection.perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
 	shader.setParameter("ProjectionMatrix", m_projection);
 
-	Mesh mesh("resources/lego/lego_poeople_obj.obj");
+	Model model("resources/lego/lego_poeople_obj.obj");
 	std::vector<DirectionalLight> dirLights;
 	dirLights.emplace_back(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
 	shader.setParameter("directional_light_count", dirLights.size());
@@ -53,7 +53,7 @@ int main(void)
 		shader.setParameter("ViewMatrix", camera.getView());
 		shader.setParameter("camera_position", camera.getPosition());
 
-		//mesh.rotateY(dt * 40.f);
+		//model.rotateY(dt * 40.f);
 		//dirLights[0].rotateX(10.f * dt);
 		dirLights[0].rotateY(-50.f * dt);
 		//dirLights[0].rotateZ(50.f * dt);
@@ -64,7 +64,7 @@ int main(void)
 
 		// Draw
 		win.clear();
-		mesh.draw(shader);
+		model.draw(shader);
 
 		win.display();
 		win.pollEvents();

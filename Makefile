@@ -25,7 +25,7 @@ SRC =	main.cpp \
 		Quaternion.cpp \
 		Windows.cpp \
 		Mesh.cpp \
-		MeshData.cpp \
+		Model.cpp \
 		ResourceManager.cpp \
 		Vertex.cpp \
 		Shader.cpp \
@@ -45,7 +45,7 @@ INC =	Matrix.hpp \
 		Quaternion.hpp \
 		Windows.hpp \
 		Mesh.hpp \
-		MeshData.hpp \
+		Model.hpp \
 		ResourceManager.hpp \
 		Vertex.hpp \
 		Shader.hpp \
