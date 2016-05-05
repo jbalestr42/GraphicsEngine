@@ -177,10 +177,10 @@ void Shader::init(std::string const & fragShader, std::string const & vertShader
 	glAttachShader(m_program, m_shaders[1]);
 	glLinkProgram(m_program);
 
-	m_attributes[Attribute::PositionAtt] = glGetAttribLocation(m_program, "in_Position");
-	m_attributes[Attribute::TexCoordAtt] = glGetAttribLocation(m_program, "in_TexCoord");
-	m_attributes[Attribute::NormalAtt] = glGetAttribLocation(m_program, "in_Normal");
-	m_attributes[Attribute::ColorAtt] = glGetAttribLocation(m_program, "in_Color");
+	m_attributes[Attribute::PositionAtt] = glGetAttribLocation(m_program, "Position");
+	m_attributes[Attribute::TexCoordAtt] = glGetAttribLocation(m_program, "TexCoord");
+	m_attributes[Attribute::NormalAtt] = glGetAttribLocation(m_program, "Normal");
+	m_attributes[Attribute::ColorAtt] = glGetAttribLocation(m_program, "Color");
 	// TODO add accessor to get good uniform location
 }
 
@@ -212,25 +212,16 @@ GLuint Shader::loadShader(std::string const & filename, GLenum shaderType)
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
 		{
-			std::cout << "ERROR: Could not compile the shader" << std::endl;
-			std::cout << glslSource << std::endl;
+			std::cout << "ERROR: Could not compile the shader : " << filename << std::endl;
 
-			//TODO
-			//GLint maxLength = 0;
-			//glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
+			GLint maxLength = 0;
+			glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
 
-			////The maxLength includes the NULL character
-			//	std::vector<GLchar> infoLog(maxLength);
-			//glGetShaderInfoLog(shaderId, maxLength, &maxLength, &infoLog[0]);
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(shaderId, maxLength, &maxLength, &infoLog[0]);
 
-			////We don't need the shader anymore.
-			//glDeleteShader(shaderId);
-			//for (auto & i : infoLog)
-			//	std::cout << i;
-
-			//Use the infoLog as you see fit.
-
-			//In this simple program, we'll just leave
+			for (auto & i : infoLog)
+				std::cout << i;
 		}
 	}
 	else
