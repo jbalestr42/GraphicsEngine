@@ -1,0 +1,161 @@
+newmtl Hair_01:blinn2SG
+illum 4
+Kd 0.28 0.16 0.09
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl HandsShader1SG
+illum 4
+Kd 0.71 0.40 0.24
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+newmtl blinn3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd face_haryach.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl blinn5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Haryach.JPG
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl blinn6SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl blinn8SG
+illum 4
+Kd 0.09 0.36 0.10
+Ka 0.00 0.00 0.00
+Tf 0.80 0.80 0.80
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl blinn9SG
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl lego_girl_Kissana:blinn2SG
+illum 4
+Kd 0.97 0.92 0.64
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_girl_Kissana:blinn3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd face_kissana_medsis.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_girl_Kissana:blinn4SG
+illum 4
+Kd 0.93 0.71 0.47
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_girl_Kissana:blinn5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd body_kissana_medsis.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_girl_Kissana:blinn7SG
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_Nikita:HandsShader1SG
+illum 4
+Kd 0.96 0.96 0.96
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_Nikita:HandsShader2SG
+illum 4
+Kd 0.19 0.54 0.45
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_Nikita:blinn3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd face_Nikita.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_Nikita:blinn5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd halat.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_zak1:blinn2SG
+illum 4
+Kd 0.79 0.00 0.04
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_zak1:blinn3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd face_zak.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_zak1:blinn4SG
+illum 4
+Kd 0.82 0.56 0.27
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_zak1:blinn5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd body_zak1.jpg
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl lego_man_zak1:blinn6SG
+illum 4
+Kd 1.00 0.00 0.37
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14

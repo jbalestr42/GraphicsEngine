@@ -22,7 +22,7 @@ int main(void)
 	m_projection.perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
 	shader.setParameter("ProjectionMatrix", m_projection);
 
-	Mesh mesh("resources/bear-obj.obj");
+	Mesh mesh("resources/lego/lego_poeople_obj.obj");
 	std::vector<DirectionalLight> dirLights;
 	dirLights.emplace_back(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
 	shader.setParameter("directional_light_count", dirLights.size());
