@@ -9,7 +9,7 @@ MeshData::MeshData(std::string const & filename) :
 	m_filename(filename)
 {
 	Assimp::Importer importer;
-	const aiScene * pScene = importer.ReadFile(filename.c_str(),
+	const aiScene * scene = importer.ReadFile(filename.c_str(),
 			aiProcess_Triangulate |
 			aiProcess_GenSmoothNormals |
 			aiProcess_GenUVCoords |
@@ -26,57 +26,26 @@ MeshData::MeshData(std::string const & filename) :
 			aiProcess_LimitBoneWeights |
 			aiProcess_SplitByBoneCount |
 			aiProcess_FixInfacingNormals);
-	if (!pScene)
+	if (!scene)
 		std::cout << "Importer error : " << importer.GetErrorString() << std::endl;
 	else
 	{
-		for (std::size_t i = 0; i < pScene->mNumMeshes; i++)
-			m_meshEntries.emplace_back(new MeshEntry(pScene->mMeshes[i]));
-		//TODO init all materials
-		initMaterials(pScene, filename);
+		// Extract directory path
+		std::string::size_type slashIndex = filename.find_last_of("/");
+		std::string dirPath;
+		std::string fullPath;
+
+		if (slashIndex == std::string::npos)
+			dirPath = ".";
+		else if (slashIndex == 0)
+			dirPath = "/";
+		else
+			dirPath = filename.substr(0, slashIndex);
+
+		for (std::size_t i = 0; i < scene->mNumMeshes; i++)
+			m_meshEntries.emplace_back(new MeshEntry(scene, scene->mMeshes[i], dirPath));
 	}
 	importer.FreeScene();
-}
-
-//void MeshData::loadMaterialTextures(aiMaterial * material, aiTextureType type)
-//{
-//
-//}
-
-void MeshData::initMaterials(aiScene const * scene, std::string const & filename)
-{
-	// Extract the directory part from the file name
-	std::string::size_type slashIndex = filename.find_last_of("/");
-	std::string dirPath;
-	std::string fullPath;
-
-	if (slashIndex == std::string::npos)
-		dirPath = ".";
-	else if (slashIndex == 0)
-		dirPath = "/";
-	else
-		dirPath = filename.substr(0, slashIndex);
-
-	// Initialize materials
-	for (std::size_t i = 0u; i < scene->mNumMaterials; i++)
-	{
-		const aiMaterial* pMaterial = scene->mMaterials[i];
-
-		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-		{
-			//TODO get all textures and store them per MeshEntry ?
-			aiString path;
-			if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
-			{
-				std::string fullPath = dirPath + "/" + path.data;
-				m_textures.push_back(ResourceManager::getInstance().getTexture(fullPath));
-			}
-			else
-				std::cout << "Error while loading texture : " << fullPath << std::endl;
-		}
-		else
-			m_textures.push_back(ResourceManager::getInstance().getTexture("resources/nyan.bmp")); // TODO load white texture instead
-	}
 }
 
 std::string const & MeshData::getFilename(void) const
@@ -86,17 +55,11 @@ std::string const & MeshData::getFilename(void) const
 
 void MeshData::draw(void) const
 {
-	//shader.setParameter("ModelMatrix", );
 	for (auto & mesh : m_meshEntries)
-	{
-		//TODO move if condition in meshentry draw
-		if (mesh->getMaterialIndex() < m_textures.size() && mesh->getMaterialIndex())
-			m_textures[mesh->getMaterialIndex()]->bind(GL_TEXTURE0, GL_TEXTURE_2D);
 		mesh->draw();
-	}
 }
 
-MeshData::MeshEntry::MeshEntry(aiMesh * mesh) :
+MeshData::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath) :
 	m_indiceCount(0u),
 	m_materialIndex(0u)
 {
@@ -127,17 +90,13 @@ MeshData::MeshEntry::MeshEntry(aiMesh * mesh) :
 	m_indiceCount = mesh->mNumFaces * 3;
 	m_materialIndex = mesh->mMaterialIndex;
 	init(vertices, indices);
+	initMaterial(scene, dirPath);
 }
 
 MeshData::MeshEntry::~MeshEntry(void)
 {
 	glDeleteBuffers(IndexCount, m_vertexBufferObject);
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
-}
-
-std::size_t MeshData::MeshEntry::getMaterialIndex(void) const
-{
-	return (m_materialIndex);
 }
 
 void MeshData::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector<GLuint> const & indices)
@@ -148,6 +107,7 @@ void MeshData::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject[VBOIndex::VertexBuffer]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
+	//TODO maybe remove color from attribpointer
 	//TODO found a way to use attriblocation from shader, maybe each frame ?
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
@@ -167,11 +127,41 @@ void MeshData::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector
 	glBindVertexArray(0);
 }
 
+void MeshData::MeshEntry::initMaterial(aiScene const * scene, std::string const & dirPath)
+{
+	// Initialize materials
+	assert(m_materialIndex < scene->mNumMaterials);
+	const aiMaterial* pMaterial = scene->mMaterials[m_materialIndex];
+	aiString name;
+	pMaterial->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
+
+	if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+	{
+		//TODO get all textures and store them per MeshEntry ?
+		aiString path;
+		if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+		{
+			std::string fullPath = dirPath + "/" + path.data;
+			m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
+		}
+		else // TODO load error texture
+			std::cout << "Error while loading texture." << std::endl;
+	}
+	aiColor3D c;
+	if (pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, c))
+		m_material.ka = Color(c.r, c.g, c.b);
+	if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, c))
+		m_material.kd = Color(c.r, c.g, c.b);
+	if (pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, c))
+		m_material.ks = Color(c.r, c.g, c.b);
+}
+
+
 void MeshData::MeshEntry::draw(void) const
 {
+	if (m_material.diffuseTexture)
+		m_material.diffuseTexture->bind(GL_TEXTURE0, GL_TEXTURE_2D);
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_indiceCount, GL_UNSIGNED_INT, (GLvoid*)0);
 	glBindVertexArray(0);
 }
-
-

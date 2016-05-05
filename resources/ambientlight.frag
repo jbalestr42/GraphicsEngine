@@ -53,7 +53,6 @@ void main(void)
 		float specular_factor = ceil(diffuse_factor) * pow(max(0.0, dot(normalize(camera_position - WorldPos0), normalize(reflect(directional_lights[i].direction, normal)))), mat.specular_power);
 		vec3 specular_color =  specular_factor * mat.specular_intensity * directional_lights[i].color.rgb;
 
-		// Pixel Color
 		FragColor += texture2D(sampler, TexCoord0.xy) * vec4(ambient_color + diffuse_color + specular_color, 1.0);
 	}
 }

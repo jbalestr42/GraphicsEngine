@@ -9,16 +9,30 @@
 
 class Texture;
 
+//TODO add them in resources manager ?
+struct Material
+{
+	Material(void) :
+		diffuseTexture(nullptr)
+	{}
+
+	Color						ka;
+	Color						kd;
+	Color						ks;
+	float						shininess;
+	std::shared_ptr<Texture>	diffuseTexture;
+};
+
 class MeshData
 {
 	class MeshEntry
 	{
 	public:
 		MeshEntry(void) = delete;
-		MeshEntry(aiMesh * mesh);
+		MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath);
 		virtual ~MeshEntry(void);
 
-		std::size_t getMaterialIndex(void) const;
+		Material const & getMaterial(void) const;
 		void draw(void) const;
 
 	private:
@@ -29,16 +43,17 @@ class MeshData
 			Index = 1
 		};
 
-		GLuint				m_vertexArrayObject;
-		GLuint				m_vertexBufferObject[IndexCount];
-		std::size_t			m_indiceCount;
-		std::size_t			m_materialIndex;
-		//TODO vector with materials per mesh entry
+		GLuint			m_vertexArrayObject;
+		GLuint			m_vertexBufferObject[IndexCount];
+		std::size_t		m_indiceCount;
+		std::size_t		m_materialIndex;
+		Material		m_material;
 
 		MeshEntry(MeshEntry const & mesh);
 		MeshEntry & operator=(MeshEntry const & mesh);
 
 		void init(std::vector<Vertex> const & vertices, std::vector<GLuint> const & indices);
+		void initMaterial(aiScene const * scene, std::string const & filename);
 	};
 
 public:
@@ -52,12 +67,9 @@ public:
 private:
 	std::string								m_filename;
 	std::vector<std::unique_ptr<MeshEntry>>	m_meshEntries;
-	std::vector<std::shared_ptr<Texture>>	m_textures;
 
 	MeshData(MeshData const & mesh);
 	MeshData & operator=(MeshData const & mesh);
-
-	void initMaterials(aiScene const * scene, std::string const & filename);
 };
 
 #endif

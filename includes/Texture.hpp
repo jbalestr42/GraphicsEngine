@@ -21,6 +21,7 @@ public:
 
 	void bind(Shader & shader);
 	void bind(GLenum textureUnit, GLenum textureTarget);
+	void unbind(void);
 	bool load(void);
 
 protected:
