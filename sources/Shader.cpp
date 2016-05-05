@@ -211,18 +211,15 @@ GLuint Shader::loadShader(std::string const & filename, GLenum shaderType)
 		GLint isCompiled = 0;
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
-		{
 			std::cout << "ERROR: Could not compile the shader : " << filename << std::endl;
+		GLint maxLength = 0;
+		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
 
-			GLint maxLength = 0;
-			glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
+		std::vector<GLchar> infoLog(maxLength);
+		glGetShaderInfoLog(shaderId, maxLength, &maxLength, &infoLog[0]);
 
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(shaderId, maxLength, &maxLength, &infoLog[0]);
-
-			for (auto & i : infoLog)
-				std::cout << i;
-		}
+		for (auto & i : infoLog)
+			std::cout << i;
 	}
 	else
 		std::cerr << "ERROR: Could not create a shader." << std::endl;
