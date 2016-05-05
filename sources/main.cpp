@@ -22,9 +22,9 @@ int main(void)
 	m_projection.perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
 	shader.setParameter("ProjectionMatrix", m_projection);
 
-	Mesh mesh("resources/bear-obj.obj");
+	Mesh mesh("resources/lego/lego_poeople_obj.obj");
 	std::vector<DirectionalLight> dirLights;
-	dirLights.emplace_back(Color(0.0f, 1.0f, 1.0f, 1.f), 0.4f, 1.f);
+	dirLights.emplace_back(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
 	shader.setParameter("directional_light_count", dirLights.size());
 	shader.setParameter("directional_lights", dirLights);
 
@@ -51,11 +51,12 @@ int main(void)
 		// Update
 		camera.update(dt);
 		shader.setParameter("ViewMatrix", camera.getView());
+		shader.setParameter("camera_position", camera.getPosition());
 
-		mesh.rotateY(dt * 40.f);
-		dirLights[0].rotateX(10.f * dt);
-		dirLights[0].rotateY(-5.f * dt);
-		dirLights[0].rotateZ(15.f * dt);
+		//mesh.rotateY(dt * 40.f);
+		//dirLights[0].rotateX(10.f * dt);
+		dirLights[0].rotateY(-50.f * dt);
+		//dirLights[0].rotateZ(50.f * dt);
 		shader.setParameter("directional_lights", dirLights);
 
 		while (dt > frameLimit)
