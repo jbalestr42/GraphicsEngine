@@ -127,32 +127,43 @@ void MeshData::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector
 	glBindVertexArray(0);
 }
 
-void MeshData::MeshEntry::initMaterial(aiScene const * scene, std::string const & dirPath)
+int MeshData::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textureType, std::string const & dirPath, std::string & fullPath)
 {
-	// Initialize materials
-	assert(m_materialIndex < scene->mNumMaterials);
-	const aiMaterial* pMaterial = scene->mMaterials[m_materialIndex];
-	aiString name;
-	pMaterial->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
-
-	if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+	if (material->GetTextureCount(textureType) > 0)
 	{
 		//TODO get all textures and store them per MeshEntry ?
 		aiString path;
-		if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+		if (material->GetTexture(textureType, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
 		{
-			std::string fullPath = dirPath + "/" + path.data;
-			m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
+			fullPath = dirPath + "/" + path.data;
+			return (1);
 		}
 		else // TODO load error texture
 			std::cout << "Error while loading texture." << std::endl;
 	}
+	return (0);
+}
+
+void MeshData::MeshEntry::initMaterial(aiScene const * scene, std::string const & dirPath)
+{
+	// Initialize materials
+	assert(m_materialIndex < scene->mNumMaterials);
+	std::string fullPath;
+	aiMaterial const * material = scene->mMaterials[m_materialIndex];
+	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
+		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
+
+	aiString name;
+	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
+	int shadingModel;
+	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
+	std::cout << shadingModel << std::endl; // TODO load shader with this value
 	aiColor3D c;
-	if (pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, c))
+	if (material->Get(AI_MATKEY_COLOR_AMBIENT, c))
 		m_material.ka = Color(c.r, c.g, c.b);
-	if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, c))
+	if (material->Get(AI_MATKEY_COLOR_DIFFUSE, c))
 		m_material.kd = Color(c.r, c.g, c.b);
-	if (pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, c))
+	if (material->Get(AI_MATKEY_COLOR_SPECULAR, c))
 		m_material.ks = Color(c.r, c.g, c.b);
 }
 

@@ -53,6 +53,7 @@ class MeshData
 		MeshEntry & operator=(MeshEntry const & mesh);
 
 		void init(std::vector<Vertex> const & vertices, std::vector<GLuint> const & indices);
+		int getTexture(aiMaterial const * material, aiTextureType textureType, std::string const & dirPath, std::string & fullPath);
 		void initMaterial(aiScene const * scene, std::string const & filename);
 	};
 
