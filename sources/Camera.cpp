@@ -6,7 +6,9 @@
 Camera::Camera(void) :
 	m_originUp(0.f, 1.f, 0.f),
 	m_originDirection(0.f, 0.f, 1.f)
-{ }
+{
+	m_projection.perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
+}
 
 Camera::Camera(Camera const & camera)
 {
@@ -23,6 +25,7 @@ Camera & Camera::operator=(Camera const & camera)
 	m_rotation = camera.m_rotation;
 	m_mousePosition = camera.m_mousePosition;
 	m_view = camera.m_view;
+	m_projection = camera.m_projection;
 	return (*this);
 }
 
@@ -66,7 +69,12 @@ void Camera::setOriginDirection(Vector3 const & originDirection)
 	m_originDirection = originDirection;
 }
 
-Matrix const & Camera::getView(void) const
+Matrix const & Camera::getProjectionMatrix(void) const
+{
+	return (m_projection);
+}
+
+Matrix const & Camera::getViewMatrix(void) const
 {
 	return (m_view);
 }

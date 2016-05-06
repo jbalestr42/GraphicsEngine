@@ -25,7 +25,7 @@ SRC =	main.cpp \
 		Quaternion.cpp \
 		Windows.cpp \
 		Mesh.cpp \
-		MeshData.cpp \
+		Model.cpp \
 		ResourceManager.cpp \
 		Vertex.cpp \
 		Shader.cpp \
@@ -42,10 +42,11 @@ SRC =	main.cpp \
 
 INC =	Matrix.hpp \
 		Transformable.hpp \
+		IDrawable.hpp \
 		Quaternion.hpp \
 		Windows.hpp \
 		Mesh.hpp \
-		MeshData.hpp \
+		Model.hpp \
 		ResourceManager.hpp \
 		Vertex.hpp \
 		Shader.hpp \
@@ -59,6 +60,7 @@ INC =	Matrix.hpp \
 		Light.hpp \
 		DirectionalLight.hpp \
 		Camera.hpp \
+		IView.hpp \
 		Color.hpp
 
 OBJ =	$(SRC:.cpp=.o)

@@ -1,24 +1,32 @@
 #ifndef RESOURCEMANAGER_HPP
 # define RESOURCEMANAGER_HPP
 
-# include "MeshData.hpp"
-# include "Texture.hpp"
 # include <map>
+# include <memory>
+
+class Mesh;
+class Texture;
+class Shader;
 
 class ResourceManager
 {
 public:
-	virtual ~ResourceManager(void);
+	virtual ~ResourceManager(void) = default;
 
 	static ResourceManager & getInstance(void);
-	std::shared_ptr<MeshData> getMeshData(std::string const & name);
+	std::shared_ptr<Mesh> getMesh(std::string const & name);
 	std::shared_ptr<Texture> getTexture(std::string const & name);
+	std::shared_ptr<Shader> getShader(int index);
+
+	void addShader(int index, std::string const & fragment, std::string const & vertex);
 
 private:
-	typedef std::map<std::string, std::shared_ptr<MeshData>>	MeshMap;
+	typedef std::map<std::string, std::shared_ptr<Mesh>>	MeshMap;
 	typedef std::map<std::string, std::shared_ptr<Texture>>	TextureMap;
+	typedef std::map<int, std::shared_ptr<Shader>>			ShaderMap;
 	MeshMap		m_meshes;
 	TextureMap	m_textures;
+	ShaderMap	m_shaders;
 
 	static std::unique_ptr<ResourceManager>	m_instance;
 

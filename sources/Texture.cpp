@@ -48,10 +48,12 @@ Texture::~Texture(void)
 
 Texture & Texture::operator=(Texture const & texture)
 {
+	std::cout << "Operator= texture todo" << std::endl;
 	(void)texture;
 	return (*this);
 }
 
+//TODO replace by a better version wieht name as param
 void Texture::bind(Shader & shader)
 {
 	glActiveTexture(GL_TEXTURE0);
@@ -64,6 +66,11 @@ void Texture::bind(GLenum textureUnit, GLenum textureTarget)
 {
 	glActiveTexture(textureUnit);
 	glBindTexture(textureTarget, m_textureID);
+}
+
+void Texture::unbind(void)
+{
+	glDisable(GL_TEXTURE_2D);
 }
 
 bool Texture::load(void)
