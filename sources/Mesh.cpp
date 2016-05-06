@@ -1,6 +1,7 @@
 #include "Mesh.hpp"
 #include "ResourceManager.hpp"
-#include "Shader.hpp" //TODO remove when it is in resourcemanager
+#include "Texture.hpp"
+#include "Shader.hpp"
 #include "IView.hpp"
 #include "Matrix.hpp"
 #include <iostream>

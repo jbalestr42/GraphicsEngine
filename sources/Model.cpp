@@ -1,5 +1,6 @@
 #include "Model.hpp"
 #include "ResourceManager.hpp"
+#include "Mesh.hpp"
 
 Model::Model(void) :
 	Transformable(),
