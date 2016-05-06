@@ -9,7 +9,8 @@
 #include <iostream>
 #include <cassert>
 
-Shader::Shader(std::string const & fragShader, std::string const & vertShader)
+Shader::Shader(std::string const & fragShader, std::string const & vertShader) :
+	m_isActive(false)
 {
 	init(fragShader, vertShader);
 }
@@ -36,6 +37,7 @@ Shader & Shader::operator=(Shader const & shader)
 	for (std::size_t i = 0u; i < AttributeCount; i++)
 		m_attributes[i] = shader.m_attributes[i];
 	m_params = shader.m_params;
+	m_isActive = shader.m_isActive;
 	return (*this);
 }
 
@@ -151,9 +153,19 @@ void Shader::setParameter(std::string const & name, std::vector<DirectionalLight
 	}
 }
 
+void Shader::setActive(bool active)
+{
+	m_isActive = active;
+}
+
 int Shader::getAttribute(Attribute attribute) const
 {
 	return (m_attributes[attribute]);
+}
+
+bool Shader::isActive(void) const
+{
+	return (m_isActive);
 }
 
 int Shader::getParamIndex(std::string const & name)
