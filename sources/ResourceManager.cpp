@@ -77,9 +77,17 @@ std::shared_ptr<Shader> ResourceManager::getShader(int index)
 {
 	auto it = m_shaders.find(index);
 	if (it != m_shaders.end())
+	{
+		it->second->setActive(true);
 		return it->second;
+	}
 	std::cout << "Shader (" << index << ") not found." << std::endl;
 	return (nullptr);
+}
+
+ResourceManager::ShaderMap & ResourceManager::getAllShaders(void)
+{
+	return (m_shaders);
 }
 
 void ResourceManager::addShader(int index, std::string const & fragment, std::string const & vertex)

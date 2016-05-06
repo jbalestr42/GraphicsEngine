@@ -1,9 +1,8 @@
 #include "Windows.hpp"
 #include "ResourceManager.hpp"
-#include "Shader.hpp"
 #include "Keyboard.hpp"
 #include "Model.hpp"
-#include "DirectionalLight.hpp"
+#include "LightManager.hpp"
 #include "Camera.hpp"
 #include <iostream>
 
@@ -15,11 +14,10 @@ int main(void)
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	win.setView(camera);
 
-	Shader shader("resources/ambientlight.frag" ,"resources/ambientlight.vert");
-	Model model("resources/lego/lego_poeople_obj.obj");
+	LightManager lights;
+	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
 
-	std::vector<DirectionalLight> dirLights;
-	dirLights.emplace_back(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
+	Model model("resources/lego/lego_poeople_obj.obj");
 
 	glfwSetTime(0.f);
 	float lastTime = 0.f;
@@ -42,15 +40,13 @@ int main(void)
 			win.close();
 
 		// Update
+		lights.update();
 		camera->update(dt);
 
 		//model.rotateY(dt * 40.f);
-		//dirLights[0].rotateX(10.f * dt);
-		//dirLights[0].rotateZ(50.f * dt);
-		//dirLights[0].rotateY(-50.f * dt);
-		//shader.setParameter("directional_light_count", dirLights.size());
-		//shader.setParameter("directional_lights", dirLights);
-		//shader.setParameter("directional_lights", dirLights);
+		light.rotateX(10.f * dt);
+		light.rotateZ(50.f * dt);
+		light.rotateY(-50.f * dt);
 
 		while (dt > frameLimit)
 			dt -= frameLimit;

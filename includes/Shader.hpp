@@ -32,6 +32,7 @@ public:
 
 	void bind(void);
 	void unbind(void);
+
 	void setParameter(std::string const & name, std::size_t value);
 	void setParameter(std::string const & name, int value);
 	void setParameter(std::string const & name, float value);
@@ -41,7 +42,11 @@ public:
 	void setParameter(std::string const & name, Matrix const & matrix);
 	void setParameter(std::string const & name, std::size_t index, DirectionalLight & light);
 	void setParameter(std::string const & name, std::vector<DirectionalLight> & lights);
+
+	void setActive(bool active);
+
 	int getAttribute(Attribute attribute) const;
+	bool isActive(void) const;
 
 private:
 	typedef std::map<std::string, int>	ParamMap;
@@ -51,6 +56,7 @@ private:
 	GLint		m_shaders[2];
 	GLint		m_attributes[AttributeCount];
 	ParamMap	m_params;
+	bool		m_isActive;
 
 	int getParamIndex(std::string const & name);
 	void init(std::string const & fragShader, std::string const & vertShader);
