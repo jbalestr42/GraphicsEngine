@@ -3,11 +3,12 @@
 
 # include <memory>
 # include "Transformable.hpp"
+# include "IDrawable.hpp"
 
 class Mesh;
-class Shader;
+class IView;
 
-class Model : public Transformable
+class Model : public Transformable, public IDrawable
 {
 public:
 	Model(void);
@@ -19,7 +20,7 @@ public:
 	Model & operator=(Model const & mesh);
 	Model & operator=(Model && mesh);
 
-	void draw(Shader & shader);
+	void draw(IView const & view);
 	void loadModel(std::string const & filename);
 
 private:

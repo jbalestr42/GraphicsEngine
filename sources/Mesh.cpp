@@ -1,5 +1,8 @@
 #include "Mesh.hpp"
 #include "ResourceManager.hpp"
+#include "Shader.hpp" //TODO remove when it is in resourcemanager
+#include "IView.hpp"
+#include "Matrix.hpp"
 #include <iostream>
 #include <cassert>
 #include <postprocess.h>
@@ -53,15 +56,14 @@ std::string const & Mesh::getFilename(void) const
 	return (m_filename);
 }
 
-void Mesh::draw(void) const
+void Mesh::draw(IView const & view, Matrix const & transform) const
 {
 	for (auto & mesh : m_meshEntries)
-		mesh->draw();
+		mesh->draw(view, transform);
 }
 
 Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath) :
-	m_indiceCount(0u),
-	m_materialIndex(0u)
+	m_indiceCount(0u)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -88,9 +90,8 @@ Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::stri
 	}
 
 	m_indiceCount = mesh->mNumFaces * 3;
-	m_materialIndex = mesh->mMaterialIndex;
+	initMaterial(scene, mesh->mMaterialIndex, dirPath);
 	init(vertices, indices);
-	initMaterial(scene, dirPath);
 }
 
 Mesh::MeshEntry::~MeshEntry(void)
@@ -144,12 +145,12 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 	return (0);
 }
 
-void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::string const & dirPath)
+void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIndex, std::string const & dirPath)
 {
 	// Initialize materials
-	assert(m_materialIndex < scene->mNumMaterials);
+	assert(materialIndex < scene->mNumMaterials);
 	std::string fullPath;
-	aiMaterial const * material = scene->mMaterials[m_materialIndex];
+	aiMaterial const * material = scene->mMaterials[materialIndex];
 	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
 
@@ -158,6 +159,8 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::string const & di
 	int shadingModel;
 	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
 	std::cout << shadingModel << std::endl; // TODO load shader with this value
+	if (shadingModel == 2)
+		m_shader = std::make_shared<Shader>("resources/ambientlight.frag" ,"resources/ambientlight.vert"); //TODO use resourcemanager
 	aiColor3D c;
 	if (material->Get(AI_MATKEY_COLOR_AMBIENT, c))
 		m_material.ka = Color(c.r, c.g, c.b);
@@ -167,9 +170,12 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::string const & di
 		m_material.ks = Color(c.r, c.g, c.b);
 }
 
-
-void Mesh::MeshEntry::draw(void) const
+void Mesh::MeshEntry::draw(IView const & view, Matrix const & transform) const
 {
+	m_shader->setParameter("ProjectionMatrix", view.getProjectionMatrix());
+	m_shader->setParameter("ViewMatrix", view.getViewMatrix());
+	m_shader->setParameter("ModelMatrix", transform);
+	m_shader->setParameter("camera_position", view.getPosition());
 	if (m_material.diffuseTexture)
 		m_material.diffuseTexture->bind(GL_TEXTURE0, GL_TEXTURE_2D);
 	glBindVertexArray(m_vertexArrayObject);

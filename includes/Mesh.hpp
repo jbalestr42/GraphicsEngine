@@ -8,6 +8,9 @@
 # include "Vertex.hpp"
 
 class Texture;
+class Shader;
+class IView;
+class Matrix;
 
 //TODO add them in resources manager ?
 struct Material
@@ -33,7 +36,8 @@ class Mesh
 		virtual ~MeshEntry(void);
 
 		Material const & getMaterial(void) const;
-		void draw(void) const;
+
+		void draw(IView const & view, Matrix const & transform) const;
 
 	private:
 		static const std::size_t IndexCount = 2;
@@ -43,18 +47,18 @@ class Mesh
 			Index = 1
 		};
 
-		GLuint			m_vertexArrayObject;
-		GLuint			m_vertexBufferObject[IndexCount];
-		std::size_t		m_indiceCount;
-		std::size_t		m_materialIndex;
-		Material		m_material;
+		GLuint					m_vertexArrayObject;
+		GLuint					m_vertexBufferObject[IndexCount];
+		std::size_t				m_indiceCount;
+		Material				m_material;
+		std::shared_ptr<Shader>	m_shader;
 
 		MeshEntry(MeshEntry const & mesh);
 		MeshEntry & operator=(MeshEntry const & mesh);
 
 		void init(std::vector<Vertex> const & vertices, std::vector<GLuint> const & indices);
 		int getTexture(aiMaterial const * material, aiTextureType textureType, std::string const & dirPath, std::string & fullPath);
-		void initMaterial(aiScene const * scene, std::string const & filename);
+		void initMaterial(aiScene const * scene, std::size_t materialIndex, std::string const & filename);
 	};
 
 public:
@@ -63,7 +67,7 @@ public:
 	virtual ~Mesh(void) = default;
 
 	std::string const & getFilename(void) const;
-	void draw(void) const;
+	void draw(IView const & view, Matrix const & transform) const;
 
 private:
 	std::string								m_filename;

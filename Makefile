@@ -42,6 +42,7 @@ SRC =	main.cpp \
 
 INC =	Matrix.hpp \
 		Transformable.hpp \
+		IDrawable.hpp \
 		Quaternion.hpp \
 		Windows.hpp \
 		Mesh.hpp \
@@ -59,6 +60,7 @@ INC =	Matrix.hpp \
 		Light.hpp \
 		DirectionalLight.hpp \
 		Camera.hpp \
+		IView.hpp \
 		Color.hpp
 
 OBJ =	$(SRC:.cpp=.o)

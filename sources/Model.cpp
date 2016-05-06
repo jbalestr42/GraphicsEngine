@@ -1,6 +1,5 @@
 #include "Model.hpp"
 #include "ResourceManager.hpp"
-#include "Shader.hpp"
 
 Model::Model(void) :
 	Transformable(),
@@ -26,17 +25,17 @@ Model::Model(Model && mesh) :
 	*this = std::move(mesh);
 }
 
-Model & Model::operator=(Model const & mesh)
+Model & Model::operator=(Model const & model)
 {
-	Transformable::operator=(mesh);
-	m_mesh = mesh.m_mesh;
+	Transformable::operator=(model);
+	m_mesh = model.m_mesh;
 	return (*this);
 }
 
-Model & Model::operator=(Model && mesh)
+Model & Model::operator=(Model && model)
 {
-	Transformable::operator=(std::move(mesh));
-	m_mesh = std::move(mesh.m_mesh);
+	Transformable::operator=(std::move(model));
+	m_mesh = std::move(model.m_mesh);
 	return (*this);
 }
 
@@ -45,10 +44,8 @@ void Model::loadModel(std::string const & filename)
 	m_mesh = ResourceManager::getInstance().getMesh(filename);
 }
 
-void Model::draw(Shader & shader)
+void Model::draw(IView const & view)
 {
-	shader.bind();
-	shader.setParameter("ModelMatrix", getMatrix());
 	if (m_mesh)
-		m_mesh->draw();
+		m_mesh->draw(view, getMatrix());
 }
