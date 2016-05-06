@@ -16,6 +16,7 @@ class Matrix;
 struct Material
 {
 	Material(void) :
+		shininess(2.f),
 		diffuseTexture(nullptr)
 	{}
 

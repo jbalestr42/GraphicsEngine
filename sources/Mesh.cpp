@@ -109,16 +109,33 @@ void Mesh::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector<GLu
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject[VBOIndex::VertexBuffer]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-	//TODO maybe remove color from attribpointer
-	//TODO found a way to use attriblocation from shader, maybe each frame ?
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3)));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2) + sizeof(Vector3)));
+	int posAtt = m_shader->getAttribute(Shader::Attribute::PositionAtt);
+	if (posAtt >= 0)
+	{
+		glEnableVertexAttribArray(posAtt);
+		glVertexAttribPointer(posAtt, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+	}
+
+	int texAtt = m_shader->getAttribute(Shader::Attribute::TexCoordAtt);
+	if (texAtt >= 0)
+	{
+		glEnableVertexAttribArray(texAtt);
+		glVertexAttribPointer(texAtt, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3)));
+	}
+
+	int normalAtt = m_shader->getAttribute(Shader::Attribute::NormalAtt);
+	if (normalAtt >= 0)
+	{
+		glEnableVertexAttribArray(normalAtt);
+		glVertexAttribPointer(normalAtt, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
+	}
+
+	int colAtt = m_shader->getAttribute(Shader::Attribute::ColorAtt);
+	if (colAtt >= 0)
+	{
+		glEnableVertexAttribArray(colAtt);
+		glVertexAttribPointer(colAtt, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2) + sizeof(Vector3)));
+	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexBufferObject[VBOIndex::Index]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -133,39 +150,46 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 {
 	if (material->GetTextureCount(textureType) > 0)
 	{
-		//TODO get all textures and store them per MeshEntry ?
+		//TODO get all textures
 		aiString path;
 		if (material->GetTexture(textureType, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
 		{
 			fullPath = dirPath + "/" + path.data;
 			return (1);
 		}
-		else // TODO load error texture
-			std::cout << "Error while loading texture." << std::endl;
+		else
+		{
+			std::cout << "Error while loading texture : Error texture used instead." << std::endl;
+			fullPath = dirPath + "/" + "error.jpg";
+			return (1);
+		}
 	}
 	return (0);
 }
 
 void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIndex, std::string const & dirPath)
 {
-	// Initialize materials
 	assert(materialIndex < scene->mNumMaterials);
+
 	std::string fullPath;
 	aiMaterial const * material = scene->mMaterials[materialIndex];
 	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
+	//TODO get other texture (specular normal ...)
+
+	int shadingModel;
+	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
+	m_shader = ResourceManager::getInstance().getShader(shadingModel);
 
 	aiString name;
 	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
-	int shadingModel;
-	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
-		m_shader = ResourceManager::getInstance().getShader(shadingModel);
-	aiColor3D c;
-	if (material->Get(AI_MATKEY_COLOR_AMBIENT, c))
+
+	aiColor3D c(0.f, 0.f, 0.f);
+	if (material->Get(AI_MATKEY_COLOR_AMBIENT, c) != -1)
 		m_material.ka = Color(c.r, c.g, c.b);
-	if (material->Get(AI_MATKEY_COLOR_DIFFUSE, c))
+	if (material->Get(AI_MATKEY_COLOR_DIFFUSE, c) != -1)
 		m_material.kd = Color(c.r, c.g, c.b);
-	if (material->Get(AI_MATKEY_COLOR_SPECULAR, c))
+	if (material->Get(AI_MATKEY_COLOR_SPECULAR, c) != -1)
 		m_material.ks = Color(c.r, c.g, c.b);
 }
 

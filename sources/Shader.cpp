@@ -193,7 +193,6 @@ void Shader::init(std::string const & fragShader, std::string const & vertShader
 	m_attributes[Attribute::TexCoordAtt] = glGetAttribLocation(m_program, "TexCoord");
 	m_attributes[Attribute::NormalAtt] = glGetAttribLocation(m_program, "Normal");
 	m_attributes[Attribute::ColorAtt] = glGetAttribLocation(m_program, "Color");
-	// TODO add accessor to get good uniform location
 }
 
 std::string Shader::readShader(std::string const & fileName)
