@@ -21,6 +21,7 @@ public:
 	float getDiffuseIntensity(void) const;
 
 private:
+	//TODO move in Light
 	Vector3	m_direction;
 	float	m_ambientIntensity;
 	float	m_diffuseIntensity;

@@ -7,6 +7,7 @@ std::unique_ptr<ResourceManager> ResourceManager::m_instance = nullptr;
 
 ResourceManager::ResourceManager(void)
 {
+	// Initialize texture library
 	ilInit();
 
 	//TODO all other shaders
@@ -43,19 +44,6 @@ ResourceManager::ResourceManager(void)
 	//	Fresnel shading.
 }
 
-ResourceManager::ResourceManager(ResourceManager const & meshManager)
-{
-	*this = meshManager;
-}
-
-ResourceManager::~ResourceManager(void) { }
-
-ResourceManager & ResourceManager::operator=(ResourceManager const & meshManager)
-{
-	(void)meshManager;
-	return (*this);
-}
-
 ResourceManager & ResourceManager::getInstance(void)
 {
 	if (m_instance == nullptr)
@@ -90,11 +78,12 @@ std::shared_ptr<Shader> ResourceManager::getShader(int index)
 	auto it = m_shaders.find(index);
 	if (it != m_shaders.end())
 		return it->second;
+	std::cout << "Shader (" << index << ") not found." << std::endl;
 	return (nullptr);
 }
 
 void ResourceManager::addShader(int index, std::string const & fragment, std::string const & vertex)
 {
-	std::cout << "Add new shader : " << fragment << " - " << vertex << std::endl;
+	std::cout << "Add new shader (" << index << ") : " << fragment << " - " << vertex << std::endl;
 	m_shaders[index] = std::make_shared<Shader>(fragment, vertex);
 }

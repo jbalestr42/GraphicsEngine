@@ -159,9 +159,7 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
 	int shadingModel;
 	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
-	std::cout << shadingModel << std::endl; // TODO load shader with this value
-	if (shadingModel == 2)
-		m_shader = std::make_shared<Shader>("resources/ambientlight.frag" ,"resources/ambientlight.vert"); //TODO use resourcemanager
+		m_shader = ResourceManager::getInstance().getShader(shadingModel);
 	aiColor3D c;
 	if (material->Get(AI_MATKEY_COLOR_AMBIENT, c))
 		m_material.ka = Color(c.r, c.g, c.b);

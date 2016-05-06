@@ -11,7 +11,7 @@ class Shader;
 class ResourceManager
 {
 public:
-	virtual ~ResourceManager(void);
+	virtual ~ResourceManager(void) = default;
 
 	static ResourceManager & getInstance(void);
 	std::shared_ptr<Mesh> getMesh(std::string const & name);
