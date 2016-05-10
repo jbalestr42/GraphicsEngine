@@ -19,14 +19,8 @@ public:
 	std::size_t getHeight(void) const;
 	std::size_t getWidth(void) const;
 
-	void bind(Shader & shader);
 	void bind(GLenum textureUnit, GLenum textureTarget);
-	void unbind(void);
 	bool load(void);
-
-protected:
-	Texture(Texture const & texture);
-	Texture & operator=(Texture const & texture);
 
 private:
 	GLuint			m_textureID;
@@ -35,6 +29,8 @@ private:
 	ILuint			m_id;
 
 	Texture(void) = delete;
+	Texture(Texture const & texture);
+	Texture & operator=(Texture const & texture);
 
 };
 

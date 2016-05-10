@@ -4,6 +4,7 @@
 #include "Color.hpp"
 #include "Matrix.hpp"
 #include "DirectionalLight.hpp"
+#include "Material.hpp"
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -128,13 +129,26 @@ void Shader::setParameter(std::string const & name, Matrix const & matrix)
 	}
 }
 
+void Shader::setParameter(std::string const & name, Material const & material)
+{
+	if (m_program)
+	{
+		setParameter(name + ".ka", material.ka);
+		setParameter(name + ".kd", material.kd);
+		setParameter(name + ".ks", material.ks);
+		setParameter(name + ".shininess", material.shininess);
+		setParameter(name + ".diffuse_tex", GL_TEXTURE0);
+		setParameter(name + ".specular_tex", GL_TEXTURE1);
+	}
+}
+
 void Shader::setParameter(std::string const & name, std::size_t index, DirectionalLight & light)
 {
 	if (m_program)
 	{
-		glUseProgram(m_program);
 		std::ostringstream s;
 		s << name << "[" << index << "].";
+		//TODO dont use setParameter, use glUniform instead
 		setParameter(s.str() + "color", light.getColor());
 		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
@@ -193,7 +207,6 @@ void Shader::init(std::string const & fragShader, std::string const & vertShader
 	m_attributes[Attribute::TexCoordAtt] = glGetAttribLocation(m_program, "TexCoord");
 	m_attributes[Attribute::NormalAtt] = glGetAttribLocation(m_program, "Normal");
 	m_attributes[Attribute::ColorAtt] = glGetAttribLocation(m_program, "Color");
-	// TODO add accessor to get good uniform location
 }
 
 std::string Shader::readShader(std::string const & fileName)

@@ -17,7 +17,7 @@ int main(void)
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
 
-	Model model("resources/lego/lego_poeople_obj.obj");
+	Model model("resources/Trex/TrexByJoel3d.fbx");
 
 	glfwSetTime(0.f);
 	float lastTime = 0.f;

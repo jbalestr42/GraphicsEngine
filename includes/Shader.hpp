@@ -11,6 +11,7 @@ class Vector3;
 class Color;
 class Matrix;
 class DirectionalLight;
+class Material;
 
 class Shader
 {
@@ -40,6 +41,7 @@ public:
 	void setParameter(std::string const & name, Vector3 const & vector);
 	void setParameter(std::string const & name, Color const & color);
 	void setParameter(std::string const & name, Matrix const & matrix);
+	void setParameter(std::string const & name, Material const & material);
 	void setParameter(std::string const & name, std::size_t index, DirectionalLight & light);
 	void setParameter(std::string const & name, std::vector<DirectionalLight> & lights);
 
