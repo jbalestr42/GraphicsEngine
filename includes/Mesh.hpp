@@ -6,26 +6,12 @@
 # include <memory>
 # include <scene.h>
 # include "Vertex.hpp"
+# include "Material.hpp" // TODO put MAterial in Resource Manager and use shared_ptr
 
 class Texture;
 class Shader;
 class IView;
 class Matrix;
-
-//TODO add them in resources manager ?
-struct Material
-{
-	Material(void) :
-		shininess(2.f),
-		diffuseTexture(nullptr)
-	{}
-
-	Color						ka;
-	Color						kd;
-	Color						ks;
-	float						shininess;
-	std::shared_ptr<Texture>	diffuseTexture;
-};
 
 class Mesh
 {

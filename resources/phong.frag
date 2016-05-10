@@ -22,19 +22,21 @@ uniform uint directional_light_count;
 
 struct Material
 {
-	float	specular_intensity;
-	float	specular_power;
+	// Alpha channel determines whether there is a texture or not
+	vec4		ka;
+	vec4		kd;
+	vec4		ks;
+	float		shininess;
+	sampler2D	diffuse_tex;
+	sampler2D	specular_tex;
 };
 
-uniform sampler2D sampler;
 uniform vec3 camera_position;
 
-Material mat;
+uniform Material material;
 
 void main(void)
 {
-	mat.specular_intensity = 1.0;
-	mat.specular_power = 32.0;
 	FragColor = vec4(0.0);
 	vec3 normal = normalize(Normal0);
 
@@ -43,16 +45,17 @@ void main(void)
 		vec3 light_direction = -directional_lights[i].direction;
 
 		// Ambient
-		vec3 ambient_color = directional_lights[i].ambient_intensity * directional_lights[i].color.rgb;
+		vec3 ambient_color = directional_lights[i].ambient_intensity * material.ka.rgb * directional_lights[i].color.rgb;
 
 		// Diffuse
 		float diffuse_factor = max(0.0, dot(normal, light_direction));
-		vec3 diffuse_color = diffuse_factor * directional_lights[i].diffuse_intensity * directional_lights[i].color.rgb;
+		vec3 diffuse_color = diffuse_factor * directional_lights[i].diffuse_intensity * mix(material.kd.rgb, texture2D(material.diffuse_tex, TexCoord0.xy).rgb, material.kd.a) * directional_lights[i].color.rgb;
 
 		// Specular
-		float specular_factor = ceil(diffuse_factor) * pow(max(0.0, dot(normalize(camera_position - WorldPos0), normalize(reflect(directional_lights[i].direction, normal)))), mat.specular_power);
-		vec3 specular_color =  specular_factor * mat.specular_intensity * directional_lights[i].color.rgb;
+		float specular_factor = ceil(diffuse_factor) * pow(max(0.0, dot(normalize(camera_position - WorldPos0), normalize(reflect(directional_lights[i].direction, normal)))), material.shininess);
+		vec3 specular_color =  specular_factor * mix(material.ks.rgb, texture2D(material.specular_tex, TexCoord0.xy).rgb, material.ks.a) * directional_lights[i].color.rgb;
 
-		FragColor += texture2D(sampler, TexCoord0.xy) * vec4(ambient_color + diffuse_color + specular_color, 1.0);
+		FragColor += vec4(ambient_color + diffuse_color + specular_color, 1.0);
 	}
+	//Ambientsum /= LIGHTCOUNT ?
 }

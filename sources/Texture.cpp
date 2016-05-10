@@ -53,24 +53,10 @@ Texture & Texture::operator=(Texture const & texture)
 	return (*this);
 }
 
-//TODO replace by a better version wieht name as param
-void Texture::bind(Shader & shader)
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_textureID);
-	//TODO find a way to get the right parameter
-	shader.setParameter("sampler", 0);
-}
-
 void Texture::bind(GLenum textureUnit, GLenum textureTarget)
 {
 	glActiveTexture(textureUnit);
 	glBindTexture(textureTarget, m_textureID);
-}
-
-void Texture::unbind(void)
-{
-	glDisable(GL_TEXTURE_2D);
 }
 
 bool Texture::load(void)

@@ -82,6 +82,7 @@ void Windows::init(void)
 	resizeCallback(m_window, m_width, m_height);
 	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_BLEND);

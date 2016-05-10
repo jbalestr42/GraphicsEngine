@@ -175,11 +175,14 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 	aiMaterial const * material = scene->mMaterials[materialIndex];
 	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
-	//TODO get other texture (specular normal ...)
+	if (getTexture(material, aiTextureType_SPECULAR, dirPath, fullPath))
+		m_material.specularTexture = ResourceManager::getInstance().getTexture(fullPath);
 
 	int shadingModel;
 	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
-	m_shader = ResourceManager::getInstance().getShader(shadingModel);
+	// TODO add check to avoid index out of bound
+	//m_shader = ResourceManager::getInstance().getShader(shadingModel);
+	m_shader = ResourceManager::getInstance().getShader(2);
 
 	aiString name;
 	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
@@ -191,16 +194,30 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 		m_material.kd = Color(c.r, c.g, c.b);
 	if (material->Get(AI_MATKEY_COLOR_SPECULAR, c) != -1)
 		m_material.ks = Color(c.r, c.g, c.b);
+	float shininess = 0.f;
+	if (material->Get(AI_MATKEY_SHININESS, shininess) != -1 && shininess > 0.f)
+		m_material.shininess = shininess;
+	m_material.kd.a = m_material.diffuseTexture ? 1.f : 0.f;
+	m_material.ks.a = m_material.specularTexture ? 1.f : 0.f;
 }
 
 void Mesh::MeshEntry::draw(IView const & view, Matrix const & transform) const
 {
+	//TODO use the view from window to get used shader and only update the modified data
+	// Set shader parameters
 	m_shader->setParameter("ProjectionMatrix", view.getProjectionMatrix());
 	m_shader->setParameter("ViewMatrix", view.getViewMatrix());
 	m_shader->setParameter("ModelMatrix", transform);
 	m_shader->setParameter("camera_position", view.getPosition());
+	m_shader->setParameter("material", m_material);
+
+	// Bind textures
 	if (m_material.diffuseTexture)
 		m_material.diffuseTexture->bind(GL_TEXTURE0, GL_TEXTURE_2D);
+	if (m_material.specularTexture)
+		m_material.specularTexture->bind(GL_TEXTURE1, GL_TEXTURE_2D);
+
+	// Draw
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_indiceCount, GL_UNSIGNED_INT, (GLvoid*)0);
 	glBindVertexArray(0);
