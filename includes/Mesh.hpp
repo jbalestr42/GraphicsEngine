@@ -6,7 +6,7 @@
 # include <memory>
 # include <scene.h>
 # include "Vertex.hpp"
-# include "Material.hpp" // TODO put MAterial in Resource Manager and use shared_ptr
+# include "Material.hpp"
 
 class Texture;
 class Shader;

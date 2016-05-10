@@ -135,9 +135,6 @@ Matrix const & Transformable::getMatrix(void)
 		m_model.translate(m_origin);
 		m_model.scale(m_scale);
 		m_model.rotate(m_rotation, m_eulerOrder);
-		//TODO Quaternion modelRot;
-		//modelRot.fromEuler(m_rotation);
-		//m_model.multiply(modelRot.toMatrix());
 		m_model.translate(m_position);
 		m_needRecompute = false;
 	}

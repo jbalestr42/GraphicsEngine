@@ -124,9 +124,8 @@ Matrix & Matrix::rotate(Vector3 const & vector, EulerOrder order)
 	return multiply(rotation);
 }
 
-Matrix Matrix::eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order)
+Matrix & Matrix::eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order)
 {
-	Matrix	result;
 	float sinX = std::sin(Deg2Rad * angles.x);
 	float sinY = std::sin(Deg2Rad * angles.y);
 	float sinZ = std::sin(Deg2Rad * angles.z);
@@ -137,73 +136,73 @@ Matrix Matrix::eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order)
 	switch (order)
 	{
 		case XYZ:
-			result.m_matrix[0] = cosY * cosZ;
-			result.m_matrix[1] = -cosY * sinZ;
-			result.m_matrix[2] = sinY;
-			result.m_matrix[4] = cosZ * sinX * sinY + cosX * sinZ;
-			result.m_matrix[5] = cosX * cosZ - sinX * sinY * sinZ;
-			result.m_matrix[6] = -cosY * sinX;
-			result.m_matrix[8] = -cosX * cosZ * sinY + sinX * sinZ;
-			result.m_matrix[9] = cosZ * sinX + cosX * sinY * sinZ;
-			result.m_matrix[10] = cosX * cosY;
+			m_matrix[0] = cosY * cosZ;
+			m_matrix[1] = -cosY * sinZ;
+			m_matrix[2] = sinY;
+			m_matrix[4] = cosZ * sinX * sinY + cosX * sinZ;
+			m_matrix[5] = cosX * cosZ - sinX * sinY * sinZ;
+			m_matrix[6] = -cosY * sinX;
+			m_matrix[8] = -cosX * cosZ * sinY + sinX * sinZ;
+			m_matrix[9] = cosZ * sinX + cosX * sinY * sinZ;
+			m_matrix[10] = cosX * cosY;
 			break;
 		case YZX:
-			result.m_matrix[0] = cosY * cosZ;
-			result.m_matrix[1] = sinX * sinY - cosX * cosY * sinZ;
-			result.m_matrix[2] = cosX * sinY + cosY * sinX * sinZ;
-			result.m_matrix[4] = sinZ;
-			result.m_matrix[5] = cosX * cosZ;
-			result.m_matrix[6] = -cosZ * sinX;
-			result.m_matrix[8] = -cosZ * sinY;
-			result.m_matrix[9] = cosY * sinX + cosX * sinY * sinZ;
-			result.m_matrix[10] = cosX * cosY - sinX * sinY * sinZ;
+			m_matrix[0] = cosY * cosZ;
+			m_matrix[1] = sinX * sinY - cosX * cosY * sinZ;
+			m_matrix[2] = cosX * sinY + cosY * sinX * sinZ;
+			m_matrix[4] = sinZ;
+			m_matrix[5] = cosX * cosZ;
+			m_matrix[6] = -cosZ * sinX;
+			m_matrix[8] = -cosZ * sinY;
+			m_matrix[9] = cosY * sinX + cosX * sinY * sinZ;
+			m_matrix[10] = cosX * cosY - sinX * sinY * sinZ;
 			break;
 		case ZXY:
-			result.m_matrix[0] = cosY * cosZ - sinX * sinY * sinZ;
-			result.m_matrix[1] = -cosX * sinZ;
-			result.m_matrix[2] = cosZ * sinY + cosY * sinX * sinZ;
-			result.m_matrix[4] = cosZ * sinX * sinY + cosY * sinZ;
-			result.m_matrix[5] = cosX * cosZ;
-			result.m_matrix[6] = -cosY * cosZ * sinX + sinY * sinZ;
-			result.m_matrix[8] = -cosX * sinY;
-			result.m_matrix[9] = sinX;
-			result.m_matrix[10] = cosX * cosY;
+			m_matrix[0] = cosY * cosZ - sinX * sinY * sinZ;
+			m_matrix[1] = -cosX * sinZ;
+			m_matrix[2] = cosZ * sinY + cosY * sinX * sinZ;
+			m_matrix[4] = cosZ * sinX * sinY + cosY * sinZ;
+			m_matrix[5] = cosX * cosZ;
+			m_matrix[6] = -cosY * cosZ * sinX + sinY * sinZ;
+			m_matrix[8] = -cosX * sinY;
+			m_matrix[9] = sinX;
+			m_matrix[10] = cosX * cosY;
 			break;
 		case ZYX:
-			result.m_matrix[0] = cosY * cosZ;
-			result.m_matrix[1] = cosZ * sinX * sinY - cosX * sinZ;
-			result.m_matrix[2] = cosX * cosZ * sinY + sinX * sinZ;
-			result.m_matrix[4] = cosY * sinZ;
-			result.m_matrix[5] = cosX * cosZ + sinX * sinY * sinZ;
-			result.m_matrix[6] = -cosZ * sinX + cosX * sinY * sinZ;
-			result.m_matrix[8] = -sinY;
-			result.m_matrix[9] = cosY * sinX;
-			result.m_matrix[10] = cosX * cosY;
+			m_matrix[0] = cosY * cosZ;
+			m_matrix[1] = cosZ * sinX * sinY - cosX * sinZ;
+			m_matrix[2] = cosX * cosZ * sinY + sinX * sinZ;
+			m_matrix[4] = cosY * sinZ;
+			m_matrix[5] = cosX * cosZ + sinX * sinY * sinZ;
+			m_matrix[6] = -cosZ * sinX + cosX * sinY * sinZ;
+			m_matrix[8] = -sinY;
+			m_matrix[9] = cosY * sinX;
+			m_matrix[10] = cosX * cosY;
 			break;
 		case YXZ:
-			result.m_matrix[0] = cosY * cosZ + sinX * sinY * sinZ;
-			result.m_matrix[1] = cosZ * sinX * sinY - cosY * sinZ;
-			result.m_matrix[2] = cosX * sinY;
-			result.m_matrix[4] = cosX * sinZ;
-			result.m_matrix[5] = cosX * cosZ;
-			result.m_matrix[6] = -sinX;
-			result.m_matrix[8] = -cosZ * sinY + cosY * sinX * sinZ;
-			result.m_matrix[9] = cosY * cosZ * sinX + sinY * sinZ;
-			result.m_matrix[10] = cosX * cosY;
+			m_matrix[0] = cosY * cosZ + sinX * sinY * sinZ;
+			m_matrix[1] = cosZ * sinX * sinY - cosY * sinZ;
+			m_matrix[2] = cosX * sinY;
+			m_matrix[4] = cosX * sinZ;
+			m_matrix[5] = cosX * cosZ;
+			m_matrix[6] = -sinX;
+			m_matrix[8] = -cosZ * sinY + cosY * sinX * sinZ;
+			m_matrix[9] = cosY * cosZ * sinX + sinY * sinZ;
+			m_matrix[10] = cosX * cosY;
 			break;
 		case XZY:
-			result.m_matrix[0] = cosY * cosZ;
-			result.m_matrix[1] = -sinZ;
-			result.m_matrix[2] = cosZ * sinY;
-			result.m_matrix[4] = sinX * sinY + cosX * cosY * sinZ;
-			result.m_matrix[5] = cosX * cosZ;
-			result.m_matrix[6] = -cosY * sinX + cosX * sinY * sinZ;
-			result.m_matrix[8] = -cosX * sinY + cosY * sinX * sinZ;
-			result.m_matrix[9] = cosZ * sinX;
-			result.m_matrix[10] = cosX * cosY + sinX * sinY * sinZ;
+			m_matrix[0] = cosY * cosZ;
+			m_matrix[1] = -sinZ;
+			m_matrix[2] = cosZ * sinY;
+			m_matrix[4] = sinX * sinY + cosX * cosY * sinZ;
+			m_matrix[5] = cosX * cosZ;
+			m_matrix[6] = -cosY * sinX + cosX * sinY * sinZ;
+			m_matrix[8] = -cosX * sinY + cosY * sinX * sinZ;
+			m_matrix[9] = cosZ * sinX;
+			m_matrix[10] = cosX * cosY + sinX * sinY * sinZ;
 			break;
 	}
-	return (result);
+	return (*this);
 }
 
 Matrix & Matrix::translate(Vector3 const & vector)

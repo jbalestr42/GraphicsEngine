@@ -31,8 +31,6 @@ public:
 	float & operator[](int index);
 	Matrix operator*(Matrix const & matrix) const;
 
-	//TODO Interpolation between matrices
-	////transpose
 	Matrix & multiply(Matrix const & matrix);
 	Matrix & rotateX(float angle);
 	Matrix & rotateY(float angle);
@@ -40,8 +38,7 @@ public:
 	Matrix & rotate(Vector3 const & vector, EulerOrder order = XYZ);
 	Matrix & translate(Vector3 const & vector);
 	Matrix & scale(Vector3 const & vector);
-	// change to return Matrix &
-	Matrix eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order = XYZ);
+	Matrix & eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order = XYZ);
 
 	Matrix inverse(void) const;
 	float determinant(void) const;
