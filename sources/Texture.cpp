@@ -34,23 +34,11 @@ Texture::Texture(std::string const & filename) :
 	ilBindImage(0);
 }
 
-Texture::Texture(Texture const & texture)
-{
-	*this = texture;
-}
-
 Texture::~Texture(void)
 {
 	glDeleteTextures(1, &m_textureID);
 	ilDeleteImage(m_id);
 	ilBindImage(0);
-}
-
-Texture & Texture::operator=(Texture const & texture)
-{
-	std::cout << "Operator= texture todo" << std::endl;
-	(void)texture;
-	return (*this);
 }
 
 void Texture::bind(GLenum textureUnit, GLenum textureTarget)

@@ -22,10 +22,6 @@ public:
 	void bind(GLenum textureUnit, GLenum textureTarget);
 	bool load(void);
 
-protected:
-	Texture(Texture const & texture);
-	Texture & operator=(Texture const & texture);
-
 private:
 	GLuint			m_textureID;
 	std::size_t		m_width;
@@ -33,6 +29,8 @@ private:
 	ILuint			m_id;
 
 	Texture(void) = delete;
+	Texture(Texture const & texture);
+	Texture & operator=(Texture const & texture);
 
 };
 
