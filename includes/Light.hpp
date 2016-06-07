@@ -16,15 +16,12 @@ public:
 
 	Color const & getColor(void) const;
 	void setAmbientIntensity(float ambientIntensity);
-	void setDiffuseIntensity(float diffuseIntensity);
 	float getAmbientIntensity(void) const;
-	float getDiffuseIntensity(void) const;
 	//TODO isActive
 
 private:
 	Color		m_color;
 	float		m_ambientIntensity;
-	float		m_diffuseIntensity;
 
 };
 

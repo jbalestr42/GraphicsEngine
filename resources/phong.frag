@@ -15,7 +15,6 @@ struct DirectionalLight
 	vec4	color;
 	vec3	direction;
 	float	ambient_intensity;
-	float	diffuse_intensity;
 };
 
 struct PointLight
@@ -23,7 +22,6 @@ struct PointLight
 	vec3	position;
 	vec4	color;
 	float	ambient_intensity;
-	float	diffuse_intensity;
 	float	constant_attenuation;
 	float	linear_attenuation;
 	float	quadratic_attenuation;
@@ -48,7 +46,7 @@ struct Material
 uniform vec3 camera_position;
 uniform Material material;
 
-vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir, float ambient_intensity, float diffuse_intensity)
+vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir, float ambient_intensity)
 {
 	light_dir = normalize(light_dir);
 	// Diffuse shading
@@ -58,7 +56,7 @@ vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir,
 	float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
 	// Combine results
 	vec3 ambient = light_color.rgb * ambient_intensity * texture2D(material.diffuse_tex, TexCoord0).rgb;
-	vec3 diffuse = light_color.rgb * diffuse_intensity * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
+	vec3 diffuse = light_color.rgb * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
 	vec3 specular = spec * texture2D(material.specular_tex, TexCoord0).rgb;
 	return (ambient + diffuse + specular);
 }
@@ -70,13 +68,13 @@ void main(void)
 	vec3 view_dir = normalize(camera_position - WorldPos0);
 
 	for (uint i = 0; i < directional_light_count; i++)
-		result += compute_light(directional_lights[i].color, -directional_lights[i].direction, normal, view_dir, directional_lights[i].ambient_intensity, directional_lights[i].diffuse_intensity);
+		result += compute_light(directional_lights[i].color, -directional_lights[i].direction, normal, view_dir, directional_lights[i].ambient_intensity);
 	for (uint i = 0; i < point_light_count; i++)
 	{
 		// Attenuation
 		float distance = length(point_lights[i].position - WorldPos0);
 		float attenuation = 1.0f / (point_lights[i].constant_attenuation + point_lights[i].linear_attenuation * distance + point_lights[i].quadratic_attenuation * distance * distance);
-		result += compute_light(point_lights[i].color, point_lights[i].position - WorldPos0, normal, view_dir, point_lights[i].ambient_intensity, point_lights[i].diffuse_intensity) * attenuation;
+		result += compute_light(point_lights[i].color, point_lights[i].position - WorldPos0, normal, view_dir, point_lights[i].ambient_intensity) * attenuation;
 	}
 	FragColor = vec4(result, 1.0);
 }

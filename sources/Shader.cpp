@@ -152,7 +152,6 @@ void Shader::setParameter(std::string const & name, std::size_t index, Direction
 		setParameter(s.str() + "color", light.getColor());
 		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
-		setParameter(s.str() + "diffuse_intensity", light.getDiffuseIntensity());
 	}
 }
 
@@ -168,7 +167,6 @@ void Shader::setParameter(std::string const & name, std::size_t index, PointLigh
 		setParameter(s.str() + "linear_attenuation", light.getLinearAttenuation());
 		setParameter(s.str() + "quadratic_attenuation", light.getQuadraticAttenuation());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
-		setParameter(s.str() + "diffuse_intensity", light.getDiffuseIntensity());
 	}
 }
 
