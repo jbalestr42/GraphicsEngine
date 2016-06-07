@@ -22,7 +22,6 @@ uniform uint directional_light_count;
 
 struct Material
 {
-	// Alpha channel determines whether there is a texture or not
 	vec4		ka;
 	vec4		kd;
 	vec4		ks;
@@ -32,30 +31,29 @@ struct Material
 };
 
 uniform vec3 camera_position;
-
 uniform Material material;
+
+vec3 compute_directional_light(DirectionalLight light, vec3 normal, vec3 view_dir)
+{
+	vec3 light_dir = normalize(-light.direction);
+	// Diffuse shading
+	float lambertian = max(dot(normal, light_dir), 0.0);
+	// Specular shading
+	vec3 reflect_dir = reflect(light_dir, normal);
+	float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+	// Combine results
+	vec3 ambient = light.color.rgb * light.ambient_intensity * texture2D(material.diffuse_tex, TexCoord0).rgb;
+	vec3 diffuse = light.color.rgb * light.diffuse_intensity * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
+	vec3 specular = spec * texture2D(material.specular_tex, TexCoord0).rgb;
+	return (ambient + diffuse + specular);
+}
 
 void main(void)
 {
 	FragColor = vec4(0.0);
 	vec3 normal = normalize(Normal0);
+	vec3 view_dir = normalize(camera_position - WorldPos0);
 
 	for (uint i = 0; i < directional_light_count; i++)
-	{
-		vec3 light_direction = -directional_lights[i].direction;
-
-		// Ambient
-		vec3 ambient_color = directional_lights[i].ambient_intensity * material.ka.rgb * directional_lights[i].color.rgb;
-
-		// Diffuse
-		float diffuse_factor = max(0.0, dot(normal, light_direction));
-		vec3 diffuse_color = diffuse_factor * directional_lights[i].diffuse_intensity * mix(material.kd.rgb, texture2D(material.diffuse_tex, TexCoord0.xy).rgb, material.kd.a) * directional_lights[i].color.rgb;
-
-		// Specular
-		float specular_factor = ceil(diffuse_factor) * pow(max(0.0, dot(normalize(camera_position - WorldPos0), normalize(reflect(directional_lights[i].direction, normal)))), material.shininess);
-		vec3 specular_color =  specular_factor * mix(material.ks.rgb, texture2D(material.specular_tex, TexCoord0.xy).rgb, material.ks.a) * directional_lights[i].color.rgb;
-
-		FragColor += vec4(ambient_color + diffuse_color + specular_color, 1.0);
-	}
-	//Ambientsum /= LIGHTCOUNT ?
+		FragColor += vec4(compute_directional_light(directional_lights[i], normal, view_dir), 1.0);
 }

@@ -15,7 +15,11 @@ int main(void)
 	win.setView(camera);
 
 	LightManager lights;
-	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
+	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f), 0.2f, 1.f);
+	DirectionalLight & light2 = lights.createDirectionalLight(Color(0.2f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
+	light.rotateY(40.f);
+	light2.rotateY(40.f);
+	light2.rotateZ(40.f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
 
@@ -43,10 +47,10 @@ int main(void)
 		lights.update();
 		camera->update(dt);
 
-		//model.rotateY(dt * 40.f);
-		light.rotateX(10.f * dt);
-		light.rotateZ(50.f * dt);
-		light.rotateY(-50.f * dt);
+		model.rotateY(dt * 40.f);
+		//light.rotateX(10.f * dt);
+		//light.rotateZ(50.f * dt);
+		//light.rotateY(-50.f * dt);
 
 		while (dt > frameLimit)
 			dt -= frameLimit;
