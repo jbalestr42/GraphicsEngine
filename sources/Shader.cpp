@@ -4,6 +4,7 @@
 #include "Color.hpp"
 #include "Matrix.hpp"
 #include "DirectionalLight.hpp"
+#include "PointLight.hpp"
 #include "Material.hpp"
 #include <sstream>
 #include <fstream>
@@ -148,11 +149,24 @@ void Shader::setParameter(std::string const & name, std::size_t index, Direction
 	{
 		std::ostringstream s;
 		s << name << "[" << index << "].";
-		//TODO dont use setParameter, use glUniform instead
 		setParameter(s.str() + "color", light.getColor());
 		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
-		setParameter(s.str() + "diffuse_intensity", light.getDiffuseIntensity());
+	}
+}
+
+void Shader::setParameter(std::string const & name, std::size_t index, PointLight & light)
+{
+	if (m_program)
+	{
+		std::ostringstream s;
+		s << name << "[" << index << "].";
+		setParameter(s.str() + "color", light.getColor());
+		setParameter(s.str() + "position", light.getPosition());
+		setParameter(s.str() + "constant_attenuation", light.getConstantAttenuation());
+		setParameter(s.str() + "linear_attenuation", light.getLinearAttenuation());
+		setParameter(s.str() + "quadratic_attenuation", light.getQuadraticAttenuation());
+		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
 	}
 }
 
@@ -162,6 +176,17 @@ void Shader::setParameter(std::string const & name, std::vector<DirectionalLight
 	{
 		glUseProgram(m_program);
 		assert(lights.size() <= DirectionalLight::MaxLight);
+		for (std::size_t i = 0u; i < lights.size(); i++)
+			setParameter(name, i, lights[i]);
+	}
+}
+
+void Shader::setParameter(std::string const & name, std::vector<PointLight> & lights)
+{
+	if (m_program)
+	{
+		glUseProgram(m_program);
+		assert(lights.size() <= PointLight::MaxLight);
 		for (std::size_t i = 0u; i < lights.size(); i++)
 			setParameter(name, i, lights[i]);
 	}

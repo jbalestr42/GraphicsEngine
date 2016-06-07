@@ -1,14 +1,12 @@
 #include "DirectionalLight.hpp"
 
 DirectionalLight::DirectionalLight(void) :
-	DirectionalLight(Color(), 1.f, 1.f)
+	DirectionalLight(Color())
 { }
 
-DirectionalLight::DirectionalLight(Color const & color, float ambientIntensity, float diffuseIntensity) :
+DirectionalLight::DirectionalLight(Color const & color) :
 	Light(color),
-	m_direction({0.f, 0.f, 1.f}),
-	m_ambientIntensity(ambientIntensity),
-	m_diffuseIntensity(diffuseIntensity)
+	m_direction({0.f, 0.f, 1.f})
 {}
 
 DirectionalLight::DirectionalLight(DirectionalLight const & directionnalLight) :
@@ -21,8 +19,6 @@ DirectionalLight & DirectionalLight::operator=(DirectionalLight const & directio
 {
 	Light::operator=(directionnalLight);
 	m_direction = directionnalLight.m_direction;
-	m_ambientIntensity = directionnalLight.m_ambientIntensity;
-	m_diffuseIntensity = directionnalLight.m_diffuseIntensity;
 	return (*this);
 }
 
@@ -34,14 +30,4 @@ Vector3 DirectionalLight::getRotatedDirection(void)
 Vector3 const & DirectionalLight::getDirection(void) const
 {
 	return (m_direction);
-}
-
-float DirectionalLight::getAmbientIntensity(void) const
-{
-	return (m_ambientIntensity);
-}
-
-float DirectionalLight::getDiffuseIntensity(void) const
-{
-	return (m_diffuseIntensity);
 }

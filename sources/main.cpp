@@ -5,6 +5,7 @@
 #include "LightManager.hpp"
 #include "Camera.hpp"
 #include <iostream>
+#include <cmath>
 
 int main(void)
 {
@@ -15,11 +16,9 @@ int main(void)
 	win.setView(camera);
 
 	LightManager lights;
-	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f), 0.2f, 1.f);
-	DirectionalLight & light2 = lights.createDirectionalLight(Color(0.2f, 1.0f, 1.0f, 1.f), 0.2f, 1.f);
+	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f));
+	PointLight & light2 = lights.createPointLight(Color(1.0f, 0.0f, 0.0f, 1.f), Vector3(2.f, 1.f, 1.f));
 	light.rotateY(40.f);
-	light2.rotateY(40.f);
-	light2.rotateZ(40.f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
 
@@ -27,18 +26,19 @@ int main(void)
 	float lastTime = 0.f;
 	float dt = 0.f;
 	float frameLimit = 1.f / 300.f;
+	float timer = 0.f;
 	while (win.isOpen())
 	{
 		// Compute frametime
 		float currentTime = glfwGetTime();
 		float frametime = (currentTime - lastTime);
-		(void)frametime;
 		lastTime = currentTime;
 
 		dt += frametime;
 		if (dt < frameLimit)
 			continue ;
 
+		timer += dt;
 		// Inputs
 		if (Keyboard::isKeyPressed(GLFW_KEY_ESCAPE))
 			win.close();
@@ -48,6 +48,7 @@ int main(void)
 		camera->update(dt);
 
 		model.rotateY(dt * 40.f);
+		light2.translate(Vector3(0.05f, 0.f, 0.f) * std::cos(timer));
 		//light.rotateX(10.f * dt);
 		//light.rotateZ(50.f * dt);
 		//light.rotateY(-50.f * dt);

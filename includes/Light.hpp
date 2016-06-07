@@ -15,10 +15,13 @@ public:
 	Light & operator=(Light const & light);
 
 	Color const & getColor(void) const;
+	void setAmbientIntensity(float ambientIntensity);
+	float getAmbientIntensity(void) const;
 	//TODO isActive
 
 private:
-	Color	m_color;
+	Color		m_color;
+	float		m_ambientIntensity;
 
 };
 
