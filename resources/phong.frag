@@ -48,39 +48,19 @@ struct Material
 uniform vec3 camera_position;
 uniform Material material;
 
-vec3 compute_directional_light(DirectionalLight light, vec3 normal, vec3 view_dir)
+vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir, float ambient_intensity, float diffuse_intensity)
 {
-	vec3 light_dir = normalize(-light.direction);
+	light_dir = normalize(light_dir);
 	// Diffuse shading
 	float lambertian = max(dot(normal, light_dir), 0.0);
 	// Specular shading
 	vec3 reflect_dir = reflect(light_dir, normal);
 	float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
 	// Combine results
-	vec3 ambient = light.color.rgb * light.ambient_intensity * texture2D(material.diffuse_tex, TexCoord0).rgb;
-	vec3 diffuse = light.color.rgb * light.diffuse_intensity * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
+	vec3 ambient = light_color.rgb * ambient_intensity * texture2D(material.diffuse_tex, TexCoord0).rgb;
+	vec3 diffuse = light_color.rgb * diffuse_intensity * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
 	vec3 specular = spec * texture2D(material.specular_tex, TexCoord0).rgb;
 	return (ambient + diffuse + specular);
-}
-
-vec3 compute_point_light(PointLight light, vec3 normal, vec3 view_dir)
-{
-	vec3 light_dir = normalize(light.position - WorldPos0);
-	// Diffuse shading
-	float lambertian = max(dot(normal, light_dir), 0.0);
-	// Specular shading
-	vec3 reflect_dir = reflect(light_dir, normal);
-	float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
-
-	// Attenuation
-	float distance = length(light.position - WorldPos0);
-	float attenuation = 1.0f / (light.constant_attenuation + light.linear_attenuation * distance + light.quadratic_attenuation * distance * distance);
-
-	// Combine results
-	vec3 ambient = light.color.rgb * light.ambient_intensity * texture2D(material.diffuse_tex, TexCoord0).rgb;
-	vec3 diffuse = light.color.rgb * light.diffuse_intensity * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
-	vec3 specular = spec * texture2D(material.specular_tex, TexCoord0).rgb;
-	return ((ambient + diffuse + specular) * attenuation);
 }
 
 void main(void)
@@ -90,8 +70,13 @@ void main(void)
 	vec3 view_dir = normalize(camera_position - WorldPos0);
 
 	for (uint i = 0; i < directional_light_count; i++)
-		result += compute_directional_light(directional_lights[i], normal, view_dir);
+		result += compute_light(directional_lights[i].color, -directional_lights[i].direction, normal, view_dir, directional_lights[i].ambient_intensity, directional_lights[i].diffuse_intensity);
 	for (uint i = 0; i < point_light_count; i++)
-		result += compute_point_light(point_lights[i], normal, view_dir);
+	{
+		// Attenuation
+		float distance = length(point_lights[i].position - WorldPos0);
+		float attenuation = 1.0f / (point_lights[i].constant_attenuation + point_lights[i].linear_attenuation * distance + point_lights[i].quadratic_attenuation * distance * distance);
+		result += compute_light(point_lights[i].color, point_lights[i].position - WorldPos0, normal, view_dir, point_lights[i].ambient_intensity, point_lights[i].diffuse_intensity) * attenuation;
+	}
 	FragColor = vec4(result, 1.0);
 }
