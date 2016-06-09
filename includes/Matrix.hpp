@@ -45,8 +45,9 @@ public:
 	Matrix coFactor(void);
 	float const * getMatrix(void) const;
 	void identity(void);
-	void perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane);
-	void orthographicProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+	static Matrix perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane);
+	static Matrix orthographicProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+	static Matrix lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up);
 
 	void dump(void);
 

@@ -7,7 +7,7 @@ Camera::Camera(void) :
 	m_originUp(0.f, 1.f, 0.f),
 	m_originDirection(0.f, 0.f, 1.f)
 {
-	m_projection.perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
+	m_projection = Matrix::perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
 }
 
 Camera::Camera(Camera const & camera)
@@ -79,33 +79,6 @@ Matrix const & Camera::getViewMatrix(void) const
 	return (m_view);
 }
 
-void Camera::lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up)
-{
-	Vector3 f = (center - position).normalize();
-	Vector3 u = up;
-	u.normalize();
-	Vector3 s = f.cross(u).normalize();
-	u = s.cross(f);
-	u.normalize();
-
-	m_view[0] = s.x;
-	m_view[4] = s.y;
-	m_view[8] = s.z;
-	m_view[3] = 0.f;
-	m_view[1] = u.x;
-	m_view[5] = u.y;
-	m_view[9] = u.z;
-	m_view[7] = 0.f;
-	m_view[2] = f.x;
-	m_view[6] = f.y;
-	m_view[10] = f.z;
-	m_view[11] = 0.f;
-	m_view[12] = s.dotProduct(center);
-	m_view[13] = u.dotProduct(center);
-	m_view[14] = f.dotProduct(center);
-	m_view[15] = 1.f;
-}
-
 void Camera::update(float frametime)
 {
 	static float speed = frametime * 10000.f;
@@ -133,6 +106,6 @@ void Camera::update(float frametime)
 	else if (Keyboard::isKeyPress(GLFW_KEY_E))
 		m_position -= up * frametime * speed;
 
-	lookAt(m_position, m_position + direction, up);
+	m_view = Matrix::lookAt(m_position, m_position + direction, up);
 	IView::update();
 }

@@ -278,48 +278,42 @@ void Matrix::identity(void)
 	m_matrix[12] = 0.f; m_matrix[13] = 0.f; m_matrix[14] = 0.f; m_matrix[15] = 1.f;
 }
 
-void Matrix::perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane)
+Matrix Matrix::perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
 	float		scaleY = 1.f / std::tan(Deg2Rad * (fov / 2.f));
 	float		scaleX = scaleY / aspectRatio;
 	float		frustumLength = nearPlane - farPlane;
 
-	m_matrix[0] = scaleX;
-	m_matrix[1] = 0.f;
-	m_matrix[2] = 0.f;
-	m_matrix[3] = 0.f;
-	m_matrix[4] = 0.f;
-	m_matrix[5] = scaleY;
-	m_matrix[6] = 0.f;
-	m_matrix[7] = 0.f;
-	m_matrix[8] = 0.f;
-	m_matrix[9] = 0.f;
-	m_matrix[10] = (farPlane + nearPlane) / frustumLength;
-	m_matrix[11] = -1.f;
-	m_matrix[12] = 0.f;
-	m_matrix[13] = 0.f;
-	m_matrix[14] = (2.f * nearPlane * farPlane) / frustumLength;
-	m_matrix[15] = 0.f;
+	Matrix result(scaleX, 0.f, 0.f, 0.f,
+			0.f, scaleY, 0.f, 0.f,
+			0.f, 0.f, (farPlane + nearPlane) / frustumLength, -1.f,
+			0.f, 0.f, (2.f * nearPlane * farPlane) / frustumLength, 0.f);
+	return (result);
 }
 
-void Matrix::orthographicProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane)
+Matrix Matrix::orthographicProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
-	m_matrix[0] = 2.f / (right - left);
-	m_matrix[1] = 0.f;
-	m_matrix[2] = 0.f;
-	m_matrix[3] = 0.f;
-	m_matrix[4] = 0.f;
-	m_matrix[5] = 2.f / (top - bottom);
-	m_matrix[6] = 0.f;
-	m_matrix[7] = 0.f;
-	m_matrix[8] = 0.f;
-	m_matrix[9] = 0.f;
-	m_matrix[10] = -2.f / (farPlane - nearPlane);
-	m_matrix[11] = 0.f;
-	m_matrix[12] = -(right + left) / (right - left);
-	m_matrix[13] = -(top + bottom) / (top - bottom);
-	m_matrix[14] = -(farPlane + nearPlane) / (farPlane - nearPlane);
-	m_matrix[15] = 1.f;
+	Matrix result(2.f / (right - left), 0.f, 0.f, 0.f,
+				0.f, 2.f / (top - bottom), 0.f, 0.f,
+				0.f, 0.f, -2.f / (farPlane - nearPlane), 0.f,
+				-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(farPlane + nearPlane) / (farPlane - nearPlane), 1.f);
+	return (result);
+}
+
+Matrix Matrix::lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up)
+{
+	Vector3 f = (center - position).normalize();
+	Vector3 u = up;
+	u.normalize();
+	Vector3 s = f.cross(u).normalize();
+	u = s.cross(f);
+	u.normalize();
+
+	Matrix result(s.x, s.y, s.z, 0.f,
+				u.x, u.y, u.z, 0.f,
+				f.x, f.y, f.z, 0.f,
+				s.dotProduct(center), u.dotProduct(center), f.dotProduct(center), 1.f);
+	return (result);
 }
 
 void Matrix::dump(void)
