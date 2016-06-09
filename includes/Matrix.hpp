@@ -46,6 +46,7 @@ public:
 	float const * getMatrix(void) const;
 	void identity(void);
 	void perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane);
+	void orthographicProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane);
 
 	void dump(void);
 
