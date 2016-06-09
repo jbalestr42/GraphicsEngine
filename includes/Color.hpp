@@ -1,7 +1,7 @@
 #ifndef COLOR_HPP
 # define COLOR_HPP
 
-# include <iostream>
+# include <iosfwd>
 
 class Color
 {

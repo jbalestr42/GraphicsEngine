@@ -4,10 +4,8 @@
 # include <GL/glew.h>
 # include <GLFW/glfw3.h>
 # include <memory>
-# include "Color.hpp"
 
-class IDrawable;
-class IView;
+class Color;
 
 class Windows
 {
@@ -22,20 +20,15 @@ public:
 	void pollEvents(void) const;
 	void close(void);
 
-	void draw(IDrawable & drawable);
-
 	GLFWwindow * getWindow(void) const;
-	IView const & getView(void) const;
 
 	void setClearColor(Color const & color);
-	void setView(std::shared_ptr<IView> view);
 
 private:
 	GLFWwindow *			m_window;
 	int						m_width;
 	int						m_height;
 	char const *			m_title;
-	std::shared_ptr<IView>	m_view;
 
 	Windows(Windows const & windows);
 	Windows & operator=(Windows const & windows);

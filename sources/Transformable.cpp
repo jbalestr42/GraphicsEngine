@@ -1,5 +1,6 @@
 #include "Transformable.hpp"
 #include "Quaternion.hpp"
+#include <utility>
 
 Transformable::Transformable(void) :
 	m_scale(1.f, 1.f, 1.f),

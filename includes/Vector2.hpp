@@ -1,7 +1,7 @@
 #ifndef VECTOR2_HPP
 # define VECTOR2_HPP
 
-# include <iostream>
+# include <iosfwd>
 
 class Vector2
 {

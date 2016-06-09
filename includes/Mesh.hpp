@@ -10,7 +10,6 @@
 
 class Texture;
 class Shader;
-class IView;
 class Matrix;
 
 class Mesh
@@ -24,7 +23,7 @@ class Mesh
 
 		Material const & getMaterial(void) const;
 
-		void draw(IView const & view, Matrix const & transform) const;
+		void draw(Matrix const & transform) const;
 
 	private:
 		static const std::size_t IndexCount = 2;
@@ -54,7 +53,7 @@ public:
 	virtual ~Mesh(void) = default;
 
 	std::string const & getFilename(void) const;
-	void draw(IView const & view, Matrix const & transform) const;
+	void draw(Matrix const & transform) const;
 
 private:
 	std::string								m_filename;
