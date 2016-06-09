@@ -1,5 +1,7 @@
 #include "Vector4.hpp"
+#include "Matrix.hpp"
 #include <cmath>
+#include <iostream>
 
 Vector4::Vector4(void) :
 	Vector4(0.f, 0.f, 0.f, 0.f)

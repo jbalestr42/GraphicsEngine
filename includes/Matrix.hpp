@@ -2,7 +2,7 @@
 # define MATRIX_HPP
 
 # include "Vector3.hpp"
-# include <iostream>
+# include <iosfwd>
 
 class Matrix
 {

@@ -1,4 +1,5 @@
 #include "Vector2.hpp"
+#include <iostream>
 
 Vector2::Vector2(void) :
 	Vector2(0.f, 0.f)

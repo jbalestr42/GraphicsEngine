@@ -27,7 +27,6 @@ public:
 	virtual Matrix const & getViewMatrix(void) const;
 	virtual Vector3 const & getPosition(void) const;
 
-	Matrix const & getView(void) const;
 	void update(float frametime);
 
 	void lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up);

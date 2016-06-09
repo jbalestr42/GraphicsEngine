@@ -1,8 +1,9 @@
 #ifndef VECTOR4_HPP
 # define VECTOR4_HPP
 
-# include <iostream>
-# include "Matrix.hpp"
+# include <iosfwd>
+
+class Matrix;
 
 class Vector4
 {

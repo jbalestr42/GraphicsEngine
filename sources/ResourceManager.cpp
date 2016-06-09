@@ -2,6 +2,7 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 #include "Shader.hpp"
+#include <iostream>
 
 std::unique_ptr<ResourceManager> ResourceManager::m_instance = nullptr;
 

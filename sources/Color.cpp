@@ -1,4 +1,5 @@
 #include "Color.hpp"
+#include <iostream>
 
 const Color Color::Black(0, 0, 0);
 const Color Color::White(255, 255, 255);

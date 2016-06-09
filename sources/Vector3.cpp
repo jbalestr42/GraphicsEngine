@@ -2,6 +2,7 @@
 #include "Matrix.hpp"
 #include "Quaternion.hpp"
 #include <cmath>
+#include <iostream>
 
 Vector3::Vector3(void) :
 	Vector3(0.f, 0.f, 0.f)
