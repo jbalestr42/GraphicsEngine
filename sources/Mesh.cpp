@@ -208,7 +208,7 @@ void Mesh::MeshEntry::draw(IView const & view, Matrix const & transform) const
 	m_shader->setParameter("ProjectionMatrix", view.getProjectionMatrix());
 	m_shader->setParameter("ViewMatrix", view.getViewMatrix());
 	m_shader->setParameter("ModelMatrix", transform);
-	m_shader->setParameter("camera_position", view.getPosition());
+	m_shader->setParameter("view_position", view.getPosition());
 	m_shader->setParameter("material", m_material);
 
 	// Bind textures
