@@ -30,6 +30,8 @@ public:
 	Matrix const & getView(void) const;
 	void update(float frametime);
 
+	void lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up);
+
 private:
 	Vector3		m_originUp;
 	Vector3		m_originDirection;
@@ -38,8 +40,6 @@ private:
 	Vector2		m_mousePosition;
 	Matrix		m_view;
 	Matrix		m_projection;
-
-	void lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up);
 };
 
 #endif

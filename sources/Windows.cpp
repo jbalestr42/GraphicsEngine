@@ -115,29 +115,14 @@ void Windows::close(void)
 	glfwSetWindowShouldClose(m_window, true);
 }
 
-void Windows::draw(IDrawable & drawable)
-{
-	drawable.draw(*m_view);
-}
-
 GLFWwindow * Windows::getWindow(void) const
 {
 	return m_window;
 }
 
-IView const & Windows::getView(void) const
-{
-	return (*m_view);
-}
-
 void Windows::setClearColor(Color const & color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
-}
-
-void Windows::setView(std::shared_ptr<IView> view)
-{
-	m_view = view;
 }
 
 void Windows::errorCallback(int error, char const * description)
@@ -148,5 +133,5 @@ void Windows::errorCallback(int error, char const * description)
 void Windows::resizeCallback(GLFWwindow * window, int width, int height)
 {
 	(void)window;
-	glViewport( 0, 0, (GLsizei)width, (GLsizei)height);
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 }

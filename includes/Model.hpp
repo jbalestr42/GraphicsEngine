@@ -6,7 +6,6 @@
 # include "IDrawable.hpp"
 
 class Mesh;
-class IView;
 
 class Model : public Transformable, public IDrawable
 {
@@ -20,7 +19,7 @@ public:
 	Model & operator=(Model const & mesh);
 	Model & operator=(Model && mesh);
 
-	void draw(IView const & view);
+	void draw(void);
 	void loadModel(std::string const & filename);
 
 private:

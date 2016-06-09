@@ -57,10 +57,10 @@ std::string const & Mesh::getFilename(void) const
 	return (m_filename);
 }
 
-void Mesh::draw(IView const & view, Matrix const & transform) const
+void Mesh::draw(Matrix const & transform) const
 {
 	for (auto & mesh : m_meshEntries)
-		mesh->draw(view, transform);
+		mesh->draw(transform);
 }
 
 Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath) :
@@ -201,14 +201,11 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 	m_material.ks.a = m_material.specularTexture ? 1.f : 0.f;
 }
 
-void Mesh::MeshEntry::draw(IView const & view, Matrix const & transform) const
+void Mesh::MeshEntry::draw(Matrix const & transform) const
 {
 	//TODO use the view from window to get used shader and only update the modified data
 	// Set shader parameters
-	m_shader->setParameter("ProjectionMatrix", view.getProjectionMatrix());
-	m_shader->setParameter("ViewMatrix", view.getViewMatrix());
 	m_shader->setParameter("ModelMatrix", transform);
-	m_shader->setParameter("view_position", view.getPosition());
 	m_shader->setParameter("material", m_material);
 
 	// Bind textures

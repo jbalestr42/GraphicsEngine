@@ -12,8 +12,7 @@ int main(void)
 	Windows win(800, 600, "test graphics");
 	win.setClearColor(Color::White);
 
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	win.setView(camera);
+	Camera camera;
 
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f));
@@ -43,9 +42,9 @@ int main(void)
 		if (Keyboard::isKeyPressed(GLFW_KEY_ESCAPE))
 			win.close();
 
-		// Update
+		// Update (first lights and view)
 		lights.update();
-		camera->update(dt);
+		camera.update(dt);
 
 		model.rotateY(dt * 40.f);
 		light2.translate(Vector3(0.05f, 0.f, 0.f) * std::cos(timer));
@@ -58,7 +57,7 @@ int main(void)
 
 		// Draw
 		win.clear();
-		win.draw(model);
+		model.draw();
 
 		win.display();
 		win.pollEvents();

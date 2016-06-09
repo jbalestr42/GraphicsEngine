@@ -45,8 +45,8 @@ void Model::loadModel(std::string const & filename)
 	m_mesh = ResourceManager::getInstance().getMesh(filename);
 }
 
-void Model::draw(IView const & view)
+void Model::draw(void)
 {
 	if (m_mesh)
-		m_mesh->draw(view, getMatrix());
+		m_mesh->draw(getMatrix());
 }
