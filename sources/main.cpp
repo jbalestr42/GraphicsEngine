@@ -37,9 +37,11 @@ int main(void)
 
 	Camera camera;
 	ShadowMap map;
+	map.init();
 
-	std::shared_ptr<Shader> depth = ResourceManager::getInstance().addShader(1, "resources/depth.frag", "resources/depth.vert");
 	std::shared_ptr<Shader> phong = ResourceManager::getInstance().getShader(0);
+	std::shared_ptr<Shader> depth = ResourceManager::getInstance().addShader(1, "resources/depth.frag", "resources/depth.vert");
+	std::shared_ptr<Shader> screen = ResourceManager::getInstance().addShader(2, "resources/render_depth_map.frag", "resources/render_texture.vert");
 
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 0.2f));
@@ -47,6 +49,7 @@ int main(void)
 	light2.translate({0.f, 1.f, 0.f});
 	light.rotateY(40.f);
 	light.rotateX(40.f);
+	light.setPosition(light.getRotation());
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
 	Model cube("resources/cube.obj");
@@ -86,31 +89,35 @@ int main(void)
 		// Draw
 		glViewport(0, 0, map.getWidth(), map.getHeight());
 		map.bindFrameBuffer(); // for each directionnal light
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Matrix lightProj = Matrix::orthographicProjection(-10.f, 10.f, -10.f, 10.f, 1.f, 100.f);
-		Matrix lightView = Matrix::lookAt(light.getPosition(), {0.f, 0.f, 0.f}, {0.f, 1.f, 0.f});
+		Matrix lightView = Matrix::lookAt(light.getPosition(), {0.f, 0.f, 1.f}, {0.f, 1.f, 0.f});
 		Matrix viewProj = lightProj * lightView;
 		depth->setParameter("LightViewProjMatrix", viewProj);
 		model.draw(*depth);
-		//set View and projection matrices
+		cube.draw(*depth);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glViewport(0, 0, win.getWidth(), win.getHeight());
 		win.clear();
+		screen->bind();
+		map.draw();
 
-		// set shaders parameters
-		phong->setParameter("ProjectionMatrix", camera.getProjectionMatrix());
-		phong->setParameter("ViewMatrix", camera.getViewMatrix());
-		phong->setParameter("view_position", camera.getPosition());
-		phong->setParameter("directional_light_count", lights.getDirectionalLightCount());
-		phong->setParameter("directional_lights", lights.getDirectionalLight());
-		phong->setParameter("point_light_count", lights.getPointLightCount());
-		phong->setParameter("point_lights", lights.getPointLight());
+		//// set shaders parameters
+		//phong->setParameter("ProjectionMatrix", camera.getProjectionMatrix());
+		//phong->setParameter("ViewMatrix", camera.getViewMatrix());
+		//phong->setParameter("view_position", camera.getPosition());
+		//phong->setParameter("directional_light_count", lights.getDirectionalLightCount());
+		//phong->setParameter("directional_lights", lights.getDirectionalLight());
+		//phong->setParameter("point_light_count", lights.getPointLightCount());
+		//phong->setParameter("point_lights", lights.getPointLight());
 
-		// draw models
-		model.draw(*phong);
-		cube.draw(*phong);
+		//// draw models
+		//model.draw(*phong);
+		//cube.draw(*phong);
 
 		win.display();
 		win.pollEvents();

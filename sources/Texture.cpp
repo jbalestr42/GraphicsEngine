@@ -3,9 +3,10 @@
 #include <iostream>
 
 Texture::Texture(std::string const & filename) :
-	m_textureID(0),
-	m_width(0),
-	m_height(0)
+	m_textureID(0u),
+	m_width(0u),
+	m_height(0u),
+	m_id(0u)
 {
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -38,7 +39,7 @@ Texture::~Texture(void)
 {
 	glDeleteTextures(1, &m_textureID);
 	ilDeleteImage(m_id);
-	ilBindImage(0);
+	ilBindImage(0u);
 }
 
 void Texture::bind(GLenum textureUnit, GLenum textureTarget)
