@@ -7,6 +7,7 @@ Camera::Camera(void) :
 	m_originUp(0.f, 1.f, 0.f),
 	m_originDirection(0.f, 0.f, 1.f)
 {
+	//TODO get the right size
 	m_projection = Matrix::perspectiveProjection(60.f, 800.f / 600.f, 0.1f, 100.f);
 }
 
@@ -14,8 +15,6 @@ Camera::Camera(Camera const & camera)
 {
 	*this = camera;
 }
-
-Camera::~Camera(void) { }
 
 Camera & Camera::operator=(Camera const & camera)
 {
@@ -107,5 +106,4 @@ void Camera::update(float frametime)
 		m_position -= up * frametime * speed;
 
 	m_view = Matrix::lookAt(m_position, m_position + direction, up);
-	IView::update();
 }

@@ -309,9 +309,9 @@ Matrix Matrix::lookAt(Vector3 const & position, Vector3 const & center, Vector3 
 	u = s.cross(f);
 	u.normalize();
 
-	Matrix result(s.x, s.y, s.z, 0.f,
-				u.x, u.y, u.z, 0.f,
-				f.x, f.y, f.z, 0.f,
+	Matrix result(s.x, u.x, f.x, 0.f,
+				s.y, u.y, f.y, 0.f,
+				s.z, u.z, f.z, 0.f,
 				s.dotProduct(center), u.dotProduct(center), f.dotProduct(center), 1.f);
 	return (result);
 }

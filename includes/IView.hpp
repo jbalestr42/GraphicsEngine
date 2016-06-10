@@ -14,7 +14,7 @@ public:
 	virtual Matrix const & getViewMatrix(void) const = 0;
 	virtual Vector3 const & getPosition(void) const = 0;
 
-	virtual void update(void)
+	virtual void setViewProjectionMatrices(void)
 	{
 		ResourceManager::ShaderMap shaders = ResourceManager::getInstance().getAllShaders();
 		for (auto shader : shaders)

@@ -10,7 +10,7 @@ class Camera : public IView
 public:
 	Camera(void);
 	Camera(Camera const & camera);
-	virtual ~Camera(void);
+	virtual ~Camera(void) = default;
 
 	Camera & operator=(Camera const & camera);
 
