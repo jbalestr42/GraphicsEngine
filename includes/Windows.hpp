@@ -3,7 +3,7 @@
 
 # include <GL/glew.h>
 # include <GLFW/glfw3.h>
-# include <memory>
+# include <cstddef>
 
 class Color;
 
@@ -20,6 +20,8 @@ public:
 	void pollEvents(void) const;
 	void close(void);
 
+	std::size_t getWidth(void) const;
+	std::size_t getHeight(void) const;
 	GLFWwindow * getWindow(void) const;
 
 	void setClearColor(Color const & color);

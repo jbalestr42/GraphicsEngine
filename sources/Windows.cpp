@@ -119,6 +119,16 @@ GLFWwindow * Windows::getWindow(void) const
 	return m_window;
 }
 
+std::size_t Windows::getWidth(void) const
+{
+	return (m_width);
+}
+
+std::size_t Windows::getHeight(void) const
+{
+	return (m_height);
+}
+
 void Windows::setClearColor(Color const & color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
