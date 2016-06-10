@@ -13,6 +13,7 @@ class Matrix;
 class DirectionalLight;
 class PointLight;
 class Material;
+class IView;
 
 class Shader
 {

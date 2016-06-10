@@ -134,5 +134,4 @@ void Camera::update(float frametime)
 		m_position -= up * frametime * speed;
 
 	lookAt(m_position, m_position + direction, up);
-	IView::update();
 }

@@ -14,6 +14,7 @@ int main(void)
 
 	Camera camera;
 
+	std::shared_ptr<Shader> phong = ResourceManager::getInstance().getShader(0);
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f));
 	PointLight & light2 = lights.createPointLight(Color(1.0f, 0.0f, 0.0f, 1.f), Vector3(2.f, 1.f, 1.f));
@@ -57,6 +58,9 @@ int main(void)
 
 		// Draw
 		win.clear();
+		phong->setParameter("ProjectionMatrix", camera.getProjectionMatrix());
+		phong->setParameter("ViewMatrix", camera.getViewMatrix());
+		phong->setParameter("view_position", camera.getPosition());
 		model.draw();
 
 		win.display();
