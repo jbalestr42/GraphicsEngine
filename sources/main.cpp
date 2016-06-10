@@ -40,12 +40,18 @@ int main(void)
 	Camera camera;
 	ShadowMap map;
 
+	ResourceManager::getInstance().addShader(1, "resources/depth.frag", "resources/depth.vert");
 	LightManager lights;
-	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f));
+	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 0.2f));
 	PointLight & light2 = lights.createPointLight(Color(1.0f, 0.0f, 0.0f, 1.f), Vector3(2.f, 1.f, 1.f));
+	light2.translate({0.f, 1.f, 0.f});
 	light.rotateY(40.f);
+	light.rotateX(40.f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
+	Model cube("resources/cube.obj");
+	cube.translate({0.f, -1.f, 0.f});
+	cube.scale({20.f, 0.5f, 20.f});
 
 	glfwSetTime(0.f);
 	float lastTime = 0.f;
@@ -82,15 +88,16 @@ int main(void)
 			dt -= frameLimit;
 
 		// Draw
-		//glViewport(0, 0, map.getWidth(), map.getHeight());
-		//map.bindFrameBuffer(); // for each directionnal light
-		//glClear(GL_DEPTH_BUFFER_BIT);
-		////set View and projection matrices
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, map.getWidth(), map.getHeight());
+		map.bindFrameBuffer(); // for each directionnal light
+		glClear(GL_DEPTH_BUFFER_BIT);
+		//set View and projection matrices
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//glViewport(0, 0, win.getWidth(), win.getHeight());
+		glViewport(0, 0, win.getWidth(), win.getHeight());
 		win.clear();
 		camera.setViewProjectionMatrices();
+		cube.draw();
 		model.draw();
 
 		win.display();
