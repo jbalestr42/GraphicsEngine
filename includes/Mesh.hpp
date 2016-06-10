@@ -18,7 +18,7 @@ class Mesh
 	{
 	public:
 		MeshEntry(void) = delete;
-		MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath);
+		MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath, int shader);
 		virtual ~MeshEntry(void);
 
 		Material const & getMaterial(void) const;
@@ -49,7 +49,7 @@ class Mesh
 
 public:
 	Mesh(void) = delete;
-	Mesh(std::string const & filename);
+	Mesh(std::string const & filename, int shader = 0);
 	virtual ~Mesh(void) = default;
 
 	std::string const & getFilename(void) const;
