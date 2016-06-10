@@ -1,6 +1,7 @@
 #include "Model.hpp"
 #include "ResourceManager.hpp"
 #include "Mesh.hpp"
+#include "Shader.hpp"
 
 Model::Model(void) :
 	Transformable(),
@@ -45,8 +46,9 @@ void Model::loadModel(std::string const & filename)
 	m_mesh = ResourceManager::getInstance().getMesh(filename);
 }
 
-void Model::draw(void)
+void Model::draw(Shader & shader)
 {
+	shader.setParameter("ModelMatrix", getMatrix());
 	if (m_mesh)
-		m_mesh->draw(getMatrix());
+		m_mesh->draw(shader);
 }

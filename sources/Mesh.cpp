@@ -9,7 +9,7 @@
 #include <postprocess.h>
 #include <Importer.hpp>
 
-Mesh::Mesh(std::string const & filename, int shader) :
+Mesh::Mesh(std::string const & filename) :
 	m_filename(filename)
 {
 	Assimp::Importer importer;
@@ -47,7 +47,7 @@ Mesh::Mesh(std::string const & filename, int shader) :
 			dirPath = filename.substr(0, slashIndex);
 
 		for (std::size_t i = 0; i < scene->mNumMeshes; i++)
-			m_meshEntries.emplace_back(new MeshEntry(scene, scene->mMeshes[i], dirPath, shader));
+			m_meshEntries.emplace_back(new MeshEntry(scene, scene->mMeshes[i], dirPath));
 	}
 	importer.FreeScene();
 }
@@ -57,13 +57,13 @@ std::string const & Mesh::getFilename(void) const
 	return (m_filename);
 }
 
-void Mesh::draw(Matrix const & transform) const
+void Mesh::draw(Shader & shader) const
 {
 	for (auto & mesh : m_meshEntries)
-		mesh->draw(transform);
+		mesh->draw(shader);
 }
 
-Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath, int shader) :
+Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath) :
 	m_indiceCount(0u)
 {
 	std::vector<Vertex> vertices;
@@ -91,7 +91,6 @@ Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::stri
 	}
 
 	m_indiceCount = mesh->mNumFaces * 3;
-	m_shader = ResourceManager::getInstance().getShader(shader);
 	initMaterial(scene, mesh->mMaterialIndex, dirPath);
 	init(vertices, indices);
 }
@@ -110,33 +109,17 @@ void Mesh::MeshEntry::init(std::vector<Vertex> const & vertices, std::vector<GLu
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject[VBOIndex::VertexBuffer]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-	int posAtt = m_shader->getAttribute(Shader::Attribute::PositionAtt);
-	if (posAtt >= 0)
-	{
-		glEnableVertexAttribArray(posAtt);
-		glVertexAttribPointer(posAtt, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-	}
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 
-	int texAtt = m_shader->getAttribute(Shader::Attribute::TexCoordAtt);
-	if (texAtt >= 0)
-	{
-		glEnableVertexAttribArray(texAtt);
-		glVertexAttribPointer(texAtt, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3)));
-	}
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3)));
 
-	int normalAtt = m_shader->getAttribute(Shader::Attribute::NormalAtt);
-	if (normalAtt >= 0)
-	{
-		glEnableVertexAttribArray(normalAtt);
-		glVertexAttribPointer(normalAtt, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
-	}
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
 
-	int colAtt = m_shader->getAttribute(Shader::Attribute::ColorAtt);
-	if (colAtt >= 0)
-	{
-		glEnableVertexAttribArray(colAtt);
-		glVertexAttribPointer(colAtt, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2) + sizeof(Vector3)));
-	}
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2) + sizeof(Vector3)));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexBufferObject[VBOIndex::Index]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -196,12 +179,10 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 	m_material.ks.a = m_material.specularTexture ? 1.f : 0.f;
 }
 
-void Mesh::MeshEntry::draw(Matrix const & transform) const
+void Mesh::MeshEntry::draw(Shader & shader) const
 {
-	//TODO use the view from window to get used shader and only update the modified data
-	// Set shader parameters
-	m_shader->setParameter("ModelMatrix", transform);
-	m_shader->setParameter("material", m_material);
+	// Set shader parameter
+	shader.setParameter("material", m_material);
 
 	// Bind textures
 	if (m_material.diffuseTexture)

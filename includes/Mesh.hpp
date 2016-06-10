@@ -18,12 +18,12 @@ class Mesh
 	{
 	public:
 		MeshEntry(void) = delete;
-		MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath, int shader);
+		MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath);
 		virtual ~MeshEntry(void);
 
 		Material const & getMaterial(void) const;
 
-		void draw(Matrix const & transform) const;
+		void draw(Shader & shader) const;
 
 	private:
 		static const std::size_t IndexCount = 2;
@@ -37,7 +37,6 @@ class Mesh
 		GLuint					m_vertexBufferObject[IndexCount];
 		std::size_t				m_indiceCount;
 		Material				m_material;
-		std::shared_ptr<Shader>	m_shader;
 
 		MeshEntry(MeshEntry const & mesh);
 		MeshEntry & operator=(MeshEntry const & mesh);
@@ -49,11 +48,11 @@ class Mesh
 
 public:
 	Mesh(void) = delete;
-	Mesh(std::string const & filename, int shader = 0);
+	Mesh(std::string const & filename);
 	virtual ~Mesh(void) = default;
 
 	std::string const & getFilename(void) const;
-	void draw(Matrix const & transform) const;
+	void draw(Shader & shader) const;
 
 private:
 	std::string								m_filename;
