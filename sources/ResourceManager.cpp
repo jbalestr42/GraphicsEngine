@@ -60,8 +60,9 @@ ResourceManager::ShaderMap & ResourceManager::getAllShaders(void)
 	return (m_shaders);
 }
 
-void ResourceManager::addShader(int index, std::string const & fragment, std::string const & vertex)
+std::shared_ptr<Shader> ResourceManager::addShader(int index, std::string const & fragment, std::string const & vertex)
 {
 	std::cout << "Add new shader (" << index << ") : " << fragment << " - " << vertex << std::endl;
 	m_shaders[index] = std::make_shared<Shader>(fragment, vertex);
+	return getShader(index);
 }

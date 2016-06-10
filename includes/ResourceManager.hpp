@@ -23,7 +23,7 @@ public:
 	std::shared_ptr<Shader> getShader(int index);
 	ShaderMap & getAllShaders(void);
 
-	void addShader(int index, std::string const & fragment, std::string const & vertex);
+	std::shared_ptr<Shader> addShader(int index, std::string const & fragment, std::string const & vertex);
 
 private:
 	MeshMap		m_meshes;
