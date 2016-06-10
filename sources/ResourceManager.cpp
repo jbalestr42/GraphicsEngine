@@ -11,38 +11,7 @@ ResourceManager::ResourceManager(void)
 	// Initialize texture library
 	ilInit();
 
-	//TODO all other shaders
-	// aiShadingMode_Flat
-	//	Flat shading. Shading is done on per-face base, diffuse only. Also known as 'faceted shading'.
-
-	// aiShadingMode_Gouraud
-	//	Simple Gouraud shading.
-	addShader(1, "resources/phong.frag", "resources/phong.vert");
-
-	// aiShadingMode_Phong
-	//	Phong-Shading.
-	addShader(2, "resources/phong.frag", "resources/phong.vert");
-
-	// aiShadingMode_Blinn
-	//	Phong-Blinn-Shading.
-
-	// aiShadingMode_Toon
-	//	Toon-Shading per pixel. Also known as 'comic' shader.
-
-	// aiShadingMode_OrenNayar
-	//	OrenNayar-Shading per pixel. Extension to standard Lambertian shading, taking the roughness of the material into account
-
-	// aiShadingMode_Minnaert
-	//	Minnaert-Shading per pixel. Extension to standard Lambertian shading, taking the "darkness" of the material into account
-
-	// aiShadingMode_CookTorrance
-	//	CookTorrance-Shading per pixel. Special shader for metallic surfaces.
-
-	// aiShadingMode_NoShading
-	//	No shading at all. Constant light influence of 1.0.
-
-	// aiShadingMode_Fresnel
-	//	Fresnel shading.
+	addShader(0, "resources/phong.frag", "resources/phong.vert");
 }
 
 ResourceManager & ResourceManager::getInstance(void)

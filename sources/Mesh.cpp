@@ -9,7 +9,7 @@
 #include <postprocess.h>
 #include <Importer.hpp>
 
-Mesh::Mesh(std::string const & filename) :
+Mesh::Mesh(std::string const & filename, int shader) :
 	m_filename(filename)
 {
 	Assimp::Importer importer;
@@ -47,7 +47,7 @@ Mesh::Mesh(std::string const & filename) :
 			dirPath = filename.substr(0, slashIndex);
 
 		for (std::size_t i = 0; i < scene->mNumMeshes; i++)
-			m_meshEntries.emplace_back(new MeshEntry(scene, scene->mMeshes[i], dirPath));
+			m_meshEntries.emplace_back(new MeshEntry(scene, scene->mMeshes[i], dirPath, shader));
 	}
 	importer.FreeScene();
 }
@@ -63,7 +63,7 @@ void Mesh::draw(Matrix const & transform) const
 		mesh->draw(transform);
 }
 
-Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath) :
+Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::string const & dirPath, int shader) :
 	m_indiceCount(0u)
 {
 	std::vector<Vertex> vertices;
@@ -91,6 +91,7 @@ Mesh::MeshEntry::MeshEntry(aiScene const * scene, aiMesh const * mesh, std::stri
 	}
 
 	m_indiceCount = mesh->mNumFaces * 3;
+	m_shader = ResourceManager::getInstance().getShader(shader);
 	initMaterial(scene, mesh->mMaterialIndex, dirPath);
 	init(vertices, indices);
 }
@@ -177,12 +178,6 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
 	if (getTexture(material, aiTextureType_SPECULAR, dirPath, fullPath))
 		m_material.specularTexture = ResourceManager::getInstance().getTexture(fullPath);
-
-	int shadingModel;
-	material->Get(AI_MATKEY_SHADING_MODEL, shadingModel);
-	// TODO add check to avoid index out of bound
-	//m_shader = ResourceManager::getInstance().getShader(shadingModel);
-	m_shader = ResourceManager::getInstance().getShader(2);
 
 	aiString name;
 	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
