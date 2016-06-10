@@ -21,10 +21,40 @@ DirectionalLight & LightManager::getDirectionalLight(std::size_t index)
 	return (m_directionalLight[index]);
 }
 
+DirectionalLight const & LightManager::getDirectionalLight(std::size_t index) const
+{
+	return (getDirectionalLight(index));
+}
+
 PointLight & LightManager::getPointLight(std::size_t index)
 {
 	assert(index < m_pointLight.size());
 	return (m_pointLight[index]);
+}
+
+PointLight const & LightManager::getPointLight(std::size_t index) const
+{
+	return (getPointLight(index));
+}
+
+std::vector<DirectionalLight> & LightManager::getDirectionalLight(void)
+{
+	return (m_directionalLight);
+}
+
+std::vector<DirectionalLight> const & LightManager::getDirectionalLight(void) const
+{
+	return (m_directionalLight);
+}
+
+std::vector<PointLight> & LightManager::getPointLight(void)
+{
+	return (m_pointLight);
+}
+
+std::vector<PointLight> const & LightManager::getPointLight(void) const
+{
+	return (m_pointLight);
 }
 
 std::size_t LightManager::getDirectionalLightCount(void) const
@@ -35,19 +65,4 @@ std::size_t LightManager::getDirectionalLightCount(void) const
 std::size_t LightManager::getPointLightCount(void) const
 {
 	return (m_pointLight.size());
-}
-
-void LightManager::update(void)
-{
-	ResourceManager::ShaderMap shaders = ResourceManager::getInstance().getAllShaders();
-	for (auto shader : shaders)
-	{
-		if (shader.second->isActive())
-		{
-			shader.second->setParameter("directional_light_count", m_directionalLight.size());
-			shader.second->setParameter("directional_lights", m_directionalLight);
-			shader.second->setParameter("point_light_count", m_pointLight.size());
-			shader.second->setParameter("point_lights", m_pointLight);
-		}
-	}
 }
