@@ -118,7 +118,7 @@ void Transformable::rotateZ(float angle)
 
 void Transformable::scale(Vector3 const & scale)
 {
-	m_scale += scale;
+	m_scale *= scale;
 	m_needRecompute = true;
 }
 

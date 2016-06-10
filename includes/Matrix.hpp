@@ -38,7 +38,7 @@ public:
 	Matrix & rotate(Vector3 const & vector, EulerOrder order = XYZ);
 	Matrix & translate(Vector3 const & vector);
 	Matrix & scale(Vector3 const & vector);
-	Matrix & eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order = XYZ);
+	Matrix eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order = XYZ);
 
 	Matrix inverse(void) const;
 	float determinant(void) const;

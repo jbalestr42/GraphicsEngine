@@ -3,10 +3,12 @@
 #include <algorithm>
 #include <iostream>
 
-Matrix::Matrix(void)
-{
-	identity();
-}
+Matrix::Matrix(void) :
+	Matrix(1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f)
+{}
 
 Matrix::Matrix(float f00, float f01, float f02, float f03,
 				float f10, float f11, float f12, float f13,
@@ -124,8 +126,9 @@ Matrix & Matrix::rotate(Vector3 const & vector, EulerOrder order)
 	return multiply(rotation);
 }
 
-Matrix & Matrix::eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order)
+Matrix Matrix::eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order)
 {
+	Matrix rotation;
 	float sinX = std::sin(Deg2Rad * angles.x);
 	float sinY = std::sin(Deg2Rad * angles.y);
 	float sinZ = std::sin(Deg2Rad * angles.z);
@@ -136,73 +139,73 @@ Matrix & Matrix::eulerAnglesToMatrix(Vector3 const & angles, EulerOrder order)
 	switch (order)
 	{
 		case XYZ:
-			m_matrix[0] = cosY * cosZ;
-			m_matrix[1] = -cosY * sinZ;
-			m_matrix[2] = sinY;
-			m_matrix[4] = cosZ * sinX * sinY + cosX * sinZ;
-			m_matrix[5] = cosX * cosZ - sinX * sinY * sinZ;
-			m_matrix[6] = -cosY * sinX;
-			m_matrix[8] = -cosX * cosZ * sinY + sinX * sinZ;
-			m_matrix[9] = cosZ * sinX + cosX * sinY * sinZ;
-			m_matrix[10] = cosX * cosY;
+			rotation[0] = cosY * cosZ;
+			rotation[1] = -cosY * sinZ;
+			rotation[2] = sinY;
+			rotation[4] = cosZ * sinX * sinY + cosX * sinZ;
+			rotation[5] = cosX * cosZ - sinX * sinY * sinZ;
+			rotation[6] = -cosY * sinX;
+			rotation[8] = -cosX * cosZ * sinY + sinX * sinZ;
+			rotation[9] = cosZ * sinX + cosX * sinY * sinZ;
+			rotation[10] = cosX * cosY;
 			break;
 		case YZX:
-			m_matrix[0] = cosY * cosZ;
-			m_matrix[1] = sinX * sinY - cosX * cosY * sinZ;
-			m_matrix[2] = cosX * sinY + cosY * sinX * sinZ;
-			m_matrix[4] = sinZ;
-			m_matrix[5] = cosX * cosZ;
-			m_matrix[6] = -cosZ * sinX;
-			m_matrix[8] = -cosZ * sinY;
-			m_matrix[9] = cosY * sinX + cosX * sinY * sinZ;
-			m_matrix[10] = cosX * cosY - sinX * sinY * sinZ;
+			rotation[0] = cosY * cosZ;
+			rotation[1] = sinX * sinY - cosX * cosY * sinZ;
+			rotation[2] = cosX * sinY + cosY * sinX * sinZ;
+			rotation[4] = sinZ;
+			rotation[5] = cosX * cosZ;
+			rotation[6] = -cosZ * sinX;
+			rotation[8] = -cosZ * sinY;
+			rotation[9] = cosY * sinX + cosX * sinY * sinZ;
+			rotation[10] = cosX * cosY - sinX * sinY * sinZ;
 			break;
 		case ZXY:
-			m_matrix[0] = cosY * cosZ - sinX * sinY * sinZ;
-			m_matrix[1] = -cosX * sinZ;
-			m_matrix[2] = cosZ * sinY + cosY * sinX * sinZ;
-			m_matrix[4] = cosZ * sinX * sinY + cosY * sinZ;
-			m_matrix[5] = cosX * cosZ;
-			m_matrix[6] = -cosY * cosZ * sinX + sinY * sinZ;
-			m_matrix[8] = -cosX * sinY;
-			m_matrix[9] = sinX;
-			m_matrix[10] = cosX * cosY;
+			rotation[0] = cosY * cosZ - sinX * sinY * sinZ;
+			rotation[1] = -cosX * sinZ;
+			rotation[2] = cosZ * sinY + cosY * sinX * sinZ;
+			rotation[4] = cosZ * sinX * sinY + cosY * sinZ;
+			rotation[5] = cosX * cosZ;
+			rotation[6] = -cosY * cosZ * sinX + sinY * sinZ;
+			rotation[8] = -cosX * sinY;
+			rotation[9] = sinX;
+			rotation[10] = cosX * cosY;
 			break;
 		case ZYX:
-			m_matrix[0] = cosY * cosZ;
-			m_matrix[1] = cosZ * sinX * sinY - cosX * sinZ;
-			m_matrix[2] = cosX * cosZ * sinY + sinX * sinZ;
-			m_matrix[4] = cosY * sinZ;
-			m_matrix[5] = cosX * cosZ + sinX * sinY * sinZ;
-			m_matrix[6] = -cosZ * sinX + cosX * sinY * sinZ;
-			m_matrix[8] = -sinY;
-			m_matrix[9] = cosY * sinX;
-			m_matrix[10] = cosX * cosY;
+			rotation[0] = cosY * cosZ;
+			rotation[1] = cosZ * sinX * sinY - cosX * sinZ;
+			rotation[2] = cosX * cosZ * sinY + sinX * sinZ;
+			rotation[4] = cosY * sinZ;
+			rotation[5] = cosX * cosZ + sinX * sinY * sinZ;
+			rotation[6] = -cosZ * sinX + cosX * sinY * sinZ;
+			rotation[8] = -sinY;
+			rotation[9] = cosY * sinX;
+			rotation[10] = cosX * cosY;
 			break;
 		case YXZ:
-			m_matrix[0] = cosY * cosZ + sinX * sinY * sinZ;
-			m_matrix[1] = cosZ * sinX * sinY - cosY * sinZ;
-			m_matrix[2] = cosX * sinY;
-			m_matrix[4] = cosX * sinZ;
-			m_matrix[5] = cosX * cosZ;
-			m_matrix[6] = -sinX;
-			m_matrix[8] = -cosZ * sinY + cosY * sinX * sinZ;
-			m_matrix[9] = cosY * cosZ * sinX + sinY * sinZ;
-			m_matrix[10] = cosX * cosY;
+			rotation[0] = cosY * cosZ + sinX * sinY * sinZ;
+			rotation[1] = cosZ * sinX * sinY - cosY * sinZ;
+			rotation[2] = cosX * sinY;
+			rotation[4] = cosX * sinZ;
+			rotation[5] = cosX * cosZ;
+			rotation[6] = -sinX;
+			rotation[8] = -cosZ * sinY + cosY * sinX * sinZ;
+			rotation[9] = cosY * cosZ * sinX + sinY * sinZ;
+			rotation[10] = cosX * cosY;
 			break;
 		case XZY:
-			m_matrix[0] = cosY * cosZ;
-			m_matrix[1] = -sinZ;
-			m_matrix[2] = cosZ * sinY;
-			m_matrix[4] = sinX * sinY + cosX * cosY * sinZ;
-			m_matrix[5] = cosX * cosZ;
-			m_matrix[6] = -cosY * sinX + cosX * sinY * sinZ;
-			m_matrix[8] = -cosX * sinY + cosY * sinX * sinZ;
-			m_matrix[9] = cosZ * sinX;
-			m_matrix[10] = cosX * cosY + sinX * sinY * sinZ;
+			rotation[0] = cosY * cosZ;
+			rotation[1] = -sinZ;
+			rotation[2] = cosZ * sinY;
+			rotation[4] = sinX * sinY + cosX * cosY * sinZ;
+			rotation[5] = cosX * cosZ;
+			rotation[6] = -cosY * sinX + cosX * sinY * sinZ;
+			rotation[8] = -cosX * sinY + cosY * sinX * sinZ;
+			rotation[9] = cosZ * sinX;
+			rotation[10] = cosX * cosY + sinX * sinY * sinZ;
 			break;
 	}
-	return (*this);
+	return (rotation);
 }
 
 Matrix & Matrix::translate(Vector3 const & vector)
