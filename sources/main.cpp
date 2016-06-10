@@ -14,6 +14,7 @@ int main(void)
 
 	Camera camera;
 
+	std::shared_ptr<Shader> phong = ResourceManager::getInstance().getShader(0);
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f));
 	PointLight & light2 = lights.createPointLight(Color(1.0f, 0.0f, 0.0f, 1.f), Vector3(2.f, 1.f, 1.f));
@@ -42,21 +43,28 @@ int main(void)
 		if (Keyboard::isKeyPressed(GLFW_KEY_ESCAPE))
 			win.close();
 
-		// Update (first lights and view)
-		lights.update();
+		// Update
 		camera.update(dt);
 
 		model.rotateY(dt * 40.f);
 		light2.translate(Vector3(0.05f, 0.f, 0.f) * std::cos(timer));
-		//light.rotateX(10.f * dt);
-		//light.rotateZ(50.f * dt);
-		//light.rotateY(-50.f * dt);
 
 		while (dt > frameLimit)
 			dt -= frameLimit;
 
 		// Draw
 		win.clear();
+
+		// set shaders parameters
+		phong->setParameter("ProjectionMatrix", camera.getProjectionMatrix());
+		phong->setParameter("ViewMatrix", camera.getViewMatrix());
+		phong->setParameter("view_position", camera.getPosition());
+		phong->setParameter("directional_light_count", lights.getDirectionalLightCount());
+		phong->setParameter("directional_lights", lights.getDirectionalLight());
+		phong->setParameter("point_light_count", lights.getPointLightCount());
+		phong->setParameter("point_lights", lights.getPointLight());
+
+		// draw models
 		model.draw();
 
 		win.display();

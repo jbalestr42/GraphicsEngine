@@ -14,20 +14,6 @@ public:
 	virtual Matrix const & getViewMatrix(void) const = 0;
 	virtual Vector3 const & getPosition(void) const = 0;
 
-	virtual void update(void)
-	{
-		ResourceManager::ShaderMap shaders = ResourceManager::getInstance().getAllShaders();
-		for (auto shader : shaders)
-		{
-			if (shader.second->isActive())
-			{
-				shader.second->setParameter("ProjectionMatrix", getProjectionMatrix());
-				shader.second->setParameter("ViewMatrix", getViewMatrix());
-				shader.second->setParameter("view_position", getPosition());
-			}
-		}
-	}
-
 };
 
 #endif
