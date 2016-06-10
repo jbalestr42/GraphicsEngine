@@ -12,7 +12,7 @@ public:
 	virtual ~FrameBuffer(void);
 
 	void bindFrameBuffer(void);
-	virtual void initTextureParam(void);
+	void init(void);
 
 	std::size_t getWidth(void) const;
 	std::size_t getHeight(void) const;
@@ -20,6 +20,7 @@ public:
 protected:
 	void bindTexture(void);
 	void createFrameBuffer(GLenum attachment, GLenum texTarget, GLint mipMapLevel = 0u);
+	virtual void initTextureParam(void);
 
 private:
 	GLuint			m_frameBufferObject;

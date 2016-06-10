@@ -19,7 +19,6 @@ public:
 
 	virtual void initTextureParam(void)
 	{
-		bindTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, getWidth(), getHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -28,7 +27,6 @@ public:
 		createFrameBuffer(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 };
 
@@ -40,8 +38,9 @@ int main(void)
 	Camera camera;
 	ShadowMap map;
 
-	ResourceManager::getInstance().addShader(1, "resources/depth.frag", "resources/depth.vert");
+	std::shared_ptr<Shader> depth = ResourceManager::getInstance().addShader(1, "resources/depth.frag", "resources/depth.vert");
 	std::shared_ptr<Shader> phong = ResourceManager::getInstance().getShader(0);
+
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 0.2f));
 	PointLight & light2 = lights.createPointLight(Color(1.0f, 0.0f, 0.0f, 1.f), Vector3(2.f, 1.f, 1.f));
@@ -88,6 +87,12 @@ int main(void)
 		glViewport(0, 0, map.getWidth(), map.getHeight());
 		map.bindFrameBuffer(); // for each directionnal light
 		glClear(GL_DEPTH_BUFFER_BIT);
+
+		Matrix lightProj = Matrix::orthographicProjection(-10.f, 10.f, -10.f, 10.f, 1.f, 100.f);
+		Matrix lightView = Matrix::lookAt(light.getPosition(), {0.f, 0.f, 0.f}, {0.f, 1.f, 0.f});
+		Matrix viewProj = lightProj * lightView;
+		depth->setParameter("LightViewProjMatrix", viewProj);
+		model.draw(*depth);
 		//set View and projection matrices
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -104,8 +109,8 @@ int main(void)
 		phong->setParameter("point_lights", lights.getPointLight());
 
 		// draw models
-		model.draw();
-		cube.draw();
+		model.draw(*phong);
+		cube.draw(*phong);
 
 		win.display();
 		win.pollEvents();

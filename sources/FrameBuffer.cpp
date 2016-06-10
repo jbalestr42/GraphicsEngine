@@ -1,4 +1,5 @@
 #include "FrameBuffer.hpp"
+#include <iostream>
 
 FrameBuffer::FrameBuffer(void) :
 	FrameBuffer(1024u, 1024u)
@@ -30,14 +31,25 @@ void FrameBuffer::bindTexture(void)
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
-void FrameBuffer::initTextureParam(void)
+void FrameBuffer::init(void)
 {
 	bindTexture();
+
+	initTextureParam();
+
+// TODO use exception
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBuffer::initTextureParam(void)
+{
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWidth(), getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	createFrameBuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void FrameBuffer::createFrameBuffer(GLenum attachment, GLenum texTarget, GLint mipMapLevel)
