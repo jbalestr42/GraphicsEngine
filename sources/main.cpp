@@ -65,7 +65,7 @@ int main(void)
 		phong->setParameter("point_lights", lights.getPointLight());
 
 		// draw models
-		model.draw();
+		model.draw(*phong);
 
 		win.display();
 		win.pollEvents();
