@@ -7,12 +7,38 @@
 #include <iostream>
 #include <cmath>
 
+# include "FrameBuffer.hpp"
+class ShadowMap : public FrameBuffer
+{
+public:
+	ShadowMap(void) :
+		FrameBuffer(1024u, 1024u)
+	{}
+
+	virtual ~ShadowMap(void) = default;
+
+	virtual void initTextureParam(void)
+	{
+		bindTexture();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, getWidth(), getHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		createFrameBuffer(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+};
+
 int main(void)
 {
 	Windows win(800, 600, "test graphics");
 	win.setClearColor(Color::White);
 
 	Camera camera;
+	ShadowMap map;
 
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 0.0f, 1.0f, 1.f));
@@ -56,7 +82,15 @@ int main(void)
 			dt -= frameLimit;
 
 		// Draw
+		//glViewport(0, 0, map.getWidth(), map.getHeight());
+		//map.bindFrameBuffer(); // for each directionnal light
+		//glClear(GL_DEPTH_BUFFER_BIT);
+		////set View and projection matrices
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		//glViewport(0, 0, win.getWidth(), win.getHeight());
 		win.clear();
+		camera.setViewProjectionMatrices();
 		model.draw();
 
 		win.display();

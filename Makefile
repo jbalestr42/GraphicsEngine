@@ -41,6 +41,7 @@ SRC =	main.cpp \
 		Camera.cpp \
 		LightManager.cpp \
 		Material.cpp \
+		FrameBuffer.cpp \
 		Color.cpp
 
 INC =	Matrix.hpp \
@@ -67,6 +68,7 @@ INC =	Matrix.hpp \
 		IView.hpp \
 		LightManager.hpp \
 		Material.hpp \
+		FrameBuffer.hpp \
 		Color.hpp
 
 OBJ =	$(SRC:.cpp=.o)
