@@ -38,6 +38,7 @@ SRC =	main.cpp \
 		Light.cpp \
 		DirectionalLight.cpp \
 		PointLight.cpp \
+		SpotLight.cpp \
 		Camera.cpp \
 		LightManager.cpp \
 		Material.cpp \
@@ -63,6 +64,7 @@ INC =	Matrix.hpp \
 		Light.hpp \
 		DirectionalLight.hpp \
 		PointLight.hpp \
+		SpotLight.hpp \
 		Camera.hpp \
 		IView.hpp \
 		LightManager.hpp \
