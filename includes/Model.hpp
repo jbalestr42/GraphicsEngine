@@ -1,11 +1,12 @@
 #ifndef MODEL_HPP
 # define MODEL_HPP
 
-# include <memory>
 # include "Transformable.hpp"
 # include "IDrawable.hpp"
+# include <memory>
 
 class Mesh;
+class Shader;
 
 class Model : public Transformable, public IDrawable
 {
@@ -19,7 +20,7 @@ public:
 	Model & operator=(Model const & mesh);
 	Model & operator=(Model && mesh);
 
-	void draw(void);
+	void draw(Shader & shader);
 	void loadModel(std::string const & filename);
 
 private:

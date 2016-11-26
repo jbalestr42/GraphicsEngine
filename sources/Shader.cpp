@@ -5,6 +5,7 @@
 #include "Matrix.hpp"
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
+#include "SpotLight.hpp"
 #include "Material.hpp"
 #include <sstream>
 #include <fstream>
@@ -170,6 +171,24 @@ void Shader::setParameter(std::string const & name, std::size_t index, PointLigh
 	}
 }
 
+void Shader::setParameter(std::string const & name, std::size_t index, SpotLight & light)
+{
+	if (m_program)
+	{
+		std::ostringstream s;
+		s << name << "[" << index << "].";
+		setParameter(s.str() + "color", light.getColor());
+		setParameter(s.str() + "position", light.getPosition());
+		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
+		setParameter(s.str() + "inner_angle", std::cos(Deg2Rad * light.getInnerAngle()));
+		setParameter(s.str() + "outer_angle", std::cos(Deg2Rad * light.getOuterAngle()));
+		setParameter(s.str() + "constant_attenuation", light.getConstantAttenuation());
+		setParameter(s.str() + "linear_attenuation", light.getLinearAttenuation());
+		setParameter(s.str() + "quadratic_attenuation", light.getQuadraticAttenuation());
+		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
+	}
+}
+
 void Shader::setParameter(std::string const & name, std::vector<DirectionalLight> & lights)
 {
 	if (m_program)
@@ -187,6 +206,17 @@ void Shader::setParameter(std::string const & name, std::vector<PointLight> & li
 	{
 		glUseProgram(m_program);
 		assert(lights.size() <= PointLight::MaxLight);
+		for (std::size_t i = 0u; i < lights.size(); i++)
+			setParameter(name, i, lights[i]);
+	}
+}
+
+void Shader::setParameter(std::string const & name, std::vector<SpotLight> & lights)
+{
+	if (m_program)
+	{
+		glUseProgram(m_program);
+		assert(lights.size() <= SpotLight::MaxLight);
 		for (std::size_t i = 0u; i < lights.size(); i++)
 			setParameter(name, i, lights[i]);
 	}
@@ -260,7 +290,7 @@ GLuint Shader::loadShader(std::string const & filename, GLenum shaderType)
 
 		GLint isCompiled = 0;
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &isCompiled);
-		if(isCompiled == GL_FALSE)
+		if (isCompiled == GL_FALSE)
 			std::cout << "ERROR: Could not compile the shader : " << filename << std::endl;
 		GLint maxLength = 0;
 		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
