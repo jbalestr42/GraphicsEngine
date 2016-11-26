@@ -6,7 +6,7 @@
 class PointLight : public Light
 {
 public:
-	static const std::size_t	MaxLight = 50u;
+	static const std::size_t	MaxLight = 10u;
 
 	PointLight(void);
 	PointLight(Color const & color, Vector3 const & position, float constantAttenuation = 1.f, float linearAttenuation = 0.09f, float quadraticAttenuation = 0.032f);
