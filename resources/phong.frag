@@ -97,14 +97,15 @@ void main(void)
 
 	for (uint i = 0; i < spot_light_count; i++)
 	{
-		// Attenuation
+		// Compute whether the pixel is the radius of the spotlight
 		vec3 light_dir = normalize(spot_lights[i].position - WorldPos0);
-		float theta = dot(light_dir, -spot_lights[i].direction); // Direction is normalized before the shader
-		float epsilon = spot_lights[i].inner_angle - spot_lights[i].outer_angle;
-		float intensity = clamp((theta - spot_lights[i].outer_angle) / epsilon, 0.0, 1.0);
+		float theta = dot(-light_dir, spot_lights[i].direction); // Direction is normalized before the shader
+		float epsilon = spot_lights[i].outer_angle - spot_lights[i].inner_angle;
+		float intensity = clamp((spot_lights[i].inner_angle + theta) / epsilon, 0.0, 1.0);
+		// Attenuation
 		float distance = length(spot_lights[i].position - WorldPos0);
 		float attenuation = 1.0 / (spot_lights[i].constant_attenuation + spot_lights[i].linear_attenuation * distance + spot_lights[i].quadratic_attenuation * distance * distance);
-		result += compute_light(spot_lights[i].color, light_dir, normal, view_dir, spot_lights[i].ambient_intensity) * attenuation * (1.0 - intensity);
+		result += compute_light(spot_lights[i].color, light_dir, normal, view_dir, spot_lights[i].ambient_intensity) * attenuation * intensity;
 	}
 	FragColor = vec4(result, 1.0);
 }

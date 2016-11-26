@@ -180,8 +180,8 @@ void Shader::setParameter(std::string const & name, std::size_t index, SpotLight
 		setParameter(s.str() + "color", light.getColor());
 		setParameter(s.str() + "position", light.getPosition());
 		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
-		setParameter(s.str() + "inner_angle", std::cos(light.getInnerAngle()));
-		setParameter(s.str() + "outer_angle", std::cos(light.getOuterAngle()));
+		setParameter(s.str() + "inner_angle", std::cos(Deg2Rad * light.getInnerAngle()));
+		setParameter(s.str() + "outer_angle", std::cos(Deg2Rad * light.getOuterAngle()));
 		setParameter(s.str() + "constant_attenuation", light.getConstantAttenuation());
 		setParameter(s.str() + "linear_attenuation", light.getLinearAttenuation());
 		setParameter(s.str() + "quadratic_attenuation", light.getQuadraticAttenuation());

@@ -6,8 +6,8 @@ SpotLight::SpotLight(void) :
 
 SpotLight::SpotLight(Color const & color, Vector3 const & position, float constantAttenuation, float linearAttenuation, float quadraticAttenuation) :
 	DirectionalLight(color),
-	m_innerAngle(0.f),
-	m_outerAngle(0.f),
+	m_innerAngle(12.f),
+	m_outerAngle(15.f),
 	m_constantAttenuation(constantAttenuation),
 	m_linearAttenuation(linearAttenuation),
 	m_quadraticAttenuation(quadraticAttenuation)

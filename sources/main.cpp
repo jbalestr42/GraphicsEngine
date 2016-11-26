@@ -17,9 +17,10 @@ int main(void)
 	std::shared_ptr<Shader> phong = ResourceManager::getInstance().getShader(0);
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f));
-	SpotLight & light3 = lights.createSpotLight(Color(0.0f, 1.0f, 0.0f, 1.f), Vector3(2.f, 3.f, 1.f));
+	SpotLight & light3 = lights.createSpotLight(Color(0.0f, 1.0f, 0.0f, 1.f), Vector3(3.f, 12.f, 4.f));
 	light.rotateY(40.f);
-	light3.setAngles(40.f, 41.f);
+	light3.rotateX(-45.f);
+	light3.setAngles(12.5f, 13.5f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
 	Model ground("resources/cube.obj");
@@ -50,8 +51,7 @@ int main(void)
 		// Update
 		camera.update(dt);
 
-		//model.rotateY(dt * 40.f);
-		light3.rotateX(300.f * frametime);
+		model.rotateY(dt * 40.f);
 
 		while (dt > frameLimit)
 			dt -= frameLimit;
