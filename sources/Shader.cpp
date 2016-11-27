@@ -69,6 +69,7 @@ void Shader::setParameter(std::string const & name, int value)
 {
 	if (m_program)
 	{
+		std::cout << name << " " << value << std::endl;
 		glUseProgram(m_program);
 		int location = getParamIndex(name);
 		if (location != -1)
