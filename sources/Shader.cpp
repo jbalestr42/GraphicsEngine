@@ -6,6 +6,7 @@
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
 #include "Material.hpp"
+#include "Texture.hpp"
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -138,8 +139,8 @@ void Shader::setParameter(std::string const & name, Material const & material)
 		setParameter(name + ".kd", material.kd);
 		setParameter(name + ".ks", material.ks);
 		setParameter(name + ".shininess", material.shininess);
-		setParameter(name + ".diffuse_tex", GL_TEXTURE0);
-		setParameter(name + ".specular_tex", GL_TEXTURE1);
+		setParameter(name + ".diffuse_tex", 0);
+		setParameter(name + ".specular_tex", 1);
 	}
 }
 

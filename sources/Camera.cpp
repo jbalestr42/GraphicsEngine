@@ -48,6 +48,21 @@ Vector3 const & Camera::getOriginDirection(void) const
 	return (m_originDirection);
 }
 
+Vector3 const & Camera::getDirection(void) const
+{
+	return (m_direction);
+}
+
+Vector3 const & Camera::getRight(void) const
+{
+	return (m_right);
+}
+
+Vector3 const & Camera::getUp(void) const
+{
+	return (m_up);
+}
+
 void Camera::setPosition(Vector3 const & position)
 {
 	m_position = position;
@@ -88,22 +103,22 @@ void Camera::update(float frametime)
 	m_rotation.x += delta.y * frametime * 100.f;
 	m_rotation.y -= delta.x * frametime * 100.f;
 	q.fromEuler(m_rotation);
-	Vector3 direction = m_originDirection.rotate(q).normalize();
-	Vector3 right = direction.cross(m_originUp).normalize();
-	Vector3 up = right.cross(direction).normalize();
+	m_direction = m_originDirection.rotate(q).normalize();
+	m_right = m_direction.cross(m_originUp).normalize();
+	m_up = m_right.cross(m_direction).normalize();
 
 	if (Keyboard::isKeyPress(GLFW_KEY_A))
-		m_position += right * frametime * speed;
+		m_position += m_right * frametime * speed;
 	else if (Keyboard::isKeyPress(GLFW_KEY_D))
-		m_position -= right * frametime * speed;
+		m_position -= m_right * frametime * speed;
 	if (Keyboard::isKeyPress(GLFW_KEY_W))
-		m_position += direction * frametime * speed;
+		m_position += m_direction * frametime * speed;
 	else if (Keyboard::isKeyPress(GLFW_KEY_S))
-		m_position -= (direction * frametime * speed);
+		m_position -= (m_direction * frametime * speed);
 	if (Keyboard::isKeyPress(GLFW_KEY_Q))
-		m_position += up * frametime * speed;
+		m_position += m_up * frametime * speed;
 	else if (Keyboard::isKeyPress(GLFW_KEY_E))
-		m_position -= up * frametime * speed;
+		m_position -= m_up * frametime * speed;
 
-	m_view = Matrix::lookAt(m_position, m_position + direction, up);
+	m_view = Matrix::lookAt(m_position, m_position + m_direction, m_up);
 }

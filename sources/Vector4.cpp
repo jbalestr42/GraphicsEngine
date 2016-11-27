@@ -127,6 +127,11 @@ Vector4 Vector4::operator*(float factor) const
 	return (Vector4(x * factor, y * factor, z * factor, w * factor));
 }
 
+Vector4 Vector4::operator/(float factor) const
+{
+	return (Vector4(x / factor, y / factor, z / factor, w / factor));
+}
+
 Vector4 Vector4::operator-(Vector4 const & vector4) const
 {
 	return (Vector4(x - vector4.x, y - vector4.y, z - vector4.z, w - vector4.w));

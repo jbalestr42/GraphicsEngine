@@ -1,4 +1,5 @@
 #include "FrameBuffer.hpp"
+#include "Shader.hpp"
 #include <iostream>
 
 FrameBuffer::FrameBuffer(void) :
@@ -102,11 +103,14 @@ std::size_t FrameBuffer::getHeight(void) const
 	return (m_height);
 }
 
-void FrameBuffer::draw(void)
+void FrameBuffer::draw(Shader & shader) const
 {
-	glBindVertexArray(m_vertexArrayObject);
+	shader.setParameter("shadow_map", GL_TEXTURE0);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
+
+	glBindVertexArray(m_vertexArrayObject);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 }

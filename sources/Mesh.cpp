@@ -154,16 +154,41 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIndex, std::string const & dirPath)
 {
 	assert(materialIndex < scene->mNumMaterials);
+	//std::cout << "Mesh entry" << std::endl;
 
 	std::string fullPath;
 	aiMaterial const * material = scene->mMaterials[materialIndex];
 	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
+	{
+		//std::cout << "diffuse" << std::endl;
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
+	}
 	if (getTexture(material, aiTextureType_SPECULAR, dirPath, fullPath))
+	{
+		//std::cout << "specular" << std::endl;
 		m_material.specularTexture = ResourceManager::getInstance().getTexture(fullPath);
+	}
+	//if (getTexture(material, aiTextureType_AMBIENT, dirPath, fullPath))
+	//	std::cout << "--" << std::endl;
+	//if (getTexture(material, aiTextureType_EMISSIVE, dirPath, fullPath))
+	//	std::cout << "-0" << std::endl;
+	//if (getTexture(material, aiTextureType_HEIGHT, dirPath, fullPath))
+	//	std::cout << "-1" << std::endl;
+	//if (getTexture(material, aiTextureType_NORMALS, dirPath, fullPath))
+	//	std::cout << "-2" << std::endl;
+	//if (getTexture(material, aiTextureType_SHININESS, dirPath, fullPath))
+	//	std::cout << "-3" << std::endl;
+	//if (getTexture(material, aiTextureType_OPACITY, dirPath, fullPath))
+	//	std::cout << "-4" << std::endl;
+	//if (getTexture(material, aiTextureType_DISPLACEMENT, dirPath, fullPath))
+	//	std::cout << "-5" << std::endl;
+	//if (getTexture(material, aiTextureType_LIGHTMAP, dirPath, fullPath))
+	//	std::cout << "-6" << std::endl;
+	//if (getTexture(material, aiTextureType_UNKNOWN, dirPath, fullPath))
+	//	std::cout << "-7" << std::endl;
 
 	aiString name;
-	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
+	material->Get(AI_MATKEY_NAME, name);
 
 	aiColor3D c(0.f, 0.f, 0.f);
 	if (material->Get(AI_MATKEY_COLOR_AMBIENT, c) != -1)
@@ -186,12 +211,16 @@ void Mesh::MeshEntry::draw(Shader & shader) const
 
 	// Bind textures
 	if (m_material.diffuseTexture)
-		m_material.diffuseTexture->bind(GL_TEXTURE0, GL_TEXTURE_2D);
+		m_material.diffuseTexture->bind(GL_TEXTURE0 + 0, GL_TEXTURE_2D);
 	if (m_material.specularTexture)
-		m_material.specularTexture->bind(GL_TEXTURE1, GL_TEXTURE_2D);
+		m_material.specularTexture->bind(GL_TEXTURE0 + 1, GL_TEXTURE_2D);
 
 	// Draw
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_indiceCount, GL_UNSIGNED_INT, (GLvoid*)0);
 	glBindVertexArray(0);
+	//glActiveTexture(GL_TEXTURE0 + 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	//glActiveTexture(GL_TEXTURE0 + 1);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
