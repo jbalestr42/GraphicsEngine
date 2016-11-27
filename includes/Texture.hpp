@@ -19,6 +19,8 @@ public:
 	std::size_t getHeight(void) const;
 	std::size_t getWidth(void) const;
 
+	int getTextureID(void) const { return m_textureID; }
+
 	void bind(GLenum textureUnit, GLenum textureTarget);
 	bool load(void);
 

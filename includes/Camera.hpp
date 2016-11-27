@@ -17,6 +17,9 @@ public:
 	Vector3 const & getRotation(void) const;
 	Vector3 const & getOriginUp(void) const;
 	Vector3 const & getOriginDirection(void) const;
+	Vector3 const & getDirection(void) const;
+	Vector3 const & getRight(void) const;
+	Vector3 const & getUp(void) const;
 
 	void setPosition(Vector3 const & position);
 	void setRotation(Vector3 const & rotation);
@@ -36,6 +39,9 @@ private:
 	Vector3		m_originDirection;
 	Vector3		m_position;
 	Vector3		m_rotation;
+	Vector3		m_direction;
+	Vector3		m_up;
+	Vector3		m_right;
 	Vector2		m_mousePosition;
 	Matrix		m_view;
 	Matrix		m_projection;

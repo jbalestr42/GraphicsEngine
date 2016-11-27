@@ -186,9 +186,9 @@ void Mesh::MeshEntry::draw(Shader & shader) const
 
 	// Bind textures
 	if (m_material.diffuseTexture)
-		m_material.diffuseTexture->bind(GL_TEXTURE0, GL_TEXTURE_2D);
+		m_material.diffuseTexture->bind(GL_TEXTURE0 + 0, GL_TEXTURE_2D);
 	if (m_material.specularTexture)
-		m_material.specularTexture->bind(GL_TEXTURE1, GL_TEXTURE_2D);
+		m_material.specularTexture->bind(GL_TEXTURE0 + 1, GL_TEXTURE_2D);
 
 	// Draw
 	glBindVertexArray(m_vertexArrayObject);

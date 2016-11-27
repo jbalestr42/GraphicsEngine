@@ -27,6 +27,7 @@ public:
 	Vector4 operator*(Matrix const & matrix) const;
 	Vector4 operator*(Vector4 const & vector4) const;
 	Vector4 operator*(float factor) const;
+	Vector4 operator/(float factor) const;
 	Vector4 operator-(Vector4 const & vector4) const;
 	Vector4 operator-(void) const;
 

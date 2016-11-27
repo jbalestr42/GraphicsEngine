@@ -4,6 +4,8 @@
 # include <cstddef>
 # include <GL/glew.h>
 
+class Shader;
+
 class FrameBuffer
 {
 public:
@@ -13,13 +15,14 @@ public:
 
 	void bindFrameBuffer(void);
 	void init(void);
-	void draw(void);
+	void draw(Shader & shader) const;
 
+	void bindTexture(void);
 	std::size_t getWidth(void) const;
 	std::size_t getHeight(void) const;
+	int getTextureID(void) const { return m_texture;}
 
 protected:
-	void bindTexture(void);
 	void createFrameBuffer(GLenum attachment, GLenum texTarget, GLint mipMapLevel = 0u);
 	virtual void initTextureParam(void);
 
