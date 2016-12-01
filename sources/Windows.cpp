@@ -6,33 +6,21 @@
 
 Windows::Windows(void) :
 	Windows(800u, 600u, "OpenGL Window")
-{
-}
+{ }
 
-Windows::Windows(int width, int height, char const * title) :
+Windows::Windows(std::size_t width, std::size_t height, char const * title) :
+	RenderTarget(width, height),
 	m_window(nullptr),
-	m_width(width),
-	m_height(height),
 	m_title(title)
 {
+	RenderTarget::setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	init();
-}
-
-Windows::Windows(Windows const & windows)
-{
-	*this = windows;
 }
 
 Windows::~Windows(void)
 {
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
-}
-
-Windows & Windows::operator=(Windows const & windows)
-{
-	(void)windows;
-	return (*this);
 }
 
 void Windows::init(void)
@@ -57,7 +45,7 @@ void Windows::init(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// if debug
 	// glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-	m_window = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
+	m_window = glfwCreateWindow(getWidth(), getHeight(), m_title, NULL, NULL);
 	if (!m_window)
 	{
 		glfwTerminate();
@@ -76,10 +64,14 @@ void Windows::init(void)
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	glGetError(); // Avoid first error
+	glGetError(); // Avoid first error coming from nowhere
 	glfwSwapInterval(1); // vsync
-	glfwGetFramebufferSize(m_window, &m_width, &m_height);
-	resizeCallback(m_window, m_width, m_height);
+	int width = 0;
+	int height = 0;
+	glfwGetFramebufferSize(m_window, &width, &height);
+	setWidth(width);
+	setHeight(height);
+	resizeCallback(m_window, getWidth(), getHeight());
 	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glEnable(GL_MULTISAMPLE);
@@ -89,14 +81,14 @@ void Windows::init(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+void Windows::bind(void)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 bool Windows::isOpen(void) const
 {
 	return (!glfwWindowShouldClose(m_window));
-}
-
-void Windows::clear(void) const
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Windows::display(void) const
@@ -117,21 +109,6 @@ void Windows::close(void)
 GLFWwindow * Windows::getWindow(void) const
 {
 	return m_window;
-}
-
-std::size_t Windows::getWidth(void) const
-{
-	return (m_width);
-}
-
-std::size_t Windows::getHeight(void) const
-{
-	return (m_height);
-}
-
-void Windows::setClearColor(Color const & color)
-{
-	glClearColor(color.r, color.g, color.b, color.a);
 }
 
 void Windows::errorCallback(int error, char const * description)

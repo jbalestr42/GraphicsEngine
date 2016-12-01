@@ -1,39 +1,31 @@
 #ifndef WINDOWS_HPP
 # define WINDOWS_HPP
 
+# include <cstddef>
 # include <GL/glew.h>
 # include <GLFW/glfw3.h>
-# include <cstddef>
+# include "RenderTarget.hpp"
 
 class Color;
 
-class Windows
+class Windows : public RenderTarget
 {
 public:
 	Windows(void);
-	Windows(int width, int height, char const * title);
+	Windows(std::size_t width, std::size_t height, char const * title);
 	virtual ~Windows(void);
 
+	virtual void bind(void);
 	bool isOpen(void) const;
-	void clear(void) const;
 	void display(void) const;
 	void pollEvents(void) const;
 	void close(void);
 
-	std::size_t getWidth(void) const;
-	std::size_t getHeight(void) const;
 	GLFWwindow * getWindow(void) const;
 
-	void setClearColor(Color const & color);
-
 private:
-	GLFWwindow *			m_window;
-	int						m_width;
-	int						m_height;
-	char const *			m_title;
-
-	Windows(Windows const & windows);
-	Windows & operator=(Windows const & windows);
+	GLFWwindow *		m_window;
+	char const *		m_title;
 
 	void init(void);
 	static void errorCallback(int error, char const * description);

@@ -42,6 +42,8 @@ SRC =	main.cpp \
 		LightManager.cpp \
 		Material.cpp \
 		FrameBuffer.cpp \
+		ShadowMap.cpp \
+		RenderTarget.cpp \
 		Color.cpp
 
 INC =	Matrix.hpp \
@@ -69,7 +71,11 @@ INC =	Matrix.hpp \
 		LightManager.hpp \
 		Material.hpp \
 		FrameBuffer.hpp \
-		Color.hpp
+		ShadowMap.hpp \
+		Color.hpp \
+		RenderTarget.hpp \
+		NonCopyable.hpp \
+		Enums.hpp
 
 OBJ =	$(SRC:.cpp=.o)
 I =		$(addprefix $(IDIR), $(INC))

@@ -8,7 +8,7 @@
 class Mesh;
 class Shader;
 
-class Model : public Transformable, public IDrawable
+class Model : public Transformable, IDrawable
 {
 public:
 	Model(void);

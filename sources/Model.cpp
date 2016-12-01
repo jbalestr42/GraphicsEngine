@@ -46,6 +46,7 @@ void Model::loadModel(std::string const & filename)
 	m_mesh = ResourceManager::getInstance().getMesh(filename);
 }
 
+// TODO check if we can make a mutable matrix to have getMatrix const
 void Model::draw(Shader & shader)
 {
 	shader.setParameter("ModelMatrix", getMatrix());

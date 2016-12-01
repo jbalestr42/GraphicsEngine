@@ -1,5 +1,6 @@
 #include "FrameBuffer.hpp"
 #include "Shader.hpp"
+#include "Enums.hpp"
 #include <iostream>
 
 FrameBuffer::FrameBuffer(void) :
@@ -7,14 +8,13 @@ FrameBuffer::FrameBuffer(void) :
 {}
 
 FrameBuffer::FrameBuffer(std::size_t width, std::size_t height) :
+	RenderTarget(width, height),
 	m_frameBufferObject(0u),
-	m_texture(0u),
-	m_width(width),
-	m_height(height)
+	m_texture(0u)
 {
+	RenderTarget::setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glGenFramebuffers(1, &m_frameBufferObject);
 	glGenTextures(1, &m_texture);
-	//TODO use Texture class
 
 	// Creates vertices to draw the texture
 	GLfloat quad[] =
@@ -46,16 +46,18 @@ FrameBuffer::~FrameBuffer(void)
 {
 	glDeleteFramebuffers(1, &m_frameBufferObject);
 	glDeleteTextures(1, &m_texture);
-	//TODO delete vao vbo
+	glDeleteBuffers(1, &m_vertexBufferObject);
+	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
-void FrameBuffer::bindFrameBuffer(void)
+void FrameBuffer::bind(void)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 }
 
 void FrameBuffer::bindTexture(void)
 {
+	glActiveTexture(GL_TEXTURE0 + ShadowMapIndex);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
@@ -80,6 +82,7 @@ void FrameBuffer::initTextureParam(void)
 	createFrameBuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 
 	//TODO use to do renderTexture
+	//GLuint			m_renderBufferObject;
 	//glGenRenderbuffers(1, &m_renderBufferObject);
 	//glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferObject);
 	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height); // Use a single renderbuffer object for both a depth AND stencil buffer.
@@ -89,27 +92,16 @@ void FrameBuffer::initTextureParam(void)
 
 void FrameBuffer::createFrameBuffer(GLenum attachment, GLenum texTarget, GLint mipMapLevel)
 {
-	bindFrameBuffer();
+	bind();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, texTarget, m_texture, mipMapLevel);
 }
 
-std::size_t FrameBuffer::getWidth(void) const
+void FrameBuffer::draw(Shader & shader)
 {
-	return (m_width);
-}
+	shader.setParameter("screen_texture", DiffuseIndex);
 
-std::size_t FrameBuffer::getHeight(void) const
-{
-	return (m_height);
-}
-
-void FrameBuffer::draw(Shader & shader) const
-{
-	shader.setParameter("shadow_map", GL_TEXTURE0);
-
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0 + DiffuseIndex);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
-
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
