@@ -76,7 +76,8 @@ int main(void)
 		Matrix cam = camera.getViewMatrix();
 		Matrix camInv = cam.inverse();
 
-		float ar = 600.f / 800.f;
+		// Retrieve data from IView
+		float ar = win.getWidth() / win.getHeight();
 		float fov = 60.f;
 		float near = 0.1f;
 		float far = 100.f;
@@ -90,8 +91,6 @@ int main(void)
 		//std::cout << cam << std::endl;
 		//std::cout << camInv << std::endl;
 		//std::cout << camera.getPosition() << std::endl;
-
-		Matrix lightView;
 
 		for (std::size_t i = 0u; i < cascadeCount; i++)
 		{
@@ -116,7 +115,8 @@ int main(void)
 				{-xf, -yf, cascadeEnd[i + 1], 1.f},
 			};
 
-			lightView = Matrix::lookAt(Vector3(0.f, 0.f, 0.f), light.getRotatedDirection(), {0.f, 1.f, 0.f});
+			Matrix lightView;
+			lightView = Matrix::lookAt({0.f, 0.f, 0.f}, light.getRotatedDirection(), {0.f, 1.f, 0.f});
 
 			Vector4 frustumCornersL[NUM_FRUSTUM_CORNERS];
 

@@ -41,7 +41,7 @@ SRC =	main.cpp \
 		Camera.cpp \
 		LightManager.cpp \
 		Material.cpp \
-		FrameBuffer.cpp \
+		RenderTexture.cpp \
 		ShadowMap.cpp \
 		RenderTarget.cpp \
 		Color.cpp
@@ -70,7 +70,7 @@ INC =	Matrix.hpp \
 		IView.hpp \
 		LightManager.hpp \
 		Material.hpp \
-		FrameBuffer.hpp \
+		RenderTexture.hpp \
 		ShadowMap.hpp \
 		Color.hpp \
 		RenderTarget.hpp \

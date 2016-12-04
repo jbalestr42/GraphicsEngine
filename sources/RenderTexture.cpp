@@ -1,13 +1,13 @@
-#include "FrameBuffer.hpp"
+#include "RenderTexture.hpp"
 #include "Shader.hpp"
 #include "Enums.hpp"
 #include <iostream>
 
-FrameBuffer::FrameBuffer(void) :
-	FrameBuffer(1024u, 1024u)
+RenderTexture::RenderTexture(void) :
+	RenderTexture(1024u, 1024u)
 {}
 
-FrameBuffer::FrameBuffer(std::size_t width, std::size_t height) :
+RenderTexture::RenderTexture(std::size_t width, std::size_t height) :
 	RenderTarget(width, height),
 	m_frameBufferObject(0u),
 	m_texture(0u)
@@ -42,7 +42,7 @@ FrameBuffer::FrameBuffer(std::size_t width, std::size_t height) :
 	glBindVertexArray(0);
 }
 
-FrameBuffer::~FrameBuffer(void)
+RenderTexture::~RenderTexture(void)
 {
 	glDeleteFramebuffers(1, &m_frameBufferObject);
 	glDeleteTextures(1, &m_texture);
@@ -50,18 +50,18 @@ FrameBuffer::~FrameBuffer(void)
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
-void FrameBuffer::bind(void)
+void RenderTexture::bind(void)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 }
 
-void FrameBuffer::bindTexture(void)
+void RenderTexture::bindTexture(void)
 {
 	glActiveTexture(GL_TEXTURE0 + ShadowMapIndex);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
-void FrameBuffer::init(void)
+void RenderTexture::init(void)
 {
 	bindTexture();
 
@@ -74,12 +74,12 @@ void FrameBuffer::init(void)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void FrameBuffer::initTextureParam(void)
+void RenderTexture::initTextureParam(void)
 {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWidth(), getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	createFrameBuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
+	createRenderTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 
 	//TODO use to do renderTexture
 	//GLuint			m_renderBufferObject;
@@ -90,13 +90,13 @@ void FrameBuffer::initTextureParam(void)
 	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferObject); // Now actually attach it
 }
 
-void FrameBuffer::createFrameBuffer(GLenum attachment, GLenum texTarget, GLint mipMapLevel)
+void RenderTexture::createRenderTexture(GLenum attachment, GLenum texTarget, GLint mipMapLevel)
 {
 	bind();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, texTarget, m_texture, mipMapLevel);
 }
 
-void FrameBuffer::draw(Shader & shader)
+void RenderTexture::draw(Shader & shader)
 {
 	shader.setParameter("screen_texture", DiffuseIndex);
 

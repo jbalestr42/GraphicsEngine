@@ -8,12 +8,12 @@
 
 class Shader;
 
-class FrameBuffer : public RenderTarget, public IDrawable
+class RenderTexture : public RenderTarget, public IDrawable
 {
 public:
-	FrameBuffer(void);
-	FrameBuffer(std::size_t width, std::size_t height);
-	virtual ~FrameBuffer(void);
+	RenderTexture(void);
+	RenderTexture(std::size_t width, std::size_t height);
+	virtual ~RenderTexture(void);
 
 	virtual void bind(void);
 	void init(void);
@@ -22,7 +22,7 @@ public:
 	void bindTexture(void);
 
 protected:
-	void createFrameBuffer(GLenum attachment, GLenum texTarget, GLint mipMapLevel = 0u);
+	void createRenderTexture(GLenum attachment, GLenum texTarget, GLint mipMapLevel = 0u);
 	virtual void initTextureParam(void);
 
 private:
@@ -31,8 +31,8 @@ private:
 	GLuint			m_frameBufferObject;
 	GLuint			m_texture;
 
-	FrameBuffer(FrameBuffer const & frameBuffer);
-	FrameBuffer & operator=(FrameBuffer const & frameBuffer);
+	RenderTexture(RenderTexture const & frameBuffer);
+	RenderTexture & operator=(RenderTexture const & frameBuffer);
 
 };
 

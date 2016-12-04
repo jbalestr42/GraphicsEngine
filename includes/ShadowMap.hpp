@@ -1,9 +1,9 @@
 #ifndef SHADOWMAP_HPP
 # define SHADOWMAP_HPP
 
-# include "FrameBuffer.hpp"
+# include "RenderTexture.hpp"
 
-class ShadowMap : public FrameBuffer
+class ShadowMap : public RenderTexture
 {
 public:
 	ShadowMap(void);
