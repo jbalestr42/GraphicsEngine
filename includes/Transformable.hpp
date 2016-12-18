@@ -32,16 +32,16 @@ public:
 	void scale(Vector3 const & scale);
 
 	void setEulerOrder(Matrix::EulerOrder order);
-	Matrix const & getMatrix(void);
+	Matrix const & getMatrix(void) const;
 
 private:
 	Vector3				m_origin;
 	Vector3				m_position;
 	Vector3				m_rotation;
 	Vector3				m_scale;
-	Matrix				m_model;
 	Matrix::EulerOrder	m_eulerOrder;
-	bool				m_needRecompute;
+	mutable Matrix		m_model;
+	mutable bool		m_needRecompute;
 
 };
 

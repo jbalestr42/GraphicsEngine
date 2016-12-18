@@ -4,6 +4,8 @@
 # include "Vector3.hpp"
 # include <iosfwd>
 
+class Vector4;
+
 class Matrix
 {
 public:
@@ -30,6 +32,7 @@ public:
 	Matrix & operator=(Matrix && matrix);
 	float & operator[](int index);
 	Matrix operator*(Matrix const & matrix) const;
+	Vector4 operator*(Vector4 const & vector) const;
 
 	Matrix & multiply(Matrix const & matrix);
 	Matrix & rotateX(float angle);
@@ -48,8 +51,6 @@ public:
 	static Matrix perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane);
 	static Matrix orthographicProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane);
 	static Matrix lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up);
-
-	void dump(void);
 
 private:
 	float	m_matrix[16];

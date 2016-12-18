@@ -128,7 +128,7 @@ void Transformable::setEulerOrder(Matrix::EulerOrder order)
 	m_needRecompute = true;
 }
 
-Matrix const & Transformable::getMatrix(void)
+Matrix const & Transformable::getMatrix(void) const
 {
 	if (m_needRecompute)
 	{

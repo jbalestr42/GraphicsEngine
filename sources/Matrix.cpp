@@ -1,5 +1,6 @@
 #include "Matrix.hpp"
 #include "Math.hpp"
+#include "Vector4.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -63,6 +64,34 @@ Matrix Matrix::operator*(Matrix const & matrix) const
 	}
 	return (result);
 }
+
+Vector4 Matrix::operator*(Vector4 const & vector) const
+{
+	Vector4 res;
+
+	res.x += m_matrix[0 * 4 + 0] * vector.x;
+	res.x += m_matrix[1 * 4 + 0] * vector.y;
+	res.x += m_matrix[2 * 4 + 0] * vector.z;
+	res.x += m_matrix[3 * 4 + 0] * vector.w;
+
+	res.y += m_matrix[0 * 4 + 1] * vector.x;
+	res.y += m_matrix[1 * 4 + 1] * vector.y;
+	res.y += m_matrix[2 * 4 + 1] * vector.z;
+	res.y += m_matrix[3 * 4 + 1] * vector.w;
+
+	res.z += m_matrix[0 * 4 + 2] * vector.x;
+	res.z += m_matrix[1 * 4 + 2] * vector.y;
+	res.z += m_matrix[2 * 4 + 2] * vector.z;
+	res.z += m_matrix[3 * 4 + 2] * vector.w;
+
+	res.w += m_matrix[0 * 4 + 3] * vector.x;
+	res.w += m_matrix[1 * 4 + 3] * vector.y;
+	res.w += m_matrix[2 * 4 + 3] * vector.z;
+	res.w += m_matrix[3 * 4 + 3] * vector.w;
+
+	return (res);
+}
+
 
 Matrix & Matrix::multiply(Matrix const & matrix)
 {
@@ -319,16 +348,6 @@ Matrix Matrix::lookAt(Vector3 const & position, Vector3 const & center, Vector3 
 	return (result);
 }
 
-void Matrix::dump(void)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-			std::cout << m_matrix[i * 4 + j] << " ";
-		std::cout << std::endl;
-	}
-}
-
 int Matrix::getMinor(Matrix const & src, Matrix & dest, int row, int col) const
 {
 	int colCount;
@@ -356,19 +375,19 @@ int Matrix::getMinor(Matrix const & src, Matrix & dest, int row, int col) const
 float Matrix::determinant3(Matrix const & matrix) const
 {
 	float const * m = matrix.m_matrix;
-	float det =
-		m[0] * (m[4] * m[8] - m[5] * m[7])
-		- m[1] * (m[3] * m[8] - m[5] * m[6])
-		+ m[2] * (m[3] * m[7] - m[4] * m[6]);
+	float det =   m[0] * (m[4] * m[8] - m[5] * m[7])
+				- m[1] * (m[3] * m[8] - m[5] * m[6])
+				+ m[2] * (m[3] * m[7] - m[4] * m[6]);
 	return (det);
 }
 
 std::ostream & operator<<(std::ostream & out, Matrix const & matrix)
 {
+	const float * m = matrix.getMatrix();
 	out << "Matrix(";
-	out << matrix.getMatrix()[0 * 4 + 0] << ", " << matrix.getMatrix()[0 * 4 + 1] << ", " << matrix.getMatrix()[0 * 4 + 2] << ", " << matrix.getMatrix()[0 * 4 + 4] << ", " << std::endl;
-	out << matrix.getMatrix()[1 * 4 + 0] << ", " << matrix.getMatrix()[1 * 4 + 1] << ", " << matrix.getMatrix()[1 * 4 + 2] << ", " << matrix.getMatrix()[1 * 4 + 4] << ", " << std::endl;
-	out << matrix.getMatrix()[2 * 4 + 0] << ", " << matrix.getMatrix()[2 * 4 + 1] << ", " << matrix.getMatrix()[2 * 4 + 2] << ", " << matrix.getMatrix()[2 * 4 + 4] << ", " << std::endl;
-	out << matrix.getMatrix()[3 * 4 + 0] << ", " << matrix.getMatrix()[3 * 4 + 1] << ", " << matrix.getMatrix()[3 * 4 + 2] << ", " << matrix.getMatrix()[3 * 4 + 4] << ")" << std::endl;
+	out << m[0 * 4 + 0] << ", " << m[0 * 4 + 1] << ", " << m[0 * 4 + 2] << ", " << m[0 * 4 + 3] << ", " << std::endl;
+	out << m[1 * 4 + 0] << ", " << m[1 * 4 + 1] << ", " << m[1 * 4 + 2] << ", " << m[1 * 4 + 3] << ", " << std::endl;
+	out << m[2 * 4 + 0] << ", " << m[2 * 4 + 1] << ", " << m[2 * 4 + 2] << ", " << m[2 * 4 + 3] << ", " << std::endl;
+	out << m[3 * 4 + 0] << ", " << m[3 * 4 + 1] << ", " << m[3 * 4 + 2] << ", " << m[3 * 4 + 3] << ")" << std::endl;
 	return (out);
 }

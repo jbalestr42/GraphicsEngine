@@ -9,6 +9,7 @@ class Camera : public IView
 {
 public:
 	Camera(void);
+	Camera(std::size_t width, std::size_t height);
 	Camera(Camera const & camera);
 	virtual ~Camera(void) = default;
 
@@ -20,15 +21,23 @@ public:
 	Vector3 const & getDirection(void) const;
 	Vector3 const & getRight(void) const;
 	Vector3 const & getUp(void) const;
+	std::size_t getWidth(void) const;
+	std::size_t getHeight(void) const;
+	float getFov(void) const;
+	float getNearPlane(void) const;
+	float getFarPlane(void) const;
+
+	virtual Vector3 const & getPosition(void) const;
+	virtual Matrix const & getProjectionMatrix(void) const;
+	virtual Matrix const & getViewMatrix(void) const;
 
 	void setPosition(Vector3 const & position);
 	void setRotation(Vector3 const & rotation);
 	void setOriginUp(Vector3 const & originUp);
 	void setOriginDirection(Vector3 const & originDirection);
-
-	virtual Matrix const & getProjectionMatrix(void) const;
-	virtual Matrix const & getViewMatrix(void) const;
-	virtual Vector3 const & getPosition(void) const;
+	void setFov(float fov);
+	void setNearPlane(float nearPlane);
+	void setFarPlane(float farPlane);
 
 	void update(float frametime);
 
@@ -45,6 +54,12 @@ private:
 	Vector2		m_mousePosition;
 	Matrix		m_view;
 	Matrix		m_projection;
+
+	std::size_t	m_width;
+	std::size_t	m_height;
+	float		m_fov;
+	float		m_near;
+	float		m_far;
 };
 
 #endif
