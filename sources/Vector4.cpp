@@ -93,26 +93,27 @@ Vector4 Vector4::operator+(Vector4 const & vector4) const
 Vector4 Vector4::operator*(Matrix const & matrix) const
 {
 	Vector4 res;
+	const float * m = matrix.getMatrix();
 
-	res.x += matrix.getMatrix()[0 * 4 + 0] * x;
-	res.x += matrix.getMatrix()[0 * 4 + 1] * y;
-	res.x += matrix.getMatrix()[0 * 4 + 2] * z;
-	res.x += matrix.getMatrix()[0 * 4 + 3] * w;
+	res.x += m[0 * 4 + 0] * x;
+	res.x += m[0 * 4 + 1] * y;
+	res.x += m[0 * 4 + 2] * z;
+	res.x += m[0 * 4 + 3] * w;
 
-	res.y += matrix.getMatrix()[1 * 4 + 0] * x;
-	res.y += matrix.getMatrix()[1 * 4 + 1] * y;
-	res.y += matrix.getMatrix()[1 * 4 + 2] * z;
-	res.y += matrix.getMatrix()[1 * 4 + 3] * w;
+	res.y += m[1 * 4 + 0] * x;
+	res.y += m[1 * 4 + 1] * y;
+	res.y += m[1 * 4 + 2] * z;
+	res.y += m[1 * 4 + 3] * w;
 
-	res.z += matrix.getMatrix()[2 * 4 + 0] * x;
-	res.z += matrix.getMatrix()[2 * 4 + 1] * y;
-	res.z += matrix.getMatrix()[2 * 4 + 2] * z;
-	res.z += matrix.getMatrix()[2 * 4 + 3] * w;
+	res.z += m[2 * 4 + 0] * x;
+	res.z += m[2 * 4 + 1] * y;
+	res.z += m[2 * 4 + 2] * z;
+	res.z += m[2 * 4 + 3] * w;
 
-	res.w += matrix.getMatrix()[3 * 4 + 0] * x;
-	res.w += matrix.getMatrix()[3 * 4 + 1] * y;
-	res.w += matrix.getMatrix()[3 * 4 + 2] * z;
-	res.w += matrix.getMatrix()[3 * 4 + 3] * w;
+	res.w += m[3 * 4 + 0] * x;
+	res.w += m[3 * 4 + 1] * y;
+	res.w += m[3 * 4 + 2] * z;
+	res.w += m[3 * 4 + 3] * w;
 
 	return (res);
 }

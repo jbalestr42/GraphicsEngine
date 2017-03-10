@@ -8,7 +8,7 @@ layout(location=3) in vec4 Color;
 uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
-uniform mat4 LightMatrix;
+uniform mat4 LightViewProjMatrix;
 
 out vec4 Color0;
 out vec2 TexCoord0;		// Pixel position
@@ -23,5 +23,5 @@ void main(void)
 	TexCoord0 = TexCoord;
 	Normal0 = (ModelMatrix * vec4(Normal, 0.0)).xyz;
 	WorldPos0 = (ModelMatrix * vec4(Position, 1.0)).xyz;
-	LightPos0 = LightMatrix * vec4(WorldPos0, 1.0);
+	LightPos0 = LightViewProjMatrix * vec4(WorldPos0, 1.0);
 }
