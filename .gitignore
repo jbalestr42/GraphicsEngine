@@ -1,26 +1,18 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Generated files
+*.vcxproj
+*.filters
+*.user
+*.opendb
+*.dir
+*.sln
+*.db
+Debug
+.vs
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# CMake files
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
 
 # Executables
 *.exe

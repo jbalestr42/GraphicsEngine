@@ -4,7 +4,7 @@
 # include <GL/glew.h>
 # include <vector>
 # include <memory>
-# include <scene.h>
+# include <assimp/scene.h>
 # include "Vertex.hpp"
 # include "Material.hpp"
 

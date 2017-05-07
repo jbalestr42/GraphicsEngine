@@ -6,8 +6,8 @@
 #include "Matrix.hpp"
 #include <iostream>
 #include <cassert>
-#include <postprocess.h>
-#include <Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
 
 Mesh::Mesh(std::string const & filename) :
 	m_filename(filename)
