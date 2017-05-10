@@ -13,6 +13,21 @@ function(link_library lib_name lib_path)
 	endforeach()
 endfunction()
 
+# Find and link a library
+function(link_library_mac lib_name lib_path)
+	message("- Link lib : ${lib_name}")
+
+	find_library(${lib_name}_LIB ${lib_name} ${lib_path})
+	target_link_libraries(GraphicsEngine ${${lib_name}_LIB})
+	get_filename_component(${lib_name}_DIR ${${lib_name}_LIB} PATH)
+
+	# Copy all dlls into the executable directory
+	file(GLOB files ${${lib_name}_DIR}/*.dll)
+	foreach (file ${files})
+		add_custom_command(TARGET GraphicsEngine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${file} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
+	endforeach()
+endfunction()
+
 # Define the minimum cmake version
 cmake_minimum_required(VERSION 3.0)
 
@@ -93,7 +108,6 @@ find_package(OpenGL REQUIRED)
 
 add_executable(GraphicsEngine ${SRCS} ${HEADERS})
 
-
 if (OPENGL_FOUND)
 	message("OPENGL FOUND ${OPENGL_gl_LIBRARY}")
 	target_include_directories(GraphicsEngine PUBLIC ${OPENGL_INCLUDE_DIR})
@@ -106,12 +120,12 @@ endif ()
 include_directories(lib/include)
 
 # Link libraries
-link_library(assimp "lib/assimp-3.3.1/x86")
-link_library(DevIL "lib/DevIL-1.8.0/x86")
-link_library(ILU "lib/DevIL-1.8.0/x86")
-link_library(ILUT "lib/DevIL-1.8.0/x86")
-link_library(glew32 "lib/glew-2.0.0/x86")
-link_library(glfw3 "lib/glfw-3.2.1/x86/lib-vc2015")
+link_library_mac(libassimp.dylib "lib/assimp-3.3.1/Mac")
+link_library_mac(libIL.dylib "lib/DevIL-1.8.0/Mac")
+link_library_mac(libILU.dylib "lib/DevIL-1.8.0/Mac")
+link_library_mac(libILUT.dylib "lib/DevIL-1.8.0/Mac")
+#link_library_mac(libGLEW.dylib "lib/glew-2.0.0/Mac")
+link_library_mac(libglfw3.dylib "lib/glfw-3.2.1/Mac")
 
 
 # static

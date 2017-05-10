@@ -3,7 +3,8 @@
 
 # define ILUT_USE_OPENGL
 
-# include <GL/glew.h>
+//# include <GL/glew.h>
+# include <OpenGL/gl3.h>
 # include <cstddef>
 # include <string>
 # include <IL/il.h>

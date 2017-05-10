@@ -194,4 +194,7 @@ void Mesh::MeshEntry::draw(Shader & shader) const
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_indiceCount, GL_UNSIGNED_INT, (GLvoid*)0);
 	glBindVertexArray(0);
+
+
+	// TODO unbind all textures
 }

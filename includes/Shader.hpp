@@ -1,7 +1,8 @@
 #ifndef SHADER_HPP
 # define SHADER_HPP
 
-# include <GL/glew.h>
+//# include <GL/glew.h>
+# include <OpenGL/gl3.h>
 # include <string>
 # include <vector>
 # include <map>

@@ -1,7 +1,8 @@
 #ifndef MESH_HPP
 # define MESH_HPP
 
-# include <GL/glew.h>
+//# include <GL/glew.h>
+# include <OpenGL/gl3.h>
 # include <vector>
 # include <memory>
 # include <assimp/scene.h>

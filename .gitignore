@@ -6,8 +6,11 @@
 *.dir
 *.sln
 *.db
-Debug
 .vs
+Debug
+Release
+bin
+Makefile
 
 # CMake files
 CMakeCache.txt

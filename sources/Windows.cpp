@@ -55,6 +55,7 @@ void Windows::init(void)
 
 	glfwWindowHint(GLFW_RESIZABLE, true);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	// if debug
 	// glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 	m_window = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
@@ -70,12 +71,15 @@ void Windows::init(void)
 	glfwSetFramebufferSizeCallback(m_window, resizeCallback);
 
 	glfwMakeContextCurrent(m_window);
+#if defined(__APPLE__) || defined(MACOSX)
+#else
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK)
 	{
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+#endif
 	glGetError(); // Avoid first error
 	glfwSwapInterval(1); // vsync
 	glfwGetFramebufferSize(m_window, &m_width, &m_height);
@@ -87,6 +91,11 @@ void Windows::init(void)
 	glDepthFunc(GL_LESS);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	int major, minor, rev;
+	glfwGetVersion(&major, &minor, &rev);
+	fprintf(stderr, "OpenGL version recieved: %d.%d.%d", major, minor, rev);
+	printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
 bool Windows::isOpen(void) const

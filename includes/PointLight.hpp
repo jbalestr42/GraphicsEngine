@@ -2,6 +2,7 @@
 # define POINTLIGHT_HPP
 
 # include "Light.hpp"
+# include <cstddef>
 
 class PointLight : public Light
 {

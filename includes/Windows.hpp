@@ -1,7 +1,8 @@
 #ifndef WINDOWS_HPP
 # define WINDOWS_HPP
 
-# include <GL/glew.h>
+//# include <GL/glew.h>
+# include <OpenGL/gl3.h>
 # include <GLFW/glfw3.h>
 # include <memory>
 

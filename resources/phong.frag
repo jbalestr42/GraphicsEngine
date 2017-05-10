@@ -72,9 +72,9 @@ vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir,
 	vec3 reflect_dir = reflect(light_dir, normal);
 	float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
 	// Combine results
-	vec3 ambient = light_color.rgb * ambient_intensity * texture2D(material.diffuse_tex, TexCoord0).rgb;
-	vec3 diffuse = light_color.rgb * lambertian * texture2D(material.diffuse_tex, TexCoord0).rgb;
-	vec3 specular = spec * texture2D(material.specular_tex, TexCoord0).rgb;
+	vec3 ambient = light_color.rgb * ambient_intensity * texture(material.diffuse_tex, TexCoord0).rgb;
+	vec3 diffuse = light_color.rgb * lambertian * texture(material.diffuse_tex, TexCoord0).rgb;
+	vec3 specular = spec * texture(material.specular_tex, TexCoord0).rgb;
 	return (ambient + diffuse + specular);
 }
 
@@ -84,10 +84,10 @@ void main(void)
 	vec3 normal = normalize(Normal0);
 	vec3 view_dir = normalize(view_position - WorldPos0);
 
-	for (uint i = 0; i < directional_light_count; i++)
+	for (uint i = 0u; i < directional_light_count; i++)
 		result += compute_light(directional_lights[i].color, -directional_lights[i].direction, normal, view_dir, directional_lights[i].ambient_intensity);
 
-	for (uint i = 0; i < point_light_count; i++)
+	for (uint i = 0u; i < point_light_count; i++)
 	{
 		// Attenuation
 		float distance = length(point_lights[i].position - WorldPos0);
@@ -95,7 +95,7 @@ void main(void)
 		result += compute_light(point_lights[i].color, point_lights[i].position - WorldPos0, normal, view_dir, point_lights[i].ambient_intensity) * attenuation;
 	}
 
-	for (uint i = 0; i < spot_light_count; i++)
+	for (uint i = 0u; i < spot_light_count; i++)
 	{
 		// Compute whether the pixel is the radius of the spotlight
 		vec3 light_dir = normalize(spot_lights[i].position - WorldPos0);
