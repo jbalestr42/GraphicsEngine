@@ -23,35 +23,35 @@ SpotLight & LightManager::createSpotLight(Color const & color, Vector3 const & p
 
 DirectionalLight & LightManager::getDirectionalLight(std::size_t index)
 {
-	assert(index < m_directionalLight.size());
-	return (m_directionalLight[index]);
+	return const_cast<DirectionalLight &>(static_cast<const LightManager &>(*this).getDirectionalLight(index));
 }
 
 DirectionalLight const & LightManager::getDirectionalLight(std::size_t index) const
 {
-	return (getDirectionalLight(index));
+	assert(index < m_directionalLight.size());
+	return (m_directionalLight[index]);
 }
 
 PointLight & LightManager::getPointLight(std::size_t index)
+{
+	return const_cast<PointLight &>(static_cast<const LightManager &>(*this).getPointLight(index));
+}
+
+PointLight const & LightManager::getPointLight(std::size_t index) const
 {
 	assert(index < m_pointLight.size());
 	return (m_pointLight[index]);
 }
 
-PointLight const & LightManager::getPointLight(std::size_t index) const
-{
-	return (getPointLight(index));
-}
-
 SpotLight & LightManager::getSpotLight(std::size_t index)
 {
-	assert(index < m_spotLight.size());
-	return (m_spotLight[index]);
+	return const_cast<SpotLight &>(static_cast<const LightManager &>(*this).getSpotLight(index));
 }
 
 SpotLight const & LightManager::getSpotLight(std::size_t index) const
 {
-	return (getSpotLight(index));
+	assert(index < m_spotLight.size());
+	return (m_spotLight[index]);
 }
 
 std::vector<DirectionalLight> & LightManager::getDirectionalLight(void)
