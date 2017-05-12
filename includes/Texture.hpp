@@ -3,8 +3,11 @@
 
 # define ILUT_USE_OPENGL
 
-//# include <GL/glew.h>
-# include <OpenGL/gl3.h>
+# if defined(__APPLE__) || defined(MACOSX)
+#  include <OpenGL/gl3.h>
+# else
+#  include <GL/glew.h>
+# endif
 # include <cstddef>
 # include <string>
 # include <IL/il.h>

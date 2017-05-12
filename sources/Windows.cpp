@@ -6,8 +6,7 @@
 
 Windows::Windows(void) :
 	Windows(800u, 600u, "OpenGL Window")
-{
-}
+{}
 
 Windows::Windows(int width, int height, char const * title) :
 	m_window(nullptr),
@@ -44,13 +43,12 @@ void Windows::init(void)
 
 	glfwWindowHint(GLFW_SAMPLES, 4); // antialiasing
 #if defined(__APPLE__) || defined(MACOSX)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
-#else
+#endif
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-#endif
+
 	glfwWindowHint(GLFW_DEPTH_BITS, 16);
 
 	glfwWindowHint(GLFW_RESIZABLE, true);
@@ -71,8 +69,9 @@ void Windows::init(void)
 	glfwSetFramebufferSizeCallback(m_window, resizeCallback);
 
 	glfwMakeContextCurrent(m_window);
-#if defined(__APPLE__) || defined(MACOSX)
-#else
+
+	// Glew is useless on MACOS
+#if !defined(__APPLE__) && !defined(MACOSX)
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK)
 	{
@@ -80,7 +79,8 @@ void Windows::init(void)
 		exit(EXIT_FAILURE);
 	}
 #endif
-	glGetError(); // Avoid first error
+
+	glGetError(); // Avoid first error ??
 	glfwSwapInterval(1); // vsync
 	glfwGetFramebufferSize(m_window, &m_width, &m_height);
 	resizeCallback(m_window, m_width, m_height);
@@ -94,8 +94,8 @@ void Windows::init(void)
 
 	int major, minor, rev;
 	glfwGetVersion(&major, &minor, &rev);
-	fprintf(stderr, "OpenGL version recieved: %d.%d.%d", major, minor, rev);
-	printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+	std::cout << "OpengGL version : " << major << "." << minor << "." << rev << std::endl;
+	std::cout << "GLSL version : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 }
 
 bool Windows::isOpen(void) const
