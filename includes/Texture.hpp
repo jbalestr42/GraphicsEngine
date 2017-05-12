@@ -3,14 +3,10 @@
 
 # define ILUT_USE_OPENGL
 
-# if defined(__APPLE__) || defined(MACOSX)
-#  include <OpenGL/gl3.h>
-# else
-#  include <GL/glew.h>
-# endif
 # include <cstddef>
 # include <string>
 # include <IL/il.h>
+# include "OpenGL.hpp"
 
 class Shader;
 

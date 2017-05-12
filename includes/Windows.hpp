@@ -1,11 +1,7 @@
 #ifndef WINDOWS_HPP
 # define WINDOWS_HPP
 
-# if defined(__APPLE__) || defined(MACOSX)
-#  include <OpenGL/gl3.h>
-# else
-#  include <GL/glew.h>
-# endif
+# include "OpenGL.hpp"
 # include <GLFW/glfw3.h>
 # include <memory>
 

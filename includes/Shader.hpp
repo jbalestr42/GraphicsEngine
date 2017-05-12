@@ -1,14 +1,10 @@
 #ifndef SHADER_HPP
 # define SHADER_HPP
 
-# if defined(__APPLE__) || defined(MACOSX)
-#  include <OpenGL/gl3.h>
-# else
-#  include <GL/glew.h>
-# endif
 # include <string>
 # include <vector>
 # include <map>
+# include "OpenGL.hpp"
 
 class Vector2;
 class Vector3;

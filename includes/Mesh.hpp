@@ -1,14 +1,10 @@
 #ifndef MESH_HPP
 # define MESH_HPP
 
-# if defined(__APPLE__) || defined(MACOSX)
-#  include <OpenGL/gl3.h>
-# else
-#  include <GL/glew.h>
-# endif
 # include <vector>
 # include <memory>
 # include <assimp/scene.h>
+# include "OpenGL.hpp"
 # include "Vertex.hpp"
 # include "Material.hpp"
 

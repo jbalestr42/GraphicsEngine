@@ -42,7 +42,7 @@ void Windows::init(void)
 		exit(EXIT_FAILURE);
 
 	glfwWindowHint(GLFW_SAMPLES, 4); // antialiasing
-#if defined(__APPLE__) || defined(MACOSX)
+#if defined(MACOS)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
 
@@ -71,7 +71,7 @@ void Windows::init(void)
 	glfwMakeContextCurrent(m_window);
 
 	// Glew is useless on MACOS
-#if !defined(__APPLE__) && !defined(MACOSX)
+#if !defined(MACOS)
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK)
 	{
