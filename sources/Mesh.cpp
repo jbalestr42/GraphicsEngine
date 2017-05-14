@@ -134,7 +134,7 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 {
 	if (material->GetTextureCount(textureType) > 0)
 	{
-		//TODO get all textures
+		//TODO get all textures, manage no texture better
 		aiString path;
 		if (material->GetTexture(textureType, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
 		{
@@ -144,7 +144,7 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 		else
 		{
 			std::cout << "Error while loading texture : Error texture used instead." << std::endl;
-			fullPath = dirPath + "/" + "error.jpg";
+			fullPath = dirPath + "/" + "no_texture.jpg";
 			return (1);
 		}
 	}
@@ -159,8 +159,12 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 	aiMaterial const * material = scene->mMaterials[materialIndex];
 	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
+	else
+		m_material.diffuseTexture = ResourceManager::getInstance().getTexture("resources/no_texture.jpg");
 	if (getTexture(material, aiTextureType_SPECULAR, dirPath, fullPath))
 		m_material.specularTexture = ResourceManager::getInstance().getTexture(fullPath);
+	else
+		m_material.specularTexture = ResourceManager::getInstance().getTexture("resources/black.jpg");
 
 	aiString name;
 	material->Get(AI_MATKEY_NAME, name); //TODO add in resource manager
@@ -194,7 +198,4 @@ void Mesh::MeshEntry::draw(Shader & shader) const
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_indiceCount, GL_UNSIGNED_INT, (GLvoid*)0);
 	glBindVertexArray(0);
-
-
-	// TODO unbind all textures
 }

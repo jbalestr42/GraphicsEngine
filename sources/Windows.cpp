@@ -41,7 +41,7 @@ void Windows::init(void)
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
 
-	glfwWindowHint(GLFW_SAMPLES, 4); // antialiasing
+	glfwWindowHint(GLFW_SAMPLES, 1); // antialiasing
 #if defined(MACOS)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
@@ -135,7 +135,7 @@ void Windows::setClearColor(Color const & color)
 
 void Windows::errorCallback(int error, char const * description)
 {
-	std::cerr << "ERROR " << error << " : " << description << std::endl;
+	std::cerr << "GLFW error (" << error << ") : " << description << std::endl;
 }
 
 void Windows::resizeCallback(GLFWwindow * window, int width, int height)
