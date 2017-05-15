@@ -1,10 +1,10 @@
 #ifndef SHADER_HPP
 # define SHADER_HPP
 
-# include <GL/glew.h>
 # include <string>
 # include <vector>
 # include <map>
+# include "OpenGL.hpp"
 
 class Vector2;
 class Vector3;

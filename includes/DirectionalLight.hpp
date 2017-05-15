@@ -2,6 +2,7 @@
 # define DIRECTIONNALLIGHT_HPP
 
 # include "Light.hpp"
+# include <cstddef>
 
 class DirectionalLight : public Light
 {

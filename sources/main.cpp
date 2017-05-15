@@ -35,7 +35,7 @@ int main(void)
 	while (win.isOpen())
 	{
 		// Compute frametime
-		float currentTime = glfwGetTime();
+		float currentTime = static_cast<float>(glfwGetTime());
 		float frametime = (currentTime - lastTime);
 		lastTime = currentTime;
 

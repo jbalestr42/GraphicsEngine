@@ -11,6 +11,9 @@ Texture::Texture(std::string const & filename) :
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // No blurry texture
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	ilGenImages(1, &m_id);
 	ilBindImage(m_id);
@@ -24,6 +27,7 @@ Texture::Texture(std::string const & filename) :
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // pixels are tightly packep
 
+	// TODO use exception
 	int err = ilGetError();
 	if (err)
 		std::cout << err << " " << filename << std::endl;

@@ -4,6 +4,7 @@
 # include "Transformable.hpp"
 # include "IDrawable.hpp"
 # include <memory>
+# include <string>
 
 class Mesh;
 class Shader;

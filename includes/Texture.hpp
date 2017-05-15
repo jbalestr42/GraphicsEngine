@@ -3,10 +3,10 @@
 
 # define ILUT_USE_OPENGL
 
-# include <GL/glew.h>
 # include <cstddef>
 # include <string>
 # include <IL/il.h>
+# include "OpenGL.hpp"
 
 class Shader;
 
