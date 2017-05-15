@@ -7,8 +7,8 @@
 #include "Enums.hpp"
 #include <iostream>
 #include <cassert>
-#include <postprocess.h>
-#include <Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
 
 Mesh::Mesh(std::string const & filename) :
 	m_filename(filename)
@@ -135,7 +135,7 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 {
 	if (material->GetTextureCount(textureType) > 0)
 	{
-		//TODO get all textures
+		//TODO get all textures, manage no texture better
 		aiString path;
 		if (material->GetTexture(textureType, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
 		{
@@ -145,7 +145,7 @@ int Mesh::MeshEntry::getTexture(aiMaterial const * material, aiTextureType textu
 		else
 		{
 			std::cout << "Error while loading texture : Error texture used instead." << std::endl;
-			fullPath = dirPath + "/" + "error.jpg";
+			fullPath = dirPath + "/" + "no_texture.jpg";
 			return (1);
 		}
 	}
@@ -160,33 +160,13 @@ void Mesh::MeshEntry::initMaterial(aiScene const * scene, std::size_t materialIn
 	std::string fullPath;
 	aiMaterial const * material = scene->mMaterials[materialIndex];
 	if (getTexture(material, aiTextureType_DIFFUSE, dirPath, fullPath))
-	{
-		//std::cout << "diffuse" << std::endl;
 		m_material.diffuseTexture = ResourceManager::getInstance().getTexture(fullPath);
-	}
+	else
+		m_material.diffuseTexture = ResourceManager::getInstance().getTexture("resources/no_texture.jpg");
 	if (getTexture(material, aiTextureType_SPECULAR, dirPath, fullPath))
-	{
-		//std::cout << "specular" << std::endl;
 		m_material.specularTexture = ResourceManager::getInstance().getTexture(fullPath);
-	}
-	//if (getTexture(material, aiTextureType_AMBIENT, dirPath, fullPath))
-	//	std::cout << "--" << std::endl;
-	//if (getTexture(material, aiTextureType_EMISSIVE, dirPath, fullPath))
-	//	std::cout << "-0" << std::endl;
-	//if (getTexture(material, aiTextureType_HEIGHT, dirPath, fullPath))
-	//	std::cout << "-1" << std::endl;
-	//if (getTexture(material, aiTextureType_NORMALS, dirPath, fullPath))
-	//	std::cout << "-2" << std::endl;
-	//if (getTexture(material, aiTextureType_SHININESS, dirPath, fullPath))
-	//	std::cout << "-3" << std::endl;
-	//if (getTexture(material, aiTextureType_OPACITY, dirPath, fullPath))
-	//	std::cout << "-4" << std::endl;
-	//if (getTexture(material, aiTextureType_DISPLACEMENT, dirPath, fullPath))
-	//	std::cout << "-5" << std::endl;
-	//if (getTexture(material, aiTextureType_LIGHTMAP, dirPath, fullPath))
-	//	std::cout << "-6" << std::endl;
-	//if (getTexture(material, aiTextureType_UNKNOWN, dirPath, fullPath))
-	//	std::cout << "-7" << std::endl;
+	else
+		m_material.specularTexture = ResourceManager::getInstance().getTexture("resources/black.jpg");
 
 	aiString name;
 	material->Get(AI_MATKEY_NAME, name);

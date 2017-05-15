@@ -1,10 +1,10 @@
 #ifndef SHADER_HPP
 # define SHADER_HPP
 
-# include <GL/glew.h>
 # include <string>
 # include <vector>
 # include <map>
+# include "OpenGL.hpp"
 
 class Vector2;
 class Vector3;
@@ -12,6 +12,7 @@ class Color;
 class Matrix;
 class DirectionalLight;
 class PointLight;
+class SpotLight;
 class Material;
 class IView;
 
@@ -46,8 +47,10 @@ public:
 	void setParameter(std::string const & name, Material const & material);
 	void setParameter(std::string const & name, std::size_t index, DirectionalLight & light);
 	void setParameter(std::string const & name, std::size_t index, PointLight & light);
+	void setParameter(std::string const & name, std::size_t index, SpotLight & light);
 	void setParameter(std::string const & name, std::vector<DirectionalLight> & lights);
 	void setParameter(std::string const & name, std::vector<PointLight> & lights);
+	void setParameter(std::string const & name, std::vector<SpotLight> & lights);
 
 	void setActive(bool active);
 

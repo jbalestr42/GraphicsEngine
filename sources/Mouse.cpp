@@ -15,10 +15,10 @@ void Mouse::callbackPosition(GLFWwindow * window, double posX, double posY)
 	int width;
 	int height;
 	glfwGetWindowSize(window, &width, &height);
-	m_position.x = posX;
-	m_position.y = posY;
-	m_normalizedPosition.x = posX / static_cast<float>(width);
-	m_normalizedPosition.y = posY / static_cast<float>(height);
+	m_position.x = static_cast<float>(posX);
+	m_position.y = static_cast<float>(posY);
+	m_normalizedPosition.x = static_cast<float>(posX) / static_cast<float>(width);
+	m_normalizedPosition.y = static_cast<float>(posY) / static_cast<float>(height);
 }
 
 bool Mouse::isButtonPressed(int button)

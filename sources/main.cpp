@@ -36,21 +36,18 @@ int main(void)
 	std::shared_ptr<Shader> screen = ResourceManager::getInstance().addShader(2, "resources/render_depth_map.frag", "resources/render_texture.vert");
 
 	LightManager lights;
-	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 0.2f));
-	PointLight & light2 = lights.createPointLight(Color(1.0f, 0.0f, 0.0f, 1.f), Vector3(2.f, 1.f, 1.f));
-	light2.translate({0.f, 1.f, 0.f});
-	light.rotateX(40.f);
-	light.setPosition(light.getRotation());
+	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f));
+	SpotLight & light3 = lights.createSpotLight(Color(0.0f, 1.0f, 0.0f, 1.f), Vector3(3.f, 12.f, 4.f));
+	light.rotateY(40.f);
+	light3.rotateX(-45.f);
+	light3.setAngles(12.5f, 13.5f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
-	Model cube("resources/cube.obj");
-	cube.translate({0.f, -1.f, 0.f});
-	cube.scale({20.f, 0.5f, 20.f});
+	Model ground("resources/cube.obj");
+	ground.scale(Vector3(20.f, 2.f, 20.f));
+	ground.translate(Vector3(0.f, -5.f, 0.f));
 
-	camera.setPosition({0.f, -10.f, -20.f});
-	camera2.setPosition({0.f, -10.f, -20.f});
-
-	glfwSetTime(0.f);
+	glfwSetTime(0.f); // TODO make a Time class
 	float lastTime = 0.f;
 	float dt = 0.f;
 	float frameLimit = 1.f / 300.f;
@@ -59,7 +56,7 @@ int main(void)
 	while (win.isOpen())
 	{
 		// Compute frametime
-		float currentTime = glfwGetTime();
+		float currentTime = static_cast<float>(glfwGetTime());
 		float frametime = (currentTime - lastTime);
 		lastTime = currentTime;
 
@@ -81,7 +78,6 @@ int main(void)
 		drawCamera->update(dt);
 
 		model.rotateY(dt * 40.f);
-		light2.translate(Vector3(0.05f, 0.f, 0.f) * std::cos(timer));
 
 		while (dt > frameLimit)
 			dt -= frameLimit;
@@ -217,6 +213,8 @@ int main(void)
 		phong->setParameter("directional_lights", lights.getDirectionalLight());
 		phong->setParameter("point_light_count", lights.getPointLightCount());
 		phong->setParameter("point_lights", lights.getPointLight());
+		phong->setParameter("spot_light_count", lights.getSpotLightCount());
+		phong->setParameter("spot_lights", lights.getSpotLight());
 
 		phong->setParameter("LightViewProjMatrix", viewProj);
 		phong->setParameter("shadow_map", ShadowMapIndex);
@@ -227,6 +225,7 @@ int main(void)
 		DebugDraw::getInstance().drawTransform(model);
 		DebugDraw::getInstance().drawTransform(cube);
 		// draw models
+		ground.draw(*phong);
 		model.draw(*phong);
 		cube.draw(*phong);
 

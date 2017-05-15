@@ -1,10 +1,10 @@
 #ifndef MESH_HPP
 # define MESH_HPP
 
-# include <GL/glew.h>
 # include <vector>
 # include <memory>
-# include <scene.h>
+# include <assimp/scene.h>
+# include "OpenGL.hpp"
 # include "Vertex.hpp"
 # include "Material.hpp"
 

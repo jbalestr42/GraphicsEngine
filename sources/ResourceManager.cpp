@@ -11,6 +11,7 @@ ResourceManager::ResourceManager(void)
 	// Initialize texture library
 	ilInit();
 
+	// TODO use const for no_texture and black
 	addShader(0, "resources/phong.frag", "resources/phong.vert");
 }
 

@@ -15,26 +15,43 @@ PointLight & LightManager::createPointLight(Color const & color, Vector3 const &
 	return (m_pointLight.back());
 }
 
+SpotLight & LightManager::createSpotLight(Color const & color, Vector3 const & position)
+{
+	m_spotLight.emplace_back(color, position);
+	return (m_spotLight.back());
+}
+
 DirectionalLight & LightManager::getDirectionalLight(std::size_t index)
+{
+	return const_cast<DirectionalLight &>(static_cast<const LightManager &>(*this).getDirectionalLight(index));
+}
+
+DirectionalLight const & LightManager::getDirectionalLight(std::size_t index) const
 {
 	assert(index < m_directionalLight.size());
 	return (m_directionalLight[index]);
 }
 
-DirectionalLight const & LightManager::getDirectionalLight(std::size_t index) const
+PointLight & LightManager::getPointLight(std::size_t index)
 {
-	return (getDirectionalLight(index));
+	return const_cast<PointLight &>(static_cast<const LightManager &>(*this).getPointLight(index));
 }
 
-PointLight & LightManager::getPointLight(std::size_t index)
+PointLight const & LightManager::getPointLight(std::size_t index) const
 {
 	assert(index < m_pointLight.size());
 	return (m_pointLight[index]);
 }
 
-PointLight const & LightManager::getPointLight(std::size_t index) const
+SpotLight & LightManager::getSpotLight(std::size_t index)
 {
-	return (getPointLight(index));
+	return const_cast<SpotLight &>(static_cast<const LightManager &>(*this).getSpotLight(index));
+}
+
+SpotLight const & LightManager::getSpotLight(std::size_t index) const
+{
+	assert(index < m_spotLight.size());
+	return (m_spotLight[index]);
 }
 
 std::vector<DirectionalLight> & LightManager::getDirectionalLight(void)
@@ -57,6 +74,16 @@ std::vector<PointLight> const & LightManager::getPointLight(void) const
 	return (m_pointLight);
 }
 
+std::vector<SpotLight> & LightManager::getSpotLight(void)
+{
+	return (m_spotLight);
+}
+
+std::vector<SpotLight> const & LightManager::getSpotLight(void) const
+{
+	return (m_spotLight);
+}
+
 std::size_t LightManager::getDirectionalLightCount(void) const
 {
 	return (m_directionalLight.size());
@@ -65,4 +92,9 @@ std::size_t LightManager::getDirectionalLightCount(void) const
 std::size_t LightManager::getPointLightCount(void) const
 {
 	return (m_pointLight.size());
+}
+
+std::size_t LightManager::getSpotLightCount(void) const
+{
+	return (m_spotLight.size());
 }
