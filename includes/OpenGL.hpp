@@ -1,5 +1,5 @@
 #ifndef OPENGL_HPP
-# define OPENG_HPP
+# define OPENGL_HPP
 
 // Mac don't need glew
 # if defined(MACOS)
