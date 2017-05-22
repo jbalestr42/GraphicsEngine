@@ -17,7 +17,7 @@ public:
 
 	virtual void bind(void);
 	void init(void);
-	void draw(Shader & shader);
+	virtual void draw(Shader & shader);
 
 	void bindTexture(void);
 

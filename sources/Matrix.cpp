@@ -332,19 +332,18 @@ Matrix Matrix::orthographicProjection(float left, float right, float bottom, flo
 	return (result);
 }
 
-Matrix Matrix::lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up)
+Matrix Matrix::lookAt(Vector3 const & eye, Vector3 const & center, Vector3 const & up)
 {
-	Vector3 f = (center - position).normalize();
+	Vector3 f = (center - eye).normalize();
 	Vector3 u = up;
 	u.normalize();
-	Vector3 s = f.cross(u).normalize();
-	u = s.cross(f);
-	u.normalize();
+	Vector3 s = u.cross(f).normalize();
+	u = f.cross(s);
 
 	Matrix result(s.x, u.x, f.x, 0.f,
 				s.y, u.y, f.y, 0.f,
 				s.z, u.z, f.z, 0.f,
-				s.dotProduct(center), u.dotProduct(center), f.dotProduct(center), 1.f);
+				-s.dotProduct(eye), -u.dotProduct(eye), -f.dotProduct(eye), 1.f);
 	return (result);
 }
 

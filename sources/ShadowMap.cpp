@@ -10,6 +10,7 @@ ShadowMap::ShadowMap(void) :
 
 void ShadowMap::initTextureParam(void)
 {
+	// TODO Replace by a virtual method for each part of this method
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, getWidth(), getHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

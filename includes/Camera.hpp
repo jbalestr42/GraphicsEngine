@@ -1,11 +1,12 @@
 #ifndef CAMERA_HPP
 # define CAMERA_HPP
 
+# include "Transformable.hpp"
 # include "IView.hpp"
 # include "Vector2.hpp"
 # include "Matrix.hpp"
 
-class Camera : public IView
+class Camera : public IView, public Transformable
 {
 public:
 	Camera(void);
@@ -15,7 +16,6 @@ public:
 
 	Camera & operator=(Camera const & camera);
 
-	Vector3 const & getRotation(void) const;
 	Vector3 const & getOriginUp(void) const;
 	Vector3 const & getOriginDirection(void) const;
 	Vector3 const & getDirection(void) const;
@@ -31,8 +31,6 @@ public:
 	virtual Matrix const & getProjectionMatrix(void) const;
 	virtual Matrix const & getViewMatrix(void) const;
 
-	void setPosition(Vector3 const & position);
-	void setRotation(Vector3 const & rotation);
 	void setOriginUp(Vector3 const & originUp);
 	void setOriginDirection(Vector3 const & originDirection);
 	void setFov(float fov);
@@ -41,13 +39,9 @@ public:
 
 	void update(float frametime);
 
-	void lookAt(Vector3 const & position, Vector3 const & center, Vector3 const & up);
-
 private:
 	Vector3		m_originUp;
 	Vector3		m_originDirection;
-	Vector3		m_position;
-	Vector3		m_rotation;
 	Vector3		m_direction;
 	Vector3		m_up;
 	Vector3		m_right;

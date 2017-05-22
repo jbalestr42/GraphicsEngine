@@ -13,6 +13,7 @@ ResourceManager::ResourceManager(void)
 
 	// TODO use const for no_texture and black
 	addShader(0, "resources/phong.frag", "resources/phong.vert");
+	addShader(-1, "resources/debug.frag", "resources/debug.vert");
 }
 
 ResourceManager & ResourceManager::getInstance(void)

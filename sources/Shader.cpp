@@ -141,8 +141,8 @@ void Shader::setParameter(std::string const & name, Material const & material)
 		setParameter(name + ".kd", material.kd);
 		setParameter(name + ".ks", material.ks);
 		setParameter(name + ".shininess", material.shininess);
-		setParameter(name + ".diffuse_tex", 0);
-		setParameter(name + ".specular_tex", 1);
+		setParameter(name + ".diffuse_tex", DiffuseIndex);
+		setParameter(name + ".specular_tex", SpecularIndex);
 	}
 }
 

@@ -129,5 +129,5 @@ void main(void)
 	// Check whether current frag pos is in shadow
 	float shadow = currentDepth > closestDepth  ? 0.5 : 1.0;
 
-	FragColor = vec4(result * shadow, 1.0);
+	FragColor = vec4(result/* * shadow*/, 1.0);
 }

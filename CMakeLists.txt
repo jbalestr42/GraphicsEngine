@@ -35,6 +35,7 @@ add_compile_options(-std=c++11)
 set(SRCS
 	sources/Camera.cpp
 	sources/Color.cpp
+	sources/DebugDraw.cpp
 	sources/DirectionalLight.cpp
 	sources/Keyboard.cpp
 	sources/Light.cpp
@@ -47,8 +48,11 @@ set(SRCS
 	sources/Mouse.cpp
 	sources/PointLight.cpp
 	sources/Quaternion.cpp
+	sources/RenderTarget.cpp
+	sources/RenderTexture.cpp
 	sources/ResourceManager.cpp
 	sources/Shader.cpp
+	sources/ShadowMap.cpp
 	sources/SpotLight.cpp
 	sources/Texture.cpp
 	sources/Transformable.cpp
@@ -62,19 +66,28 @@ set(SRCS
 set(HEADERS
 	includes/Camera.hpp
 	includes/Color.hpp
+	includes/DebugDraw.hpp
 	includes/DirectionalLight.hpp
+	includes/Enums.hpp
+	includes/IDrawable.hpp
+	includes/IView.hpp
 	includes/Keyboard.hpp
 	includes/Light.hpp
 	includes/LightManager.hpp
 	includes/Material.hpp
+	includes/Math.hpp
 	includes/Matrix.hpp
 	includes/Mesh.hpp
 	includes/Model.hpp
 	includes/Mouse.hpp
+	includes/NonCopyable.hpp
 	includes/PointLight.hpp
 	includes/Quaternion.hpp
+	includes/RenderTarget.hpp
+	includes/RenderTexture.hpp
 	includes/ResourceManager.hpp
 	includes/Shader.hpp
+	includes/ShadowMap.hpp
 	includes/SpotLight.hpp
 	includes/Texture.hpp
 	includes/Transformable.hpp

@@ -2,14 +2,10 @@
 
 std::map<int, int>	Keyboard::m_keys;
 
-Keyboard::Keyboard(void) { }
-
 Keyboard::Keyboard(Keyboard const & keyboard)
 {
 	*this = keyboard;
 }
-
-Keyboard::~Keyboard(void) { }
 
 Keyboard & Keyboard::operator=(Keyboard const & keyboard)
 {

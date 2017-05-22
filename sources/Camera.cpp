@@ -4,10 +4,11 @@
 #include "Quaternion.hpp"
 
 Camera::Camera(void) :
-	Camera(800.f, 600.f)
+	Camera(800u, 600u)
 { }
 
 Camera::Camera(std::size_t width, std::size_t height) :
+	Transformable(),
 	m_originUp(0.f, 1.f, 0.f),
 	m_originDirection(0.f, 0.f, 1.f),
 	m_width(width),
@@ -26,10 +27,9 @@ Camera::Camera(Camera const & camera)
 
 Camera & Camera::operator=(Camera const & camera)
 {
+	Transformable::operator=(camera);
 	m_originUp = camera.m_originUp;
 	m_originDirection = camera.m_originDirection;
-	m_position = camera.m_position;
-	m_rotation = camera.m_rotation;
 	m_direction = camera.m_direction;
 	m_up = camera.m_up;
 	m_right = camera.m_right;
@@ -46,12 +46,7 @@ Camera & Camera::operator=(Camera const & camera)
 
 Vector3 const & Camera::getPosition(void) const
 {
-	return (m_position);
-}
-
-Vector3 const & Camera::getRotation(void) const
-{
-	return (m_rotation);
+	return (Transformable::getPosition());
 }
 
 Vector3 const & Camera::getOriginUp(void) const
@@ -114,16 +109,6 @@ Matrix const & Camera::getProjectionMatrix(void) const
 	return (m_projection);
 }
 
-void Camera::setPosition(Vector3 const & position)
-{
-	m_position = position;
-}
-
-void Camera::setRotation(Vector3 const & rotation)
-{
-	m_rotation = rotation;
-}
-
 void Camera::setOriginUp(Vector3 const & originUp)
 {
 	m_originUp = originUp;
@@ -148,32 +133,33 @@ void Camera::setFarPlane(float farPlane)
 {
 	m_far = farPlane;
 }
+
 void Camera::update(float frametime)
 {
-	static float speed = frametime * 10000.f; // TODO add speed variable
+	static const float speed = frametime * 10000.f; // TODO add speed variable
 	Vector2 delta = m_mousePosition - Mouse::getPosition();
 	m_mousePosition = Mouse::getPosition();
 
 	Quaternion q;
-	m_rotation.x += delta.y * frametime * 100.f;
-	m_rotation.y -= delta.x * frametime * 100.f;
-	q.fromEuler(m_rotation);
+	Transformable::rotateX(delta.y * frametime * 100.f);
+	Transformable::rotateY(-delta.x * frametime * 100.f);
+	q.fromEuler(Transformable::getRotation());
 	m_direction = m_originDirection.rotate(q).normalize();
-	m_right = m_direction.cross(m_originUp).normalize();
-	m_up = m_right.cross(m_direction).normalize();
+	m_right = m_originUp.cross(m_direction).normalize();
+	m_up = m_direction.cross(m_right).normalize();
 
 	if (Keyboard::isKeyPress(GLFW_KEY_A))
-		m_position += m_right * frametime * speed;
+		Transformable::translate(m_right * frametime * speed);
 	else if (Keyboard::isKeyPress(GLFW_KEY_D))
-		m_position -= m_right * frametime * speed;
+		Transformable::translate(-m_right * frametime * speed);
 	if (Keyboard::isKeyPress(GLFW_KEY_W))
-		m_position += m_direction * frametime * speed;
+		Transformable::translate(m_direction * frametime * speed);
 	else if (Keyboard::isKeyPress(GLFW_KEY_S))
-		m_position -= (m_direction * frametime * speed);
+		Transformable::translate(-m_direction * frametime * speed);
 	if (Keyboard::isKeyPress(GLFW_KEY_Q))
-		m_position += m_up * frametime * speed;
+		Transformable::translate(-m_up * frametime * speed);
 	else if (Keyboard::isKeyPress(GLFW_KEY_E))
-		m_position -= m_up * frametime * speed;
+		Transformable::translate(m_up * frametime * speed);
 
-	m_view = Matrix::lookAt(m_position, m_position + m_direction, m_up);
+	m_view = Matrix::lookAt(Transformable::getPosition(), Transformable::getPosition() + m_direction, m_up);
 }

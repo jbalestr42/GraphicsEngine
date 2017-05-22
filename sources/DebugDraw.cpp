@@ -3,12 +3,13 @@
 #include "Shader.hpp"
 #include "Transformable.hpp"
 #include "Camera.hpp"
+#include "Vector4.hpp"
 #include <cassert>
 
 std::unique_ptr<DebugDraw> DebugDraw::m_instance = nullptr;
 
 DebugDraw::DebugDraw(void) :
-	m_shader(ResourceManager::getInstance().addShader(3, "resources/debug.frag", "resources/debug.vert")),
+	m_shader(ResourceManager::getInstance().getShader(-1)),
 	m_size(0u)
 {
 	// Creates vertices to draw the texture
@@ -54,9 +55,12 @@ void DebugDraw::drawLine(Vector3 const & start, Vector3 const & end, Color const
 
 void DebugDraw::drawTransform(Transformable const & transformable)
 {
-	drawLine(transformable.getPosition(), transformable.getPosition() + Vector3(1.f, 0.f, 0.f) * transformable.getMatrix(), Color::Red);
-	drawLine(transformable.getPosition(), transformable.getPosition() + Vector3(0.f, 1.f, 0.f) * transformable.getMatrix(), Color::Green);
-	drawLine(transformable.getPosition(), transformable.getPosition() + Vector3(0.f, 0.f, 1.f) * transformable.getMatrix(), Color::Blue);
+	//TODO remove scale from matrix
+	m_shader->setParameter("ModelMatrix", transformable.getMatrix());
+	drawLine(Vector3(0.f, 0.f, 0.f), Vector3(1.f, 0.f, 0.f), Color::Red);
+	drawLine(Vector3(0.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f), Color::Green);
+	drawLine(Vector3(0.f, 0.f, 0.f), Vector3(0.f, 0.f, 1.f), Color::Blue);
+	draw();
 }
 
 void DebugDraw::drawOrthogonalProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane)
@@ -77,12 +81,33 @@ void DebugDraw::drawOrthogonalProjection(float left, float right, float bottom, 
 	drawLine(Vector3(right, bottom, farPlane), Vector3(left, bottom, farPlane), Color::Red);
 }
 
+void DebugDraw::drawFrustum(Camera const & camera, float xn, float yn, float xf, float yf, float near, float far)
+{
+	drawTransform(camera);
+	m_shader->setParameter("ModelMatrix", camera.getMatrix());
+	drawLine(Vector3(xn, yn, near), Vector3(-xn, yn, near), Color::White);
+	drawLine(Vector3(-xn, yn, near), Vector3(-xn, -yn, near), Color::White);
+	drawLine(Vector3(-xn, -yn, near), Vector3(xn, -yn, near), Color::White);
+	drawLine(Vector3(xn, -yn, near), Vector3(xn, yn, near), Color::White);
+
+	drawLine(Vector3(xf, yf, far), Vector3(-xf, yf, far), Color::White);
+	drawLine(Vector3(-xf, yf, far), Vector3(-xf, -yf, far), Color::White);
+	drawLine(Vector3(-xf, -yf, far), Vector3(xf, -yf, far), Color::White);
+	drawLine(Vector3(xf, -yf, far), Vector3(xf, yf, far), Color::White);
+
+	drawLine(Vector3(xn, yn, near), Vector3(xf, yf, far), Color::White);
+	drawLine(Vector3(-xn, yn, near), Vector3(-xf, yf, far), Color::White);
+	drawLine(Vector3(xn, -yn, near), Vector3(xf, -yf, far), Color::White);
+	drawLine(Vector3(-xn, -yn, near), Vector3(-xf, -yf, far), Color::White);
+	draw();
+}
+
 void DebugDraw::draw(void)
 {
 	m_shader->bind();
 
 	glBindVertexArray(m_vertexArrayObject);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * MaxLine * 2, &m_vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_size * 2, &m_vertices);
 	glDrawArrays(GL_LINES, 0, m_size);
 	glBindVertexArray(0);
 	m_size = 0u;

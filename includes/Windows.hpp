@@ -2,8 +2,8 @@
 # define WINDOWS_HPP
 
 # include <cstddef>
-# include <GLFW/glfw3.h>
 # include "OpenGL.hpp"
+# include <GLFW/glfw3.h>
 # include "RenderTarget.hpp"
 
 class Color;

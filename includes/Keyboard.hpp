@@ -13,8 +13,8 @@ public:
 	static bool isKeyReleased(int key);
 
 private:
-	Keyboard(void);
-	virtual ~Keyboard(void);
+	Keyboard(void) = default;
+	virtual ~Keyboard(void) = default;
 
 	Keyboard(Keyboard const & keyboard);
 	Keyboard & operator=(Keyboard const & keyboard);
