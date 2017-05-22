@@ -133,12 +133,7 @@ else ()
 	message(FATAL_ERROR " : OpenGL not found !")
 endif ()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wextra")
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Werror")
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -o3")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
 	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /WX")
 
@@ -150,6 +145,10 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 	# Remove false warnings about std::copy and std::move
 	add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+else ()
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wextra")
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -o3")
 endif ()
 
-message("- Compiler flags : ${CMAKE_CXX_FLAGS}")
+message("- Compiler flags (${CMAKE_CXX_COMPILER_ID}) : ${CMAKE_CXX_FLAGS}")
