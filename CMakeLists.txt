@@ -133,7 +133,7 @@ else ()
 	message(FATAL_ERROR " : OpenGL not found !")
 endif ()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
 	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /WX")
 
