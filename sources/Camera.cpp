@@ -20,7 +20,8 @@ Camera::Camera(std::size_t width, std::size_t height) :
 	m_projection = Matrix::perspectiveProjection(m_fov, static_cast<float>(m_width) / static_cast<float>(m_height), m_near, m_far);
 }
 
-Camera::Camera(Camera const & camera)
+Camera::Camera(Camera const & camera) :
+	Transformable(camera)
 {
 	*this = camera;
 }

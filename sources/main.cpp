@@ -40,7 +40,10 @@ int main(void)
 	LightManager lights;
 	DirectionalLight & light = lights.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f));
 	light.rotateX(40.f);
+	SpotLight & light3 = lights.createSpotLight(Color(0.0f, 1.0f, 0.0f, 1.f), Vector3(3.f, 12.f, 4.f));
 	light.rotateY(40.f);
+	light3.rotateX(-45.f);
+	light3.setAngles(12.5f, 13.5f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
 	Model ground("resources/cube.obj");
@@ -225,7 +228,7 @@ int main(void)
 
 		// draw models
 		ground.draw(*phong);
-		//model.draw(*phong);
+		model.draw(*phong);
 
 		if (Keyboard::isKeyPress(GLFW_KEY_H))
 			map.draw(*screen);

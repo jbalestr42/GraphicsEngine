@@ -1,12 +1,9 @@
-# Find and link a library
-function(link_library lib_name lib_path)
-	message("- Link lib and copy dlls : ${lib_name}")
-
-	find_library(${lib_name}_LIB ${lib_name} ${lib_path})
-	target_link_libraries(GraphicsEngine ${${lib_name}_LIB})
+# Copy all dlls into the executable directory
+function(link_library_dll lib_name lib_path)
+	link_library(${lib_name} ${lib_path})
+	message("- Copy dlls")
 	get_filename_component(${lib_name}_DIR ${${lib_name}_LIB} PATH)
 
-	# Copy all dlls into the executable directory
 	file(GLOB files ${${lib_name}_DIR}/*.dll)
 	foreach (file ${files})
 		add_custom_command(TARGET GraphicsEngine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${file} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
@@ -14,8 +11,8 @@ function(link_library lib_name lib_path)
 endfunction()
 
 # Find and link a library for mac
-function(link_library_mac lib_name lib_path)
-	message("- Link lib : ${lib_name}")
+function(link_library lib_name lib_path)
+	message("- Link ${lib_name}")
 
 	find_library(${lib_name}_LIB ${lib_name} ${lib_path})
 	target_link_libraries(GraphicsEngine ${${lib_name}_LIB})
@@ -99,12 +96,6 @@ set(HEADERS
 	includes/OpenGL.hpp
 )
 
-#if (WIN32 OR MSVC)
-#    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
-#elseif (UNIX)
-#    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-#endif() 
-
 # Set the executable name
 add_executable(GraphicsEngine ${SRCS} ${HEADERS})
 
@@ -114,28 +105,36 @@ include_directories(lib/include)
 # Don't need to use the full path when including a file
 target_include_directories(GraphicsEngine PUBLIC includes)
 
+#TODO manage Debug and Release
+
 # Link libraries
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	message("-- Windows detected")
-	link_library(assimp "lib/assimp-3.3.1/x86")
-	link_library(DevIL "lib/DevIL-1.8.0/x86")
-	link_library(ILU "lib/DevIL-1.8.0/x86")
-	link_library(ILUT "lib/DevIL-1.8.0/x86")
-	link_library(glew32 "lib/glew-2.0.0/x86")
-	link_library(glfw3 "lib/glfw-3.2.1/x86/lib-vc2015")
 	add_definitions(-DWIN)
+	link_library_dll(assimp "lib/assimp-3.3.1/x86")
+	link_library_dll(DevIL "lib/DevIL-1.8.0/x86")
+	link_library_dll(ILU "lib/DevIL-1.8.0/x86")
+	link_library_dll(ILUT "lib/DevIL-1.8.0/x86")
+	link_library_dll(glew32 "lib/glew-2.0.0/x86")
+	link_library_dll(glfw3 "lib/glfw-3.2.1/x86/lib-vc2015")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("-- Linux detected")
 	add_definitions(-DLINUX)
+	link_library(libassimp.so "lib/assimp-3.3.1/Linux")
+	link_library(libIL.so "lib/DevIL-1.8.0/Linux")
+	link_library(libILU.so "lib/DevIL-1.8.0/Linux")
+	link_library(libILUT.so "lib/DevIL-1.8.0/Linux")
+	link_library(libGLEW.so "lib/glew-2.0.0/Linux")
+	link_library(libglfw.so "lib/glfw-3.2.1/Linux")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("-- Darwin detected")
 	add_definitions(-DMACOS)
-	link_library_mac(libassimp.dylib "lib/assimp-3.3.1/Mac")
-	link_library_mac(libIL.dylib "lib/DevIL-1.8.0/Mac")
-	link_library_mac(libILU.dylib "lib/DevIL-1.8.0/Mac")
-	link_library_mac(libILUT.dylib "lib/DevIL-1.8.0/Mac")
-	link_library_mac(libglfw3.dylib "lib/glfw-3.2.1/Mac")
-endif()
+	link_library(libassimp.dylib "lib/assimp-3.3.1/Mac")
+	link_library(libIL.dylib "lib/DevIL-1.8.0/Mac")
+	link_library(libILU.dylib "lib/DevIL-1.8.0/Mac")
+	link_library(libILUT.dylib "lib/DevIL-1.8.0/Mac")
+	link_library(libglfw3.dylib "lib/glfw-3.2.1/Mac")
+endif ()
 
 # Link OpenGL
 find_package(OpenGL REQUIRED)
@@ -147,12 +146,7 @@ else ()
 	message(FATAL_ERROR " : OpenGL not found !")
 endif ()
 
-# Set the flags
-if (CMAKE_COMPILER_IS_GNUCC)
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wextra")
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Werror")
-elseif (MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
 	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /WX")
 
@@ -164,4 +158,10 @@ elseif (MSVC)
 
 	# Remove false warnings about std::copy and std::move
 	add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+else ()
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wextra")
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -o3")
 endif ()
+
+message("- Compiler flags (${CMAKE_CXX_COMPILER_ID}) : ${CMAKE_CXX_FLAGS}")

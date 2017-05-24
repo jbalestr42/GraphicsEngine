@@ -24,6 +24,8 @@ struct PointLight
 	vec3	position;
 	vec3	direction;
 	vec4	color;
+	float	inner_angle;
+	float	outer_angle;
 	float	ambient_intensity;
 	float	constant_attenuation;
 	float	linear_attenuation;
