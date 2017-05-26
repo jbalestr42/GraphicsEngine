@@ -12,9 +12,8 @@ endfunction()
 
 # Find and link a library for mac
 function(link_library lib_name lib_path)
-	message("- Link ${lib_name}")
-
-	find_library(${lib_name}_LIB ${lib_name} ${lib_path})
+	find_library(${lib_name}_LIB ${lib_name} ${lib_path} NO_DEFAULT_PATH)
+	message("- Link ${${lib_name}_LIB} ${lib_path}")
 	target_link_libraries(GraphicsEngine ${${lib_name}_LIB})
 endfunction()
 
@@ -107,6 +106,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("-- Linux detected")
 	add_definitions(-DLINUX)
+
+	#target_link_libraries(GraphicsEngine "${CMAKE_CURRENT_SOURCE_DIR}/lib/assimp-3.3.1/Linux/libassimp.so")
 	link_library(libassimp.so "lib/assimp-3.3.1/Linux")
 	link_library(libIL.so "lib/DevIL-1.8.0/Linux")
 	link_library(libILU.so "lib/DevIL-1.8.0/Linux")
