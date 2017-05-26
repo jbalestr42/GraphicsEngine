@@ -20,7 +20,7 @@ public:
 	void drawLine(Vector3 const & start, Vector3 const & end, Color const & color = Color::White);
 	void drawTransform(Transformable const & transformable);
 	void drawOrthogonalProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-	void drawFrustum(Camera const & camera, float xn, float yn, float xf, float yf, float near, float far);
+	void drawFrustum(Camera const & camera);
 
 private:
 	static std::unique_ptr<DebugDraw>	m_instance;

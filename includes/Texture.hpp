@@ -8,8 +8,6 @@
 # include <IL/il.h>
 # include "OpenGL.hpp"
 
-class Shader;
-
 class Texture
 {
 public:

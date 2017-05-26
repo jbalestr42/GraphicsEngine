@@ -65,6 +65,7 @@ void DebugDraw::drawTransform(Transformable const & transformable)
 
 void DebugDraw::drawOrthogonalProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
+	m_shader->setParameter("ModelMatrix", Matrix());
 	drawLine(Vector3(left, bottom, nearPlane), Vector3(left, top, nearPlane), Color::Red);
 	drawLine(Vector3(left, top, nearPlane), Vector3(right, top, nearPlane), Color::Red);
 	drawLine(Vector3(right, top, nearPlane), Vector3(right, bottom, nearPlane), Color::Red);
@@ -79,31 +80,136 @@ void DebugDraw::drawOrthogonalProjection(float left, float right, float bottom, 
 	drawLine(Vector3(left, top, farPlane), Vector3(right, top, farPlane), Color::Red);
 	drawLine(Vector3(right, top, farPlane), Vector3(right, bottom, farPlane), Color::Red);
 	drawLine(Vector3(right, bottom, farPlane), Vector3(left, bottom, farPlane), Color::Red);
+	draw();
 }
 
-void DebugDraw::drawFrustum(Camera const & camera, float xn, float yn, float xf, float yf, float near, float far)
+#include "Math.hpp"
+void DebugDraw::drawFrustum(Camera const & camera)
 {
-	drawTransform(camera);
-	m_shader->setParameter("ModelMatrix", camera.getMatrix());
-	drawLine(Vector3(xn, yn, near), Vector3(-xn, yn, near), Color::White);
-	drawLine(Vector3(-xn, yn, near), Vector3(-xn, -yn, near), Color::White);
-	drawLine(Vector3(-xn, -yn, near), Vector3(xn, -yn, near), Color::White);
-	drawLine(Vector3(xn, -yn, near), Vector3(xn, yn, near), Color::White);
+	float ar = static_cast<float>(800.f / 600.f);
+	float fov = 60.f;
+	float near = 0.1f;
+	float far = 100.f;
+	float halfHeight = tanf(Deg2Rad * (fov / 2.f));
+	float halfWidth = halfHeight * ar;
 
-	drawLine(Vector3(xf, yf, far), Vector3(-xf, yf, far), Color::White);
-	drawLine(Vector3(-xf, yf, far), Vector3(-xf, -yf, far), Color::White);
-	drawLine(Vector3(-xf, -yf, far), Vector3(xf, -yf, far), Color::White);
-	drawLine(Vector3(xf, -yf, far), Vector3(xf, yf, far), Color::White);
+	//drawTransform(camera);
+	m_shader->setParameter("ModelMatrix", Matrix());
+	//--------------------------------------
 
-	drawLine(Vector3(xn, yn, near), Vector3(xf, yf, far), Color::White);
-	drawLine(Vector3(-xn, yn, near), Vector3(-xf, yf, far), Color::White);
-	drawLine(Vector3(xn, -yn, near), Vector3(xf, -yf, far), Color::White);
-	drawLine(Vector3(-xn, -yn, near), Vector3(-xf, -yf, far), Color::White);
+	//Vector3 r = camera.m_right * halfWidth * far;
+	//Vector3 t = camera.m_up * halfHeight * far;
+	//Vector3 c = camera.getPosition() + camera.m_direction * far;
+
+	//Vector3 nr = camera.m_right * halfWidth * near;
+	//Vector3 nt = camera.m_up * halfHeight * near;
+	//Vector3 nc = camera.getPosition() + camera.m_direction * near;
+
+	//drawLine(c + t + r, c + t - r, Color::White);
+	//drawLine(c + t + r, c - t + r, Color::White);
+	//drawLine(c - t - r, c - t + r, Color::White);
+	//drawLine(c - t - r, c + t - r, Color::White);
+
+	//drawLine(nc + nt + nr, nc + nt - nr, Color::White);
+	//drawLine(nc + nt + nr, nc - nt + nr, Color::White);
+	//drawLine(nc - nt - nr, nc - nt + nr, Color::White);
+	//drawLine(nc - nt - nr, nc + nt - nr, Color::White);
+
+	// -------------------------------- 
+
+#if 1
+	Matrix inv = (camera.getViewMatrix() * camera.getProjectionMatrix()).inverse();
+	Vector4 f[8u] =
+	{
+		// near face
+		{1, 1, -1, 1.f},
+		{-1, 1, -1, 1.f},
+		{1, -1, -1, 1.f},
+		{-1, -1, -1 , 1.f},
+
+		// 1 face
+		{1, 1, 1, 1.f},
+		{-1, 1, 1 , 1.f},
+		{1, -1, 1 , 1.f},
+		{-1, -1,1, 1.f},
+	};
+
+	Vector3 v[8];
+	for (int i = 0; i < 8; i++)
+	{
+		Vector4 ff = inv * f[i];
+		v[i].x = ff.x / ff.w;
+		v[i].y = ff.y / ff.w;
+		v[i].z = ff.z / ff.w;
+	}
+
+	drawLine(v[0], v[1], Color::White);
+	drawLine(v[0], v[2], Color::White);
+	drawLine(v[3], v[1], Color::White);
+	drawLine(v[3], v[2], Color::White);
+
+	drawLine(v[4], v[5], Color::White);
+	drawLine(v[4], v[6], Color::White);
+	drawLine(v[7], v[5], Color::White);
+	drawLine(v[7], v[6], Color::White);
+
+	drawLine(v[0], v[4], Color::White);
+	drawLine(v[1], v[5], Color::White);
+	drawLine(v[3], v[7], Color::White);
+	drawLine(v[2], v[6], Color::White);
+#else
+	Matrix inv = camera.getViewMatrix().inverse();
+
+	float xn = halfWidth * near;
+	float xf = halfWidth * far;
+	float yn = halfHeight * near;
+	float yf = halfHeight * far;
+
+	Vector4 f[8u] =
+	{
+		// near face
+		{xn, yn, near, 1.f},
+		{-xn, yn, near, 1.f},
+		{xn, -yn, near, 1.f},
+		{-xn, -yn,near , 1.f},
+
+		// far face
+		{xf, yf, far, 1.f},
+		{-xf, yf,far , 1.f},
+		{xf, -yf,far , 1.f},
+		{-xf, -yf,far, 1.f},
+	};
+
+	Vector3 v[8];
+	for (int i = 0; i < 8; i++)
+	{
+		Vector4 ff = inv * f[i];
+		v[i].x = ff.x / ff.w;
+		v[i].y = ff.y / ff.w;
+		v[i].z = ff.z / ff.w;
+	}
+
+	drawLine(v[0], v[1], Color::White);
+	drawLine(v[0], v[2], Color::White);
+	drawLine(v[3], v[1], Color::White);
+	drawLine(v[3], v[2], Color::White);
+
+	drawLine(v[4], v[5], Color::White);
+	drawLine(v[4], v[6], Color::White);
+	drawLine(v[7], v[5], Color::White);
+	drawLine(v[7], v[6], Color::White);
+
+	drawLine(v[0], v[4], Color::White);
+	drawLine(v[1], v[5], Color::White);
+	drawLine(v[3], v[7], Color::White);
+	drawLine(v[2], v[6], Color::White);
+#endif
 	draw();
 }
 
 void DebugDraw::draw(void)
 {
+	// TODO draw debug in front of everything
 	m_shader->bind();
 
 	glBindVertexArray(m_vertexArrayObject);

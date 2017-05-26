@@ -10,7 +10,7 @@ Camera::Camera(void) :
 Camera::Camera(std::size_t width, std::size_t height) :
 	Transformable(),
 	m_originUp(0.f, 1.f, 0.f),
-	m_originDirection(0.f, 0.f, 1.f),
+	m_originDirection(0.f, 0.f, -1.f),
 	m_width(width),
 	m_height(height),
 	m_fov(60.f),
@@ -142,8 +142,8 @@ void Camera::update(float frametime)
 	m_mousePosition = Mouse::getPosition();
 
 	Quaternion q;
-	Transformable::rotateX(delta.y * frametime * 100.f);
-	Transformable::rotateY(-delta.x * frametime * 100.f);
+	Transformable::rotateX(-delta.y * frametime * 100.f);
+	Transformable::rotateY(delta.x * frametime * 100.f);
 	q.fromEuler(Transformable::getRotation());
 	m_direction = m_originDirection.rotate(q).normalize();
 	m_right = m_originUp.cross(m_direction).normalize();

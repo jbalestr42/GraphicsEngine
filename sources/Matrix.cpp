@@ -312,14 +312,14 @@ void Matrix::identity(void)
 
 Matrix Matrix::perspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
-	float		scaleY = 1.f / std::tan(Deg2Rad * (fov / 2.f));
-	float		scaleX = scaleY / aspectRatio;
-	float		frustumLength = nearPlane - farPlane;
+	float		tanHalfFovY = std::tan(Deg2Rad * fov / 2.f);
+	float		scaleX = 1.f / (aspectRatio * tanHalfFovY);
+	float		scaleY = 1.f / tanHalfFovY;
 
 	Matrix result(scaleX, 0.f, 0.f, 0.f,
 			0.f, scaleY, 0.f, 0.f,
-			0.f, 0.f, (farPlane + nearPlane) / frustumLength, -1.f,
-			0.f, 0.f, (2.f * nearPlane * farPlane) / frustumLength, 0.f);
+			0.f, 0.f, -(farPlane + nearPlane) / (farPlane - nearPlane), -1.f,
+			0.f, 0.f, -(2.f * nearPlane * farPlane) / (farPlane - nearPlane), 0.f);
 	return (result);
 }
 
@@ -337,13 +337,13 @@ Matrix Matrix::lookAt(Vector3 const & eye, Vector3 const & center, Vector3 const
 	Vector3 f = (center - eye).normalize();
 	Vector3 u = up;
 	u.normalize();
-	Vector3 s = u.cross(f).normalize();
-	u = f.cross(s);
+	Vector3 s = f.cross(u).normalize();
+	u = s.cross(f);
 
-	Matrix result(s.x, u.x, f.x, 0.f,
-				s.y, u.y, f.y, 0.f,
-				s.z, u.z, f.z, 0.f,
-				-s.dotProduct(eye), -u.dotProduct(eye), -f.dotProduct(eye), 1.f);
+	Matrix result(s.x, u.x, -f.x, 0.f,
+				s.y, u.y, -f.y, 0.f,
+				s.z, u.z, -f.z, 0.f,
+				-s.dotProduct(eye), -u.dotProduct(eye), f.dotProduct(eye), 1.f);
 	return (result);
 }
 
