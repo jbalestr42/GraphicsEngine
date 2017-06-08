@@ -15,12 +15,19 @@ int main()
 	glm::vec3 up(0.f, 1.f, 0.f);
 	glm::vec4 v(23.4f, -2.03f, 12.6f, 0.5f);
 	glm::mat4 look = glm::lookAt(eye, target, up);
+	glm::mat4 ortho = glm::ortho(2.f, -5.f, 23.f, 12.f, -3.14f, 36.12f);
 
 	Vector3 veye(2.f, -41.f, 12.f);
 	Vector3 vtarget(2.f, 7.f, -5.f);
 	Vector3 vup(0.f, 1.f, 0.f);
 	Vector4 vv(23.4f, -2.03f, 12.6f, 0.5f);
 	Matrix vlook = Matrix::lookAt(veye, vtarget, vup);
+	Matrix vortho = Matrix::orthographicProjection(2.f, -5.f, 23.f, 12.f, -3.14f, 36.12f);
+
+	/* TEST OK
+	std::cout << vortho << std::endl;
+	std::cout << glm::to_string(ortho) << std::endl;
+	*/
 
 	/* TEST OK matrix * vector4
 	std::cout << vv * vlook << std::endl;

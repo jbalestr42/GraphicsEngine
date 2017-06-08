@@ -19,7 +19,7 @@ public:
 
 	void drawLine(Vector3 const & start, Vector3 const & end, Color const & color = Color::White);
 	void drawTransform(Transformable const & transformable);
-	void drawOrthogonalProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+	void drawOrthogonalProjection(Matrix const & viewProjMatrix);
 	void drawFrustum(Camera const & camera);
 
 private:

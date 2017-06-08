@@ -4,6 +4,7 @@
 #include "Transformable.hpp"
 #include "Camera.hpp"
 #include "Vector4.hpp"
+#include "Math.hpp"
 #include <cassert>
 
 std::unique_ptr<DebugDraw> DebugDraw::m_instance = nullptr;
@@ -63,27 +64,53 @@ void DebugDraw::drawTransform(Transformable const & transformable)
 	draw();
 }
 
-void DebugDraw::drawOrthogonalProjection(float left, float right, float bottom, float top, float nearPlane, float farPlane)
+void DebugDraw::drawOrthogonalProjection(Matrix const & viewProjMatrix)
 {
 	m_shader->setParameter("ModelMatrix", Matrix());
-	drawLine(Vector3(left, bottom, nearPlane), Vector3(left, top, nearPlane), Color::Red);
-	drawLine(Vector3(left, top, nearPlane), Vector3(right, top, nearPlane), Color::Red);
-	drawLine(Vector3(right, top, nearPlane), Vector3(right, bottom, nearPlane), Color::Red);
-	drawLine(Vector3(right, bottom, nearPlane), Vector3(left, bottom, nearPlane), Color::Red);
 
-	drawLine(Vector3(left, bottom, nearPlane), Vector3(left, bottom, farPlane), Color::Red);
-	drawLine(Vector3(right, bottom, nearPlane), Vector3(right, bottom, farPlane), Color::Red);
-	drawLine(Vector3(left, top, nearPlane), Vector3(left, top, farPlane), Color::Red);
-	drawLine(Vector3(right, top, nearPlane), Vector3(right, top, farPlane), Color::Red);
+	Matrix inv = viewProjMatrix.inverse();
 
-	drawLine(Vector3(left, bottom, farPlane), Vector3(left, top, farPlane), Color::Red);
-	drawLine(Vector3(left, top, farPlane), Vector3(right, top, farPlane), Color::Red);
-	drawLine(Vector3(right, top, farPlane), Vector3(right, bottom, farPlane), Color::Red);
-	drawLine(Vector3(right, bottom, farPlane), Vector3(left, bottom, farPlane), Color::Red);
+	Vector4 ndc[8u] =
+	{
+		// near face
+		{ 1, 1, -1, 1.f },
+		{ -1, 1, -1, 1.f },
+		{ 1, -1, -1, 1.f },
+		{ -1, -1, -1, 1.f },
+
+		// far face
+		{ 1, 1, 1, 1.f },
+		{ -1, 1, 1, 1.f },
+		{ 1, -1, 1, 1.f },
+		{ -1, -1, 1, 1.f },
+	};
+
+	Vector3 v[8];
+	for (int i = 0; i < 8; i++)
+	{
+		Vector4 wc = inv * ndc[i];
+		v[i].x = wc.x / wc.w;
+		v[i].y = wc.y / wc.w;
+		v[i].z = wc.z / wc.w;
+	}
+
+	drawLine(v[0], v[1], Color::Blue);
+	drawLine(v[0], v[2], Color::Blue);
+	drawLine(v[3], v[1], Color::Blue);
+	drawLine(v[3], v[2], Color::Blue);
+
+	drawLine(v[4], v[5], Color::Red);
+	drawLine(v[4], v[6], Color::Red);
+	drawLine(v[7], v[5], Color::Red);
+	drawLine(v[7], v[6], Color::Red);
+
+	drawLine(v[0], v[4], Color::Red);
+	drawLine(v[1], v[5], Color::Red);
+	drawLine(v[3], v[7], Color::Red);
+	drawLine(v[2], v[6], Color::Red);
 	draw();
 }
 
-#include "Math.hpp"
 void DebugDraw::drawFrustum(Camera const & camera)
 {
 	float ar = static_cast<float>(800.f / 600.f);
@@ -93,54 +120,32 @@ void DebugDraw::drawFrustum(Camera const & camera)
 	float halfHeight = tanf(Deg2Rad * (fov / 2.f));
 	float halfWidth = halfHeight * ar;
 
-	//drawTransform(camera);
 	m_shader->setParameter("ModelMatrix", Matrix());
-	//--------------------------------------
 
-	//Vector3 r = camera.m_right * halfWidth * far;
-	//Vector3 t = camera.m_up * halfHeight * far;
-	//Vector3 c = camera.getPosition() + camera.m_direction * far;
-
-	//Vector3 nr = camera.m_right * halfWidth * near;
-	//Vector3 nt = camera.m_up * halfHeight * near;
-	//Vector3 nc = camera.getPosition() + camera.m_direction * near;
-
-	//drawLine(c + t + r, c + t - r, Color::White);
-	//drawLine(c + t + r, c - t + r, Color::White);
-	//drawLine(c - t - r, c - t + r, Color::White);
-	//drawLine(c - t - r, c + t - r, Color::White);
-
-	//drawLine(nc + nt + nr, nc + nt - nr, Color::White);
-	//drawLine(nc + nt + nr, nc - nt + nr, Color::White);
-	//drawLine(nc - nt - nr, nc - nt + nr, Color::White);
-	//drawLine(nc - nt - nr, nc + nt - nr, Color::White);
-
-	// -------------------------------- 
-
-#if 1
+#if 0 // NDC space
 	Matrix inv = (camera.getViewMatrix() * camera.getProjectionMatrix()).inverse();
-	Vector4 f[8u] =
+	Vector4 ndc[8u] =
 	{
 		// near face
-		{1, 1, -1, 1.f},
-		{-1, 1, -1, 1.f},
-		{1, -1, -1, 1.f},
-		{-1, -1, -1 , 1.f},
+		{ 1, 1, -1, 1.f },
+		{ -1, 1, -1, 1.f },
+		{ 1, -1, -1, 1.f },
+		{ -1, -1, -1, 1.f },
 
-		// 1 face
-		{1, 1, 1, 1.f},
-		{-1, 1, 1 , 1.f},
-		{1, -1, 1 , 1.f},
-		{-1, -1,1, 1.f},
+		// far face
+		{ 1, 1, 1, 1.f},
+		{ -1, 1, 1, 1.f},
+		{ 1, -1, 1, 1.f},
+		{ -1, -1, 1, 1.f},
 	};
 
 	Vector3 v[8];
 	for (int i = 0; i < 8; i++)
 	{
-		Vector4 ff = inv * f[i];
-		v[i].x = ff.x / ff.w;
-		v[i].y = ff.y / ff.w;
-		v[i].z = ff.z / ff.w;
+		Vector4 wc = inv * ndc[i];
+		v[i].x = wc.x / wc.w;
+		v[i].y = wc.y / wc.w;
+		v[i].z = wc.z / wc.w;
 	}
 
 	drawLine(v[0], v[1], Color::White);
@@ -165,28 +170,28 @@ void DebugDraw::drawFrustum(Camera const & camera)
 	float yn = halfHeight * near;
 	float yf = halfHeight * far;
 
-	Vector4 f[8u] =
+	Vector4 cc[8u] =
 	{
 		// near face
-		{xn, yn, near, 1.f},
-		{-xn, yn, near, 1.f},
-		{xn, -yn, near, 1.f},
-		{-xn, -yn,near , 1.f},
+		{ xn, yn, -near, 1.f },
+		{ -xn, yn, -near, 1.f },
+		{ xn, -yn, -near, 1.f },
+		{ -xn, -yn, -near, 1.f },
 
 		// far face
-		{xf, yf, far, 1.f},
-		{-xf, yf,far , 1.f},
-		{xf, -yf,far , 1.f},
-		{-xf, -yf,far, 1.f},
+		{ xf, yf, -far, 1.f },
+		{ -xf, yf, -far, 1.f },
+		{ xf, -yf, -far, 1.f },
+		{ -xf, -yf, -far, 1.f },
 	};
 
 	Vector3 v[8];
 	for (int i = 0; i < 8; i++)
 	{
-		Vector4 ff = inv * f[i];
-		v[i].x = ff.x / ff.w;
-		v[i].y = ff.y / ff.w;
-		v[i].z = ff.z / ff.w;
+		Vector4 wc = inv * cc[i];
+		v[i].x = wc.x / wc.w;
+		v[i].y = wc.y / wc.w;
+		v[i].z = wc.z / wc.w;
 	}
 
 	drawLine(v[0], v[1], Color::White);
