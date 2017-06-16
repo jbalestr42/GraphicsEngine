@@ -64,6 +64,7 @@ void DebugDraw::drawTransform(Transformable const & transformable)
 	draw();
 }
 
+#include <iostream>
 void DebugDraw::drawOrthogonalProjection(Matrix const & viewProjMatrix)
 {
 	m_shader->setParameter("ModelMatrix", Matrix());
@@ -99,10 +100,10 @@ void DebugDraw::drawOrthogonalProjection(Matrix const & viewProjMatrix)
 	drawLine(v[3], v[1], Color::Blue);
 	drawLine(v[3], v[2], Color::Blue);
 
-	drawLine(v[4], v[5], Color::Red);
-	drawLine(v[4], v[6], Color::Red);
-	drawLine(v[7], v[5], Color::Red);
-	drawLine(v[7], v[6], Color::Red);
+	drawLine(v[4], v[5], Color::Green);
+	drawLine(v[4], v[6], Color::Green);
+	drawLine(v[7], v[5], Color::Green);
+	drawLine(v[7], v[6], Color::Green);
 
 	drawLine(v[0], v[4], Color::Red);
 	drawLine(v[1], v[5], Color::Red);
@@ -117,7 +118,7 @@ void DebugDraw::drawFrustum(Camera const & camera)
 	float fov = 60.f;
 	float near = 0.1f;
 	float far = 100.f;
-	float halfHeight = tanf(Deg2Rad * (fov / 2.f));
+	float halfHeight = std::tan(Deg2Rad * (fov / 2.f));
 	float halfWidth = halfHeight * ar;
 
 	m_shader->setParameter("ModelMatrix", Matrix());

@@ -123,16 +123,19 @@ void Camera::setOriginDirection(Vector3 const & originDirection)
 void Camera::setFov(float fov)
 {
 	m_fov = fov;
+	m_projection = Matrix::perspectiveProjection(m_fov, static_cast<float>(m_width) / static_cast<float>(m_height), m_near, m_far);
 }
 
 void Camera::setNearPlane(float nearPlane)
 {
 	m_near = nearPlane;
+	m_projection = Matrix::perspectiveProjection(m_fov, static_cast<float>(m_width) / static_cast<float>(m_height), m_near, m_far);
 }
 
 void Camera::setFarPlane(float farPlane)
 {
 	m_far = farPlane;
+	m_projection = Matrix::perspectiveProjection(m_fov, static_cast<float>(m_width) / static_cast<float>(m_height), m_near, m_far);
 }
 
 void Camera::update(float frametime)

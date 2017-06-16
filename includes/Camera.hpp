@@ -39,12 +39,12 @@ public:
 
 	void update(float frametime);
 
-	Vector3		m_direction;
-	Vector3		m_up;
-	Vector3		m_right;
 private:
 	Vector3		m_originUp;
 	Vector3		m_originDirection;
+	Vector3		m_direction;
+	Vector3		m_up;
+	Vector3		m_right;
 	Vector2		m_mousePosition;
 	Matrix		m_view;
 	Matrix		m_projection;
@@ -54,6 +54,7 @@ private:
 	float		m_fov;
 	float		m_near;
 	float		m_far;
+
 };
 
 #endif
