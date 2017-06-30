@@ -12,8 +12,8 @@ ResourceManager::ResourceManager(void)
 	ilInit();
 
 	// TODO use const for no_texture and black
-	addShader(0, "resources/phong.frag", "resources/phong.vert");
-	addShader(-1, "resources/debug.frag", "resources/debug.vert");
+	addShader(ShaderId::Phong, "resources/phong.frag", "resources/phong.vert");
+	addShader(ShaderId::Debug, "resources/debug.frag", "resources/debug.vert");
 }
 
 ResourceManager & ResourceManager::getInstance(void)
@@ -45,7 +45,7 @@ std::shared_ptr<Texture> ResourceManager::getTexture(std::string const & name)
 	return (texture);
 }
 
-std::shared_ptr<Shader> ResourceManager::getShader(int index)
+std::shared_ptr<Shader> ResourceManager::getShader(ShaderId index)
 {
 	auto it = m_shaders.find(index);
 	if (it != m_shaders.end())
@@ -53,7 +53,7 @@ std::shared_ptr<Shader> ResourceManager::getShader(int index)
 		it->second->setActive(true);
 		return it->second;
 	}
-	std::cout << "Shader (" << index << ") not found." << std::endl;
+	std::cout << "Shader (" << static_cast<int>(index) << ") not found." << std::endl;
 	return (nullptr);
 }
 
@@ -62,9 +62,9 @@ ResourceManager::ShaderMap & ResourceManager::getAllShaders(void)
 	return (m_shaders);
 }
 
-std::shared_ptr<Shader> ResourceManager::addShader(int index, std::string const & fragment, std::string const & vertex)
+std::shared_ptr<Shader> ResourceManager::addShader(ShaderId index, std::string const & fragment, std::string const & vertex)
 {
-	std::cout << "Add new shader (" << index << ") : " << fragment << " - " << vertex << std::endl;
+	std::cout << "Add new shader (" << static_cast<int>(index) << ") : " << fragment << " - " << vertex << std::endl;
 	m_shaders[index] = std::make_shared<Shader>(fragment, vertex);
 	return getShader(index);
 }

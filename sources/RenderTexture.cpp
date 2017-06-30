@@ -55,6 +55,7 @@ void RenderTexture::bind(void)
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 }
 
+//TODO use the correct shadowmapindex
 void RenderTexture::bindTexture(void)
 {
 	glActiveTexture(GL_TEXTURE0 + ShadowMapIndex);
@@ -96,7 +97,7 @@ void RenderTexture::createRenderTexture(GLenum attachment, GLenum texTarget, GLi
 	glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, texTarget, m_texture, mipMapLevel);
 }
 
-void RenderTexture::draw(Shader & shader)
+void RenderTexture::draw(Shader & shader) const
 {
 	shader.setParameter("screen_texture", DiffuseIndex);
 

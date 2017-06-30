@@ -49,3 +49,8 @@ float PointLight::getQuadraticAttenuation(void) const
 {
 	return (m_quadraticAttenuation);
 }
+
+void PointLight::computeShadowMap(Camera const &)
+{
+	//TODO std::cout << "shadow map for pointlight not implemented" << std::endl;
+}

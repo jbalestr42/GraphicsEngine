@@ -66,3 +66,8 @@ float SpotLight::getQuadraticAttenuation(void) const
 {
 	return (m_quadraticAttenuation);
 }
+
+void SpotLight::computeShadowMap(Camera const &)
+{
+	//TODO std::cout << "shadow map for spotlight not implemented" << std::endl;
+}

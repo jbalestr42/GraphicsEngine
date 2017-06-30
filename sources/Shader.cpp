@@ -155,6 +155,7 @@ void Shader::setParameter(std::string const & name, std::size_t index, Direction
 		setParameter(s.str() + "color", light.getColor());
 		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
+		light.bindShadowMap(*this);
 	}
 }
 

@@ -36,7 +36,7 @@ set(SRCS
 	sources/DirectionalLight.cpp
 	sources/Keyboard.cpp
 	sources/Light.cpp
-	sources/LightManager.cpp
+	sources/RenderManager.cpp
 	sources/main.cpp
 	sources/Material.cpp
 	sources/Matrix.cpp
@@ -70,7 +70,7 @@ set(HEADERS
 	includes/IView.hpp
 	includes/Keyboard.hpp
 	includes/Light.hpp
-	includes/LightManager.hpp
+	includes/RenderManager.hpp
 	includes/Material.hpp
 	includes/Math.hpp
 	includes/Matrix.hpp

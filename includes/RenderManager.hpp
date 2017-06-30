@@ -2,23 +2,28 @@
 # define LIGHTMANAGER_HPP
 
 # include <vector>
-# include <memory>
 # include "DirectionalLight.hpp"
 # include "PointLight.hpp"
 # include "SpotLight.hpp"
+# include "NonCopyable.hpp"
 
-class LightManager
+class RenderTarget;
+class Camera;
+#include "Shader.hpp"
+#include "Model.hpp"
+#include <map>
+#include <list>
+
+class RenderManager : public NonCopyable
 {
 public:
-	enum LightType
-	{
-		Directional,
-		Point,
-		Spot
-	};
+	RenderManager(void) = default;
+	virtual ~RenderManager(void) = default;
 
-	LightManager(void) = default;
-	virtual ~LightManager(void) = default;
+	void draw(Model & model, Shader & shader);
+	void display(RenderTarget & target, Camera const & camera);
+
+	std::map<Shader *, std::list<Model const *>> m_drawables;
 
 	DirectionalLight & createDirectionalLight(Color const & color);
 	PointLight & createPointLight(Color const & color, Vector3 const & position);
@@ -46,9 +51,6 @@ private:
 	std::vector<DirectionalLight>	m_directionalLight;
 	std::vector<PointLight>			m_pointLight;
 	std::vector<SpotLight>			m_spotLight;
-
-	LightManager(LightManager const & lightManager);
-	LightManager & operator=(LightManager const & lightManager);
 
 };
 

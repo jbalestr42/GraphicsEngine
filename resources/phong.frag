@@ -121,6 +121,7 @@ void main(void)
 
 	// Calculate shadow
 	// perform perspective divide
+	// TODO can be done in vertex shader ?
 	vec3 projCoords = LightPos0.xyz / LightPos0.w;
 	// Transform to [0,1] range
 	projCoords = projCoords * 0.5 + 0.5;

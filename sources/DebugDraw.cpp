@@ -10,7 +10,7 @@
 std::unique_ptr<DebugDraw> DebugDraw::m_instance = nullptr;
 
 DebugDraw::DebugDraw(void) :
-	m_shader(ResourceManager::getInstance().getShader(-1)),
+	m_shader(ResourceManager::getInstance().getShader(ShaderId::Debug)),
 	m_size(0u)
 {
 	// Creates vertices to draw the texture

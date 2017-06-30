@@ -21,7 +21,7 @@ public:
 	Model & operator=(Model const & mesh);
 	Model & operator=(Model && mesh);
 
-	void draw(Shader & shader);
+	void draw(Shader & shader) const;
 	void loadModel(std::string const & filename);
 
 private:

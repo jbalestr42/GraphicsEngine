@@ -10,8 +10,8 @@ uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 uniform mat4 LightViewProjMatrix;
 
-out vec4 Color0;
-out vec2 TexCoord0;		// Pixel position
+out vec4 Color0;		// Vertex color
+out vec2 TexCoord0;		// Texture coordinate
 out vec3 Normal0;		// Normal in world space
 out vec3 WorldPos0;		// Vertex in world space
 out vec4 LightPos0;		// Vertex in light space

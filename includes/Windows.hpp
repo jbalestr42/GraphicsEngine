@@ -15,11 +15,11 @@ public:
 	Windows(std::size_t width, std::size_t height, char const * title);
 	virtual ~Windows(void);
 
-	virtual void bind(void);
 	bool isOpen(void) const;
 	void display(void) const;
 	void pollEvents(void) const;
 	void close(void);
+	virtual void bind(void);
 
 	GLFWwindow * getWindow(void) const;
 

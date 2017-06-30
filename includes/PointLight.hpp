@@ -22,6 +22,8 @@ public:
 	float getLinearAttenuation(void) const;
 	float getQuadraticAttenuation(void) const;
 
+	virtual void computeShadowMap(Camera const & camera);
+
 private:
 	float		m_constantAttenuation;
 	float		m_linearAttenuation;
