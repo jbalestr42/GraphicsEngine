@@ -21,11 +21,15 @@ public:
 	Model & operator=(Model const & mesh);
 	Model & operator=(Model && mesh);
 
+	void castShadow(bool castShadow);
+	bool isCastingShadow(void) const;
+
 	void draw(Shader & shader) const;
 	void loadModel(std::string const & filename);
 
 private:
 	std::shared_ptr<Mesh>	m_mesh;
+	bool					m_castShadow;
 
 };
 

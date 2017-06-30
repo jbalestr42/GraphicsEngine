@@ -2,15 +2,17 @@
 #include "Shader.hpp"
 #include "RenderTarget.hpp"
 #include "Camera.hpp"
+#include "Model.hpp"
 #include <cassert>
 
-void RenderManager::draw(Model & model, Shader & shader)
+void RenderManager::draw(Model const & model, Shader & shader)
 {
 	m_drawables[&shader].push_back(&model);
 }
 
 void RenderManager::display(RenderTarget & target, Camera const & camera)
 {
+	// Generate the shadow map for each light
 	std::shared_ptr<Shader> depth = ResourceManager::getInstance().getShader(ShaderId::Depth);
 	for (auto & light : m_directionalLight)
 	{
@@ -20,20 +22,23 @@ void RenderManager::display(RenderTarget & target, Camera const & camera)
 			light.computeShadowMap(camera);
 			for (auto & list : m_drawables)
 			{
+				// Draw the model in the shadow map
 				for (auto & model : list.second)
 				{
 					// TODO check AABB collision between ligth view and model
-					// TODO if (drawable.castShadow)
-					model->draw(*depth);
+					if (model->isCastingShadow())
+						model->draw(*depth);
 				}
 			}
 		}
 	}
 
+	// Bind the target for drawing
 	target.setViewport();
 	target.bind();
 	target.clear();
 
+	// Draw the models
 	for (auto & list : m_drawables)
 	{
 		list.first->setParameter("ProjectionMatrix", camera.getProjectionMatrix());

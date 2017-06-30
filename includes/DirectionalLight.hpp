@@ -1,7 +1,6 @@
 #ifndef DIRECTIONNALLIGHT_HPP
 # define DIRECTIONNALLIGHT_HPP
 
-# include <cstddef>
 # include "Light.hpp"
 # include "ShadowMap.hpp"
 

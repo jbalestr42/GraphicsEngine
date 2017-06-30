@@ -1,20 +1,7 @@
-#include "Windows.hpp"
-#include "Texture.hpp"
-#include "ResourceManager.hpp"
 #include "Keyboard.hpp"
-#include "Model.hpp"
 #include "RenderManager.hpp"
 #include "Camera.hpp"
-#include "ShadowMap.hpp"
-#include "DebugDraw.hpp"
-#include <iostream>
-#include <cmath>
-
-#include "Enums.hpp"
-#include "Vector4.hpp"
-#include "Math.hpp"
-#include <limits>
-#include <algorithm>
+#include "Model.hpp"
 
 int main(void)
 {
@@ -39,7 +26,9 @@ int main(void)
 	light3.setAngles(12.5f, 13.5f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
+	Model model1("resources/Trex/TrexByJoel3d.fbx");
 	Model ground("resources/cube.obj");
+	model1.translate({-15.f, 15.f, 15.f});
 	ground.scale(Vector3(40.f, 2.f, 40.f));
 	ground.translate(Vector3(0.f, -5.f, 0.f));
 
@@ -80,17 +69,16 @@ int main(void)
 
 		render.draw(ground, *phong);
 		render.draw(model, *phong);
+		render.draw(model1, *phong);
+
+		render.display(win, *drawCamera);
 
 		//DebugDraw::getInstance().drawTransform(light);
-		//DebugDraw::getInstance().drawTransform(cube);
-
+		//DebugDraw::getInstance().drawTransform(model);
+		//DebugDraw::getInstance().drawFrustum(camera);
 		//debug->setParameter("ProjectionMatrix", drawCamera->getProjectionMatrix());
 		//debug->setParameter("ViewMatrix", drawCamera->getViewMatrix());
 
-		//DebugDraw::getInstance().drawOrthogonalProjection(viewProj);
-		//DebugDraw::getInstance().drawFrustum(camera);
-
-		render.display(win, *drawCamera);
 		win.display();
 		win.pollEvents();
 	}

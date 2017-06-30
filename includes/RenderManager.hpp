@@ -1,7 +1,9 @@
-#ifndef LIGHTMANAGER_HPP
-# define LIGHTMANAGER_HPP
+#ifndef RENDERMANAGER_HPP
+# define RENDERMANAGER_HPP
 
 # include <vector>
+# include <map>
+# include <list>
 # include "DirectionalLight.hpp"
 # include "PointLight.hpp"
 # include "SpotLight.hpp"
@@ -9,10 +11,7 @@
 
 class RenderTarget;
 class Camera;
-#include "Shader.hpp"
-#include "Model.hpp"
-#include <map>
-#include <list>
+class Model;
 
 class RenderManager : public NonCopyable
 {
@@ -20,10 +19,8 @@ public:
 	RenderManager(void) = default;
 	virtual ~RenderManager(void) = default;
 
-	void draw(Model & model, Shader & shader);
+	void draw(Model const & model, Shader & shader);
 	void display(RenderTarget & target, Camera const & camera);
-
-	std::map<Shader *, std::list<Model const *>> m_drawables;
 
 	DirectionalLight & createDirectionalLight(Color const & color);
 	PointLight & createPointLight(Color const & color, Vector3 const & position);
@@ -48,9 +45,10 @@ public:
 	std::size_t getSpotLightCount(void) const;
 
 private:
-	std::vector<DirectionalLight>	m_directionalLight;
-	std::vector<PointLight>			m_pointLight;
-	std::vector<SpotLight>			m_spotLight;
+	std::map<Shader *, std::list<Model const *>>	m_drawables;
+	std::vector<DirectionalLight>					m_directionalLight;
+	std::vector<PointLight>							m_pointLight;
+	std::vector<SpotLight>							m_spotLight;
 
 };
 

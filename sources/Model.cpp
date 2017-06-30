@@ -5,12 +5,12 @@
 
 Model::Model(void) :
 	Transformable(),
-	m_mesh(nullptr)
+	m_mesh(nullptr),
+	m_castShadow(true)
 { }
 
 Model::Model(std::string const & filename) :
-	Transformable(),
-	m_mesh(nullptr)
+	Model()
 {
 	loadModel(filename);
 }
@@ -52,4 +52,14 @@ void Model::draw(Shader & shader) const
 	shader.setParameter("ModelMatrix", getMatrix());
 	if (m_mesh)
 		m_mesh->draw(shader);
+}
+
+void Model::castShadow(bool castShadow)
+{
+	m_castShadow = castShadow;
+}
+
+bool Model::isCastingShadow(void) const
+{
+	return (m_castShadow);
 }
