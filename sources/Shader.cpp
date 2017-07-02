@@ -143,6 +143,11 @@ void Shader::setParameter(std::string const & name, Material const & material)
 		setParameter(name + ".shininess", material.shininess);
 		setParameter(name + ".diffuse_tex", DiffuseIndex);
 		setParameter(name + ".specular_tex", SpecularIndex);
+
+		if (material.diffuseTexture)
+			material.diffuseTexture->bind(GL_TEXTURE0 + DiffuseIndex, GL_TEXTURE_2D);
+		if (material.specularTexture)
+			material.specularTexture->bind(GL_TEXTURE0 + SpecularIndex, GL_TEXTURE_2D);
 	}
 }
 
@@ -150,12 +155,22 @@ void Shader::setParameter(std::string const & name, std::size_t index, Direction
 {
 	if (m_program)
 	{
+		// TODO make a method to get the right name with the index
 		std::ostringstream s;
 		s << name << "[" << index << "].";
 		setParameter(s.str() + "color", light.getColor());
 		setParameter(s.str() + "direction", light.getRotatedDirection().normalize());
 		setParameter(s.str() + "ambient_intensity", light.getAmbientIntensity());
-		light.bindShadowMap(*this);
+
+		std::vector<DirectionalLight::ShadowData> & data = light.getShadowData();
+		setParameter("cascade_shadow_map_count", data.size());
+		for (std::size_t i = 0u; i < data.size(); i++)
+		{
+			setParameter(formatWithIndex("LightViewProjMatrix", i), data[i].viewProj);
+			setParameter(formatWithIndex("CascadEndClipSpace", i), data[i].endClipSpace);
+			setParameter(formatWithIndex("shadow_map", i), static_cast<int>(ShadowMapIndex + i));
+			data[i].shadowMap.bindTexture(GL_TEXTURE0 + ShadowMapIndex + i);
+		}
 	}
 }
 
@@ -307,4 +322,9 @@ GLuint Shader::loadShader(std::string const & filename, GLenum shaderType)
 	else
 		std::cerr << "ERROR: Could not create a shader." << std::endl;
 	return (shaderId);
+}
+
+std::string Shader::formatWithIndex(std::string const & name, std::size_t index)
+{
+	return name + "[" + std::to_string(index) + "]";
 }

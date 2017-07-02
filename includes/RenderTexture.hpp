@@ -1,7 +1,6 @@
 #ifndef FRAMEBUFFER_HPP
 # define FRAMEBUFFER_HPP
 
-# include <cstddef>
 # include <GL/glew.h>
 # include "IDrawable.hpp"
 # include "RenderTarget.hpp"
@@ -19,7 +18,7 @@ public:
 	void init(void);
 	virtual void draw(Shader & shader) const;
 
-	void bindTexture(void);
+	void bindTexture(GLenum textureUnit);
 
 protected:
 	void createRenderTexture(GLenum attachment, GLenum texTarget, GLint mipMapLevel = 0u);
@@ -30,9 +29,6 @@ private:
 	GLuint			m_vertexBufferObject;
 	GLuint			m_frameBufferObject;
 	GLuint			m_texture;
-
-	RenderTexture(RenderTexture const & frameBuffer);
-	RenderTexture & operator=(RenderTexture const & frameBuffer);
 
 };
 

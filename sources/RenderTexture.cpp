@@ -55,16 +55,16 @@ void RenderTexture::bind(void)
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 }
 
-//TODO use the correct shadowmapindex
-void RenderTexture::bindTexture(void)
+void RenderTexture::bindTexture(GLenum textureUnit)
 {
-	glActiveTexture(GL_TEXTURE0 + ShadowMapIndex);
+	glActiveTexture(textureUnit);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
 void RenderTexture::init(void)
 {
-	bindTexture();
+	//bindTexture(index);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
 
 	initTextureParam();
 

@@ -3,12 +3,12 @@
 
 # define ILUT_USE_OPENGL
 
-# include <cstddef>
 # include <string>
 # include <IL/il.h>
 # include "OpenGL.hpp"
+# include "NonCopyable.hpp"
 
-class Texture
+class Texture : public NonCopyable
 {
 public:
 	Texture(std::string const & filename);
@@ -29,8 +29,6 @@ private:
 	ILuint			m_id;
 
 	Texture(void) = delete;
-	Texture(Texture const & texture);
-	Texture & operator=(Texture const & texture);
 
 };
 

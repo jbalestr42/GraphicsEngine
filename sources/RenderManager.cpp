@@ -20,14 +20,25 @@ void RenderManager::display(RenderTarget & target, Camera const & camera)
 		{
 			// Compute and bind the shadow map
 			light.computeShadowMap(camera);
-			for (auto & list : m_drawables)
+
+			std::vector<DirectionalLight::ShadowData> & data = light.getShadowData();
+			for (std::size_t i = 0u; i < data.size(); i++)
 			{
-				// Draw the model in the shadow map
-				for (auto & model : list.second)
+				// Draw the shadowmap in a new texture
+				data[i].shadowMap.setViewport();
+				data[i].shadowMap.bind();
+				data[i].shadowMap.clear();
+
+				ResourceManager::getInstance().getShader(ShaderId::Depth)->setParameter("LightViewProjMatrix", data[i].viewProj);
+				for (auto & list : m_drawables)
 				{
-					// TODO check AABB collision between ligth view and model
-					if (model->isCastingShadow())
-						model->draw(*depth);
+					// Draw the model in the shadow map
+					for (auto & model : list.second)
+					{
+						// TODO check AABB collision between ligth view and model
+						if (model->isCastingShadow())
+							model->draw(*depth);
+					}
 				}
 			}
 		}

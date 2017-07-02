@@ -3,12 +3,14 @@
 #define MAX_DIRECTIONAL_LIGHT 10
 #define MAX_POINT_LIGHT 10
 #define MAX_SPOT_LIGHT 10
+#define MAX_SHADOW_MAP 10
 
 in vec4 Color0;
 in vec2 TexCoord0;
 in vec3 Normal0;
 in vec3 WorldPos0;
-in vec4 LightPos0;
+in vec4 LightPos0[MAX_SHADOW_MAP];
+in float ClipSpacePosZ;
 
 out vec4 FragColor;
 
@@ -52,6 +54,7 @@ uniform SpotLight spot_lights[MAX_SPOT_LIGHT];
 uniform uint directional_light_count;
 uniform uint point_light_count;
 uniform uint spot_light_count;
+uniform uint cascade_shadow_map_count;
 
 struct Material
 {
@@ -68,7 +71,8 @@ uniform Material material;
 
 // Needed for shadow
 uniform vec3 light_position;
-uniform sampler2D shadow_map;
+uniform sampler2D shadow_map[MAX_SHADOW_MAP];
+uniform float CascadEndClipSpace[MAX_SHADOW_MAP];
 
 vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir, float ambient_intensity)
 {
@@ -119,18 +123,26 @@ void main(void)
 		result += compute_light(spot_lights[i].color, light_dir, normal, view_dir, spot_lights[i].ambient_intensity) * attenuation * intensity;
 	}
 
-	// Calculate shadow
-	// perform perspective divide
-	// TODO can be done in vertex shader ?
-	vec3 projCoords = LightPos0.xyz / LightPos0.w;
-	// Transform to [0,1] range
-	projCoords = projCoords * 0.5 + 0.5;
-	// Get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	float closestDepth = texture(shadow_map, projCoords.xy).r;
-	// Get depth of current fragment from light's perspective
-	float currentDepth = projCoords.z;
-	// Check whether current frag pos is in shadow
-	float shadow = currentDepth > closestDepth  ? 0.5 : 1.0;
+	float shadow = 1.0;
+	for (uint i = 0; i < cascade_shadow_map_count; i++)
+	{
+		if (ClipSpacePosZ <= CascadEndClipSpace[i])
+		{
+			// Calculate shadow
+			// perform perspective divide
+			// TODO can be done in vertex shader ?
+			vec3 projCoords = LightPos0[i].xyz / LightPos0[i].w;
+			// Transform to [0,1] range
+			projCoords = projCoords * 0.5 + 0.5;
+			// Get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+			float closestDepth = texture2D(shadow_map[i], projCoords.xy).r;
+			// Get depth of current fragment from light's perspective
+			float currentDepth = projCoords.z;
+			// Check whether current frag pos is in shadow
+			shadow *= currentDepth > closestDepth  ? 0.5 : 1.0;
+			break;
+		}
+	}
 
 	FragColor = vec4(result * shadow, 1.0);
 }

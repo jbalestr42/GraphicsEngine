@@ -190,19 +190,8 @@ void Mesh::MeshEntry::draw(Shader & shader) const
 	// Set shader parameter
 	shader.setParameter("material", m_material);
 
-	// Bind textures
-	if (m_material.diffuseTexture)
-		m_material.diffuseTexture->bind(GL_TEXTURE0 + DiffuseIndex, GL_TEXTURE_2D);
-	if (m_material.specularTexture)
-		m_material.specularTexture->bind(GL_TEXTURE0 + SpecularIndex, GL_TEXTURE_2D);
-
 	// Draw
 	glBindVertexArray(m_vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_indiceCount, GL_UNSIGNED_INT, (GLvoid*)0);
 	glBindVertexArray(0);
-	//TODO check whats is the best to do
-	//glActiveTexture(GL_TEXTURE0 + 0);
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	//glActiveTexture(GL_TEXTURE0 + 1);
-	//glBindTexture(GL_TEXTURE_2D, 0);
 }

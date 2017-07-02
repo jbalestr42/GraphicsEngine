@@ -2,11 +2,10 @@
 # define RENDERTARGET_HPP
 
 # include <cstddef>
-# include "NonCopyable.hpp"
 
 class Color;
 
-class RenderTarget : public NonCopyable
+class RenderTarget
 {
 public:
 	RenderTarget(std::size_t width, std::size_t height);

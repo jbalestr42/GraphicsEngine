@@ -5,10 +5,11 @@
 # include "OpenGL.hpp"
 # include <GLFW/glfw3.h>
 # include "RenderTarget.hpp"
+# include "NonCopyable.hpp"
 
 class Color;
 
-class Windows : public RenderTarget
+class Windows : public RenderTarget, public NonCopyable
 {
 public:
 	Windows(void);

@@ -71,6 +71,7 @@ private:
 	void init(std::string const & fragShader, std::string const & vertShader);
 	std::string readShader(std::string const & fileName);
 	GLuint loadShader(std::string const & filename, GLenum shaderType);
+	std::string formatWithIndex(std::string const & name, std::size_t index);
 
 };
 
