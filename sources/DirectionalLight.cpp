@@ -2,6 +2,7 @@
 #include "Vector4.hpp"
 #include "Math.hpp"
 #include "Camera.hpp"
+#include "DebugDraw.hpp"
 #include <vector>
 
 DirectionalLight::DirectionalLight(void) :
@@ -10,7 +11,7 @@ DirectionalLight::DirectionalLight(void) :
 
 DirectionalLight::DirectionalLight(Color const & color) :
 	Light(color),
-	m_direction({0.f, 0.f, 1.f})
+	m_direction({0.f, 0.f, -1.f})
 {
 	float cascadeCount = 3u;
 	m_shadowData.resize(cascadeCount);
@@ -52,8 +53,7 @@ std::vector<DirectionalLight::ShadowData> & DirectionalLight::getShadowData(void
 void DirectionalLight::computeShadowMap(Camera const & camera)
 {
 	Matrix camInv = camera.getViewMatrix().inverse();
-	// TODO change the directionnal light direction and the relative stuff in shaders
-	Matrix lightView = Matrix::lookAt({0.f, 0.f, 0.f}, -getRotatedDirection().normalize(), {0.f, 1.f, 0.f});
+	Matrix lightView = Matrix::lookAt({0.f, 0.f, 0.f}, getRotatedDirection().normalize(), {0.f, 1.f, 0.f});
 
 	float ar = static_cast<float>(camera.getWidth()) / static_cast<float>(camera.getHeight());
 	float near = camera.getNearPlane();
@@ -62,7 +62,7 @@ void DirectionalLight::computeShadowMap(Camera const & camera)
 	float halfWidth = halfHeight * ar;
 
 	m_shadowData[0].endClipSpace = near + (far - near) * 0.25f;
-	m_shadowData[1].endClipSpace = near + (far - near) * 0.9f;
+	m_shadowData[1].endClipSpace = near + (far - near) * 0.75f;
 	m_shadowData[2].endClipSpace = near + (far - near) * 1.0f;
 
 	for (std::size_t i = 0u; i < m_shadowData.size(); i++)
@@ -70,10 +70,11 @@ void DirectionalLight::computeShadowMap(Camera const & camera)
 		float xf = halfWidth * m_shadowData[i].endClipSpace;
 		float yf = halfHeight * m_shadowData[i].endClipSpace;
 
-		Vector4 farthestCorner = Vector4(xf, yf, -far, 1.f);
+		Vector4 farthestCorner = Vector4(xf, yf, -m_shadowData[i].endClipSpace, 1.f);
 
+		float n = i == 0 ? near : m_shadowData[i - 1u].endClipSpace;
 		// Frustum center in camera space
-		Vector4 fc = Vector4(0.f, 0.f, -(near + far) / 2.f, 1.f);
+		Vector4 fc = Vector4(0.f, 0.f, -(n + (m_shadowData[i].endClipSpace - n) / 2.f), 1.f);
 		// Frustum center in world space
 		Vector4 fcW = camInv * fc;
 
@@ -81,15 +82,7 @@ void DirectionalLight::computeShadowMap(Camera const & camera)
 		float dist = (farthestCorner - fc).length();
 		Matrix lightProj = Matrix::orthographicProjection(fcW.x - dist, fcW.x + dist, fcW.y - dist, fcW.y + dist, -fcW.z - dist, -fcW.z + dist);
 		m_shadowData[i].viewProj = lightProj * lightView;
-	}
-}
 
-void DirectionalLight::bindShadowMap(Shader & shader)
-{
-	// TODO tableau de viewProj et de shadow map dans le shader pour gérer le CSM
-	// for (int i = 0; i < light.getCSMCount(); i++)
-	// Need global value for multiple light with shadows
-	//shader.setParameter("LightViewProjMatrix", m_viewProj);
-	//shader.setParameter("shadow_map", ShadowMapIndex);
-	//m_shadowMap.bindTexture(/*TODO use the good index*/);
+		//DebugDraw::getInstance().drawOrthogonalProjection(m_shadowData[i].viewProj);
+	}
 }

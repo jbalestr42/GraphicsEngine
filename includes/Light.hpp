@@ -25,7 +25,6 @@ public:
 	bool isShadowEnabled(void) const;
 
 	virtual void computeShadowMap(Camera const & camera) = 0;
-	virtual void bindShadowMap(Shader & shader);
 
 private:
 	Color		m_color;

@@ -64,7 +64,6 @@ void DebugDraw::drawTransform(Transformable const & transformable)
 	draw();
 }
 
-#include <iostream>
 void DebugDraw::drawOrthogonalProjection(Matrix const & viewProjMatrix)
 {
 	m_shader->setParameter("ModelMatrix", Matrix());

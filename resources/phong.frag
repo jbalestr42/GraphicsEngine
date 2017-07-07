@@ -95,26 +95,27 @@ vec3 compute_light(vec4 light_color, vec3 light_dir, vec3 normal, vec3 view_dir,
 
 void main(void)
 {
+	//TODO fix specular
 	vec3 result = vec3(0.0);
 	vec3 normal = normalize(Normal0);
-	vec3 view_dir = normalize(view_position - WorldPos0);
+	vec3 view_dir = normalize(WorldPos0 - view_position);
 
 	for (uint i = 0u; i < directional_light_count; i++)
-		result += compute_light(directional_lights[i].color, -directional_lights[i].direction, normal, view_dir, directional_lights[i].ambient_intensity);
+		result += compute_light(directional_lights[i].color, directional_lights[i].direction, normal, view_dir, directional_lights[i].ambient_intensity);
 
 	for (uint i = 0u; i < point_light_count; i++)
 	{
 		// Attenuation
 		float distance = length(point_lights[i].position - WorldPos0);
 		float attenuation = 1.0 / (point_lights[i].constant_attenuation + point_lights[i].linear_attenuation * distance + point_lights[i].quadratic_attenuation * distance * distance);
-		result += compute_light(point_lights[i].color, point_lights[i].position - WorldPos0, normal, view_dir, point_lights[i].ambient_intensity) * attenuation;
+		result += compute_light(point_lights[i].color, WorldPos0 - point_lights[i].position, normal, view_dir, point_lights[i].ambient_intensity) * attenuation;
 	}
 
 	for (uint i = 0u; i < spot_light_count; i++)
 	{
 		// Compute whether the pixel is the radius of the spotlight
 		vec3 light_dir = normalize(spot_lights[i].position - WorldPos0);
-		float theta = dot(-light_dir, spot_lights[i].direction); // Direction is normalized before the shader
+		float theta = dot(light_dir, spot_lights[i].direction); // Direction is normalized before the shader
 		float epsilon = spot_lights[i].outer_angle - spot_lights[i].inner_angle;
 		float intensity = clamp((spot_lights[i].inner_angle + theta) / epsilon, 0.0, 1.0);
 		// Attenuation
@@ -123,6 +124,13 @@ void main(void)
 		result += compute_light(spot_lights[i].color, light_dir, normal, view_dir, spot_lights[i].ambient_intensity) * attenuation * intensity;
 	}
 
+	vec3[6] t;
+	t[0] = vec3(1.0, 0.0, 0.0);
+	t[1] = vec3(0.0, 1.0, 0.0);
+	t[2] = vec3(0.0, 0.0, 1.0);
+	t[3] = vec3(1.0, 0.0, 1.0);
+	t[4] = vec3(0.0, 1.0, 1.0);
+	t[5] = vec3(1.0, 1.0, 0.0);
 	float shadow = 1.0;
 	for (uint i = 0; i < cascade_shadow_map_count; i++)
 	{
@@ -139,7 +147,10 @@ void main(void)
 			// Get depth of current fragment from light's perspective
 			float currentDepth = projCoords.z;
 			// Check whether current frag pos is in shadow
+			//float bias = max(0.05 * (1.0 - dot(Normal0, -directional_lights[0].direction)), 0.005);
+			//shadow = currentDepth - bias > closestDepth ? 0.5 : 1.0;
 			shadow *= currentDepth > closestDepth  ? 0.5 : 1.0;
+			result += t[i] * 0.5;
 			break;
 		}
 	}

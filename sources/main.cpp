@@ -2,6 +2,8 @@
 #include "RenderManager.hpp"
 #include "Camera.hpp"
 #include "Model.hpp"
+#include "DebugDraw.hpp"
+#include <cmath>
 
 int main(void)
 {
@@ -20,14 +22,15 @@ int main(void)
 	RenderManager render;
 	DirectionalLight & light = render.createDirectionalLight(Color(1.0f, 1.0f, 1.0f, 1.f));
 	light.rotateX(40.f);
-	SpotLight & light3 = render.createSpotLight(Color(0.0f, 1.0f, 0.0f, 1.f), Vector3(3.f, 12.f, 4.f));
+	SpotLight & light3 = render.createSpotLight(Color(0.0f, 1.0f, 0.0f, 1.f), Vector3(0.f, 10.f, 0.f));
 	light.rotateY(40.f);
-	light3.rotateX(-45.f);
+	light3.rotateX(-90.f);
 	light3.setAngles(12.5f, 13.5f);
 
 	Model model("resources/Trex/TrexByJoel3d.fbx");
 	Model model1("resources/Trex/TrexByJoel3d.fbx");
 	Model ground("resources/cube.obj");
+	model.translate({0.f, -4.0f, 0.f});
 	model1.translate({-15.f, 15.f, 15.f});
 	ground.scale(Vector3(40.f, 2.f, 40.f));
 	ground.translate(Vector3(0.f, -5.f, 0.f));
@@ -63,6 +66,7 @@ int main(void)
 		drawCamera->update(dt);
 
 		//model.rotateY(dt * 40.f);
+		light3.translate({std::cos(timer) * 0.1f, 0.f, 0.f});
 
 		while (dt > frameLimit)
 			dt -= frameLimit;
@@ -73,11 +77,11 @@ int main(void)
 
 		render.display(win, *drawCamera);
 
-		//DebugDraw::getInstance().drawTransform(light);
+		//DebugDraw::getInstance().drawTransform(light3);
 		//DebugDraw::getInstance().drawTransform(model);
 		//DebugDraw::getInstance().drawFrustum(camera);
-		//debug->setParameter("ProjectionMatrix", drawCamera->getProjectionMatrix());
-		//debug->setParameter("ViewMatrix", drawCamera->getViewMatrix());
+		debug->setParameter("ProjectionMatrix", drawCamera->getProjectionMatrix());
+		debug->setParameter("ViewMatrix", drawCamera->getViewMatrix());
 
 		win.display();
 		win.pollEvents();

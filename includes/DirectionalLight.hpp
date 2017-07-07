@@ -29,9 +29,7 @@ public:
 
 	std::vector<ShadowData> & getShadowData(void);
 
-	//TODO rename for writing/reading
 	virtual void computeShadowMap(Camera const & camera);
-	virtual void bindShadowMap(Shader & shader);
 
 private:
 	std::vector<ShadowData>	m_shadowData;

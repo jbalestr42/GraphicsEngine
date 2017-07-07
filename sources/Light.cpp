@@ -50,7 +50,3 @@ bool Light::isShadowEnabled(void) const
 {
 	return (m_castShadow);
 }
-
-void Light::bindShadowMap(Shader &)
-{
-}
