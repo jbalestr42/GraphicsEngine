@@ -67,19 +67,20 @@ int main(void)
 
 		//model.rotateY(dt * 40.f);
 		light3.translate({std::cos(timer) * 0.1f, 0.f, 0.f});
+		//TODO retest pointlight
 
 		while (dt > frameLimit)
 			dt -= frameLimit;
 
 		render.draw(ground, *phong);
 		render.draw(model, *phong);
-		render.draw(model1, *phong);
+		//render.draw(model1, *phong);
 
-		render.display(win, *drawCamera);
+		render.display(win, camera, *drawCamera);
 
-		//DebugDraw::getInstance().drawTransform(light3);
+		DebugDraw::getInstance().drawTransform(light3);
 		//DebugDraw::getInstance().drawTransform(model);
-		//DebugDraw::getInstance().drawFrustum(camera);
+		DebugDraw::getInstance().drawFrustum(camera);
 		debug->setParameter("ProjectionMatrix", drawCamera->getProjectionMatrix());
 		debug->setParameter("ViewMatrix", drawCamera->getViewMatrix());
 

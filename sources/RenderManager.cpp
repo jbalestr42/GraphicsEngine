@@ -3,6 +3,7 @@
 #include "RenderTarget.hpp"
 #include "Camera.hpp"
 #include "Model.hpp"
+#include "DebugDraw.hpp"
 #include <cassert>
 
 void RenderManager::draw(Model const & model, Shader & shader)
@@ -10,7 +11,7 @@ void RenderManager::draw(Model const & model, Shader & shader)
 	m_drawables[&shader].push_back(&model);
 }
 
-void RenderManager::display(RenderTarget & target, Camera const & camera)
+void RenderManager::display(RenderTarget & target, Camera const & camera, Camera const & debugCamera)
 {
 	// Generate the shadow map for each light
 	std::shared_ptr<Shader> depth = ResourceManager::getInstance().getShader(ShaderId::Depth);
@@ -49,12 +50,17 @@ void RenderManager::display(RenderTarget & target, Camera const & camera)
 	target.bind();
 	target.clear();
 
+	std::vector<DirectionalLight::ShadowData> & data = m_directionalLight[0].getShadowData();
+	for (std::size_t i = 0u; i < data.size(); i++)
+	{
+		DebugDraw::getInstance().drawOrthogonalProjection(data[i].viewProj);
+	}
 	// Draw the models
 	for (auto & list : m_drawables)
 	{
-		list.first->setParameter("ProjectionMatrix", camera.getProjectionMatrix());
-		list.first->setParameter("ViewMatrix", camera.getViewMatrix());
-		list.first->setParameter("view_position", camera.getPosition());
+		list.first->setParameter("ProjectionMatrix", debugCamera.getProjectionMatrix());
+		list.first->setParameter("ViewMatrix", debugCamera.getViewMatrix());
+		list.first->setParameter("view_position", debugCamera.getPosition());
 
 		list.first->setParameter("directional_light_count", getDirectionalLightCount());
 		list.first->setParameter("directional_lights", getDirectionalLight());

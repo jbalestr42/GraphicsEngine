@@ -20,7 +20,7 @@ public:
 	virtual ~RenderManager(void) = default;
 
 	void draw(Model const & model, Shader & shader);
-	void display(RenderTarget & target, Camera const & camera);
+	void display(RenderTarget & target, Camera const & camera, Camera const & debugCamera);
 
 	DirectionalLight & createDirectionalLight(Color const & color);
 	PointLight & createPointLight(Color const & color, Vector3 const & position);

@@ -113,6 +113,7 @@ void DebugDraw::drawOrthogonalProjection(Matrix const & viewProjMatrix)
 
 void DebugDraw::drawFrustum(Camera const & camera)
 {
+	//TODO clean 
 	float ar = static_cast<float>(800.f / 600.f);
 	float fov = 60.f;
 	float near = 0.1f;
